@@ -1,0 +1,15 @@
+.box-name {
+    color: #fff
+}
+.post {
+    position: relative;
+    margin-bottom: 0px;
+    padding-bottom: 10px;
+}
+@media only screen and (max-width: 1200px) {
+.hide-on-1200{
+display: none;}}
+
+@media only screen and (min-width: 1201px) {
+.hide-to-1201{
+display: none;}}

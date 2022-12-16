@@ -1,0 +1,54 @@
+
+<div class="group-messages-wrapper messages-wrapper <?php echo ($wo['chatMessage']['onwer']) ? 'pull-right' : 'pull-left';?>" id="messageId_<?php echo $wo['chatMessage']['id'] ?>" data-group-tmessage-id="<?php echo $wo['chatMessage']['id'] ?>">
+
+	<div class="message <?php echo ($wo['chatMessage']['onwer']) ? 'outgoing pull-right' : 'incoming pull-left';?>" onclick="Wo_ShowMessageOptions(<?php echo $wo['chatMessage']['id'] ?>);">
+
+	    <?php if($wo['chatMessage']['onwer']){ ?>
+	    <div class="deleteMessage grpRight" style="display: none;">
+
+
+	        <div class="editMessage ">
+	        </div>
+	        <i class="fa fa-pencil-square-o" onclick="Wo_EditGroupChatMessage(<?php echo $wo['chatMessage']['id'] ?>);"></i>
+	    </div>
+
+
+	    <?php } ?>
+
+		<?php if (!$wo['chatMessage']['onwer']): ?>
+			<p class="message-group_owner"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u='.$wo['chatMessage']['user_data']['username']);?>" data-ajax="?link1=timeline&u=<?php echo $wo['chatMessage']['user_data']['username']?>"><?php echo $wo['chatMessage']['user_data']['username']?></a></p>
+		<?php endif; ?>
+		<?php if (!empty($wo['chatMessage']['text'])): ?>
+			<p id="particular_group_portion_<?php echo $wo['chatMessage']['id'] ?>" class="message-text" dir="auto">
+			    <?php echo ($wo['chatMessage']['onwer'] == 0) ? '<span class="toggleLeftChat">…</span>': '<span class="toggleRightChat">…</span>';?>
+				<?php if($wo['chatMessage']['type_two'] == 'contact'):
+					$json = json_decode(trim(htmlspecialchars_decode($wo['chatMessage']['text'])), true);
+					echo $json['Value'] . ' (' . $json['Key'] . ')';
+				?>
+				<input class="form-control" type="text" id="edit_grp_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" name="edit_grp_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" value="Hello World" onkeydown="Wo_UpdateGroupChatMessage(event, <?php echo $wo['chatMessage']['id'] ?>)" style="display:none;">
+				<?php else: ?>
+					<?php echo $wo['chatMessage']['text']; ?>
+
+					<input class="form-control" type="text" id="edit_grp_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" name="edit_grp_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" value="<?php echo $wo['chatMessage']['text']; ?>" onkeydown="Wo_UpdateGroupChatMessage(event, <?php echo $wo['chatMessage']['id'] ?>)" style="display:none;">
+
+				<?php endif;?>
+			</p>
+		<?php endif; ?>
+		<div class="clear"></div>
+		<div class="message-media">
+			<?php
+				if(isset($wo['chatMessage']['media']) && !empty($wo['chatMessage']['media'])) {
+					$media = array('type' => 'chatMessage', 'storyId' => $wo['chatMessage']['id'], 'filename' => $wo['chatMessage']['media'], 'name' => $wo['chatMessage']['mediaFileName']);
+					echo Wo_DisplaySharedFile($media, 'chat');
+				}
+			?>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<?php if($wo['chatMessage']['user_data']['user_id'] == $wo['user']['user_id']) { ?>
+		<div class="message-seen text-right message-details"></div>
+		<div class="clear"></div>
+	<?php } ?>
+	<div class="message-typing message-details"></div>
+</div>
+<div class="clear"></div>

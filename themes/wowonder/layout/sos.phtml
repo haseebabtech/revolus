@@ -1,0 +1,60 @@
+<?php
+			global $wo, $sqlConnect;
+							$chats = Wo_GetMessagesUsers($wo['user']['user_id']);
+							$array = array();
+					        if (!empty($chats)) {
+					            $incre = 0;
+                                $id_num = 2000;
+                                //$chats = Wo_GetMessagesUsers($wo['user']['user_id']);
+					            $time = $chats[0][message][time];
+					            //print_r($time);
+					            foreach ($chats as $key => $value) {
+					                
+					                $array[] = $value[user_id];
+					                
+					                 //print_r($value[user_id]);
+					                 //$IDs = explode(', ',$value[user_id]);
+					                 //$IDss = implode(' ',$value[user_id]);
+					               // if(isset($_POST['submit'])){
+					               // mysqli_query($sqlConnect, "INSERT INTO ".T_MESSAGES." (`id`, `from_id`, `group_id`, `page_id`, `to_id`, `text`, `media`, `mediaFileName`, `mediaFileNames`, `time`, `seen`, `deleted_one`, `deleted_two`, `sent_push`, `notification_id`, `type_two`, `stickers`, `product_id`, `lat`, `lng`) VALUES
+                    //             (214634, 3, 0, 0, ".$array.", 'SOS Alert', '', '', '', 1605178319, 0, '0', '0', 0, '', '', '', 0, '0', '0')");
+					               // }
+					                
+					           
+					            $users_to_send = count($array);
+					            //print_r($array[$incre]);
+					            
+					            
+					           // $time = Wo_Time_Elapsed_String(strtotime(date("Y-m-d H:i:s")));
+					           //$user_ID = explode(',',$value[user_id]);
+					           //$array[] = $user_ID;
+					           //print_r($user_ID[0]);
+					          //for($i=0; $i <=$users_to_send; $i++) {
+					           //   if(isset($_POST['submit'])){
+					           //     mysqli_query($sqlConnect, "INSERT INTO ".T_MESSAGES." (`id`, `from_id`, `group_id`, `page_id`, `to_id`, `text`, `media`, `mediaFileName`, `mediaFileNames`, `time`, `seen`, `deleted_one`, `deleted_two`, `sent_push`, `notification_id`, `type_two`, `stickers`, `product_id`, `lat`, `lng`) VALUES
+                //                 (".rand(10,1050).", 3, 0, 0, 25, 'Help world', '', '', '', ".$time.", 0, '0', '0', 0, '', '', '', 0, '0', '0')");
+					           //     }
+					                //echo $array[$incre].'<br>';
+					                //print_r($array[$incre]);
+					                
+					                //echo Wo_Time_Elapsed_String(date("Y-m-d"));
+					                //echo time_elapsed_string('2013-05-01 00:22:35');
+					                //echo time_elapsed_string('2013-05-01 00:22:35', true);
+					                //print_r($array[$incre]);
+					                //print_r($incre);
+					                
+					          //}
+					            }
+					            for($i=0; $i <=$users_to_send; $i++) {
+					                //print_r($array[$incre]);
+					            if(isset($_POST['submit'])){
+					                mysqli_query($sqlConnect, "INSERT INTO ".T_MESSAGES." (`id`, `from_id`, `group_id`, `page_id`, `to_id`, `text`, `media`, `mediaFileName`, `mediaFileNames`, `time`, `seen`, `deleted_one`, `deleted_two`, `sent_push`, `notification_id`, `type_two`, `stickers`, `product_id`, `lat`, `lng`) VALUES
+                                (".rand(10,1950).", 3, 0, 0, ".$array[$incre].", 'Emergency Call', '', '', '', ".$time.", 0, '0', '0', 0, '', '', '', 0, '0', '0')");
+					                }
+					                
+					                $incre++;
+					                $id_num++;
+					            }
+					        }
+					        
+			?>

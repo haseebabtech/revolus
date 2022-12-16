@@ -1,0 +1,93 @@
+<?php
+require 'anet-sdk-php/autoload.phtml';
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
+
+class AuthorizeNetPayment
+{
+    private $_APILoginId;
+    private $_APIKey;
+    private $_refId;
+    private $_anet_env;
+    private $_merchantAuthentication;
+    public $_responseText;
+
+    //__construct
+    public function __construct() {
+        require_once "config.phtml";
+        $this->_APILoginId = ANET_API_LOGIN_ID;
+        $this->_APIKey = ANET_TRANSACTION_KEY;
+        $this->_anet_env = ANET_ENV;
+        $this->_refId = 'ref' . time();
+        
+        //print_r(ANET_ENV);die;
+        
+        $this->_merchantAuthentication = $this->setMerchantAuthentication();
+        $this->_responseText = array("1"=>"Approved", "2"=>"Declined", "3"=>"Error", "4"=>"Held for Review");
+    }
+
+    // set Merchant Authentication
+    public function setMerchantAuthentication() {
+        // Create a merchantAuthenticationType object with authentication details 
+        // retrieved from the config file 
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName($this->_APILoginId);
+        $merchantAuthentication->setTransactionKey($this->_APIKey);  
+        return $merchantAuthentication;
+    }
+
+    // set Credit Card
+    public function setCreditCard($cardDetails) {
+        // Create the payment data for a credit card 
+        $creditCard = new AnetAPI\CreditCardType();
+        $creditCard->setCardNumber($cardDetails["card_number"]);
+        $creditCard->setExpirationDate( $cardDetails["card_exp_month"] . "-" . $cardDetails["card_exp_year"]);
+        $creditCard->setCardCode($cardDetails["card_cvc"]);
+        // Add the payment data to a paymentType object 
+        $paymentType = new AnetAPI\PaymentType();
+        $paymentType->setCreditCard($creditCard);  
+        return $paymentType;
+    }
+
+    // set TransactionRequest Type
+    public function setTransactionRequestType($paymentType, $amount) {
+        // Create a transaction
+        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        $transactionRequestType->setTransactionType("authCaptureTransaction");
+        $transactionRequestType->setAmount($amount);
+        $transactionRequestType->setPayment($paymentType);
+        return $transactionRequestType;
+    }
+
+    public function customerData($data) {
+        // Set the customer's identifying information 
+        $customerData = new AnetAPI\CustomerDataType();
+        $customerData->setType("individual");
+        $customerData->setId(time());
+        $customerData->setEmail($data['email']);
+
+        // Set the customer's address
+        $customerAddress = new AnetAPI\CustomerAddressType();
+        $customerAddress->setFirstName($data['first_name']);
+        $customerAddress->setLastName($data['last_name']);
+        $customerAddress->setCompany("TA");
+        $customerAddress->setAddress("Delhi");
+        $customerAddress->setCity("Delhi");
+        $customerAddress->setState("DE");
+        $customerAddress->setZip("1100001");
+        $customerAddress->setCountry("India");
+
+    }
+    // charge Credit Card
+    public function chargeCreditCard($cardDetails) {
+        $paymentType = $this->setCreditCard($_POST);
+        $transactionRequestType = $this->setTransactionRequestType($paymentType, $_POST["amount"]);
+        $request = new AnetAPI\CreateTransactionRequest();
+        $request->setMerchantAuthentication($this->_merchantAuthentication);
+        $request->setRefId( $this->_refId);
+        $request->setTransactionRequest($transactionRequestType);
+        $controller = new AnetController\CreateTransactionController($request);
+        $response = $controller->executeWithApiResponse(constant("\\net\authorize\api\constants\ANetEnvironment::$this->_anet_env"));     
+        return $response;
+    }
+}

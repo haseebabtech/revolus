@@ -1,0 +1,197 @@
+
+<?php
+session_start();
+/*$_SESSION["language_code"] =  'hi';
+$tab_style = '';
+$tab_style_height = '';
+if (isset($_SESSION['open_chat'])) {
+  if($_SESSION['open_chat'] == 0) {
+    $tab_style = 'none';
+    $tab_style_height = 'min-height:auto;';
+  }
+}*/
+?>
+<?php if (Wo_IsMobile() == true) { ?>
+
+
+<script type="text/javascript">
+
+
+function Wo_ChatSide(id) {
+    if (current_width < 700) {
+        return false;
+    }
+    if ($('.search-users-chat').val().length > 0) {
+       return false;
+    }
+    if ($('body').attr('sending-' + id) == 'true') {
+        return false;
+    }
+    var chat_container = $('.chat-tab').find('.chat_main_' + id);
+    var offline_users_container = $('.offline-users');
+    var user_id = chat_container.find('.chat-user-id').val();
+    var message_id = chat_container.find('.chat-messages-wrapper').find('.messages-wrapper:last').attr('data-message-id');
+    var chat_user_tab = chat_container.find('.chat-wrapper').find('.chat-status');
+    var online_users_container = $('.online-users');
+    var last_id = chat_container.find('.messages-text:last').attr('data-message-id');
+    var is_empty_seen = 1;
+    var chat_groups = $(".chat_groups");
+    var last_group = ($(".groups-list").length > 0) ? $(".groups-list").last().attr('data-chat-group') : 0;
+    if (!$('.messages-text:last').find('.message-seen').is(':empty')) {
+        is_empty_seen = 0;
+    }
+    if (typeof user_id === 'undefined') {
+       user_id = 0;
+    }
+    if (typeof message_id === 'undefined') {
+       message_id = 0;
+    }
+    if (typeof last_id === 'undefined') {
+       last_id = 0;
+    }
+    var count_span = $('.count-online-users');
+    $.get(Wo_Ajax_Requests_File(), {f:'chat', s:'chat_side', user_id:user_id, message_id:message_id, last_id:last_id,last_group:last_group}, function(data) {
+        
+        // For Group Video Call
+        console.log(data);
+        
+        // For Video
+        if(data.exists == 1){
+            jQuery.each(data.data, function(index, val) {
+                
+                $('#video-group-title').html("Group Name: "+val["group_name"]);
+                $('#video-group-body').html("Video Calling...");
+                
+                if(val["to_id"] != val["group_created_userid"]){
+                    document.getElementById('video-calling-sound').play();
+                    $('#video-group-modal').modal({show: true});
+                }
+                
+                $("#grpvideoclick").attr("onclick","Wo_GenerateGroupVideoCall("+val["from_id"]+", "+val["group_id"]+", '"+val["group_name"]+"', 'attended')");
+                $("#grpvideocancelclick").attr("onclick","Wo_GenerateGroupVideoCall("+val["from_id"]+", "+val["group_id"]+", '"+val["group_name"]+"', 'declined')");
+            });
+        }
+        
+        // For Audio
+        //console.log("Audio 1");
+        if(data.audio_exists == 1){
+            //console.log("Audio 2");
+            jQuery.each(data.audio_data, function(index, val) {
+                //console.log("Audio 3");
+                
+                $('#audio-group-title').html("Group Name: "+val["group_name"]);
+                $('#audio-group-body').html("Audio Calling...");
+                
+                if(val["to_id"] != val["group_created_userid"]){
+                    document.getElementById('video-calling-sound').play();
+                    $('#audio-group-modal').modal({show: true});
+                }
+
+                
+                $("#grpaudioclick").attr("onclick","Wo_GenerateGroupAudioCall("+val["from_id"]+", "+val["group_id"]+", '"+val["group_name"]+"', 'attended')");
+                $("#grpaudiocancelclick").attr("onclick","Wo_GenerateGroupAudioCall("+val["from_id"]+", "+val["group_id"]+", '"+val["group_name"]+"', 'declined')");
+            });
+        }
+        //console.log("Audio 4");
+            
+        if (data.status == 200  && data.chat_groups.length > 0) {
+          chat_groups.html(data.chat_groups);
+        }
+        if (data.status == 200) {
+            count_span.html(data.count_chat);
+        }
+        if (data.update_group_status.length > 0) {
+         if ('<?php echo $wo['page']; ?>' != 'messages') {
+          for (var i = 0; i < data.update_group_status.length; i++) {
+            if ($(".chat_group_"+data.update_group_status[i]).length == 0) {
+              $("[data-chat-group='"+ data.update_group_status[i] +"']").find('.group-lastseen').html('<i class="fa fa-circle main" style="font-size:10px;"></i>');
+            }
+          }
+         }
+         else if ('<?php echo $wo['page']; ?>' == 'messages') {}{
+          for (var i = 0; i < data.update_group_status.length; i++) {
+            if ($(".chat_group_"+data.update_group_status[i]).length == 0 && $("#messages-group-id").val() != data.update_group_status[i]) {
+              $("#messages-group-"+ data.update_group_status[i]).find('.group-lastseen').html('<i class="fa fa-circle main" style="font-size:10px;"></i>');
+            }
+          }
+         }
+        }
+        if (data.online_users.length == 0) {
+            online_users_container.html('');
+        } else {
+            online_users_container.html(data.online_users);
+        }
+        if (data.offline_users.length == 0) {
+            offline_users_container.html('');
+        } else {
+            offline_users_container.html(data.offline_users);
+        }
+        if (data.chat_user_tab == 200) {
+            chat_user_tab.html('active');
+        } else {
+            chat_user_tab.removeClass('active');
+        }
+        if (data.messages == 200) {
+            chat_container.find('.chat-messages-wrapper').find("div[class*='message-seen']").empty();
+            chat_container.find('.chat-messages-wrapper').find("div[class*='message-typing']").empty();
+            chat_container.find('.chat-messages-wrapper').append(data.messages_html);
+            chat_container.find('.chat-messages-wrapper').scrollTop(chat_container.find('.chat-messages-wrapper')[0].scrollHeight);
+            if (data.sender == data.receiver) {
+               document.getElementById('message-sound').play();
+            }
+            if (!$('#sendMessage').is(':focus')) {
+                document.title = 'New Message | ' + document_title;
+            }
+        }
+        if (is_empty_seen == 1 && data.can_seen == 1) {
+            chat_container.find('.messages-text:last').find('.message-seen').hide().html('<i class="fa fa-check"></i> <?php echo $wo["lang"]["seen"];?> (<span class="ajax-time" title="' + data.time + '">' + data.seen + '</span>)').fadeIn(300);
+            chat_container.find('.chat-messages-wrapper').scrollTop(chat_container.find('.chat-messages-wrapper')[0].scrollHeight);
+        }
+        if (data.is_typing == 200) {
+            chat_container.find('.messages-text:last').find('.message-typing').html('<img class="user-avatar-left" src="' + data.img + '" alt="Profile Picture"><div id="loading"> <img class="typing" src="' + data.typing + '"></div>').fadeIn(300);
+
+            chat_container.find('.chat-messages-wrapper').scrollTop(chat_container.find('.chat-messages-wrapper')[0].scrollHeight);
+            
+        } else {
+            chat_container.find('.messages-text:last').find('.message-typing').empty();
+        } 
+        if (data.chat_color) {
+            $(".chat_" + user_id).find('.online-toggle, .outgoing .message-text, .outgoing .message-media').css('background', data.chat_color);
+            $(".chat_" + user_id).find('.outgoing .message-text').css('color', '#fff');
+            $(".chat_" + user_id).find('#color').val(data.chat_color);
+            $(".chat_" + user_id).find('.select-color').css('color', data.chat_color);
+        }
+    });
+}
+
+var chat_part_array = [];
+
+$(function() {
+    setTimeout(function () {
+       Timeout();
+    }, 7000);
+});
+
+function Timeout() {
+    
+    var inputs = $("input.grpp-chat-user-id");
+    //alert(inputs);
+    if (inputs.length > 0) {
+        for(var i = 0; i < inputs.length; i++){
+            //alert($(inputs[i]).val());
+            Wo_ChatSide($(inputs[i]).val());
+        }
+    } else {
+        //alert('no');
+        Wo_ChatSide(0);
+    }
+    setTimeout(function () {
+       Timeout();
+    }, 7000);
+}
+
+
+
+
+</script>
+<?php } ?>

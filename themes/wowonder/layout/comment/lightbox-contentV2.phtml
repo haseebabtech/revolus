@@ -1,0 +1,33 @@
+<?php $replies = Wo_CountCommentReplies($wo['comment']['id']);?>
+<div class="comment comment-container" id="comment_<?php echo $wo['comment']['id'];?>" data-comment-id ="<?php echo $wo['comment']['id'];?>">
+   <a class="<?php echo Wo_RightToLeft('pull-left'); ?>" href="<?php echo $wo['comment']['publisher']['url']?>">
+   <img class="avatar <?php echo Wo_RightToLeft('pull-left'); ?>" src="<?php echo $wo['comment']['publisher']['avatar']?>" alt="avatar">
+   </a>
+   <div class="comment-body">
+      <div class="comment-heading">
+         <span class="user-popover" data-id="<?php echo $wo['comment']['publisher']['id'];?>" data-type="<?php echo $wo['comment']['publisher']['type'];?>">
+         <a href="<?php echo $wo['comment']['publisher']['url']?>">
+            <h4 class="user">
+               <?php echo $wo['comment']['publisher']['name']?>
+            </h4>
+         </a>
+         </span>
+         <?php  if($wo['comment']['publisher']['verified'] == 1) {   ?>
+         <span class="verified-color" data-toggle="tooltip" title="<?php echo $wo['lang']['verified_user'];?>"><i class="fa fa-check-circle"></i></span>
+         <?php } ?>
+         <span class="time ajax-time" title="<?php echo date('c',$wo['comment']['time']);?>"><?php echo $wo['comment']['time']?></span>
+         <div class="comment-text"><?php echo $wo['comment']['text']?></div>
+         <div class="comment-image">
+            <?php if (!empty($wo['comment']['c_file'])): ?>
+               <a href="<?php echo Wo_GetMedia($wo['comment']['c_file']);?>" target="_blank"><img src="<?php echo Wo_GetMedia($wo['comment']['c_file']);?>" alt="Comment image"></a>
+            <?php endif ?>
+         </div>
+         <div class="clear"></div>   
+      </div>
+      
+      <div class="comment-edit">
+         <input type="text" class="form-control" value="<?php echo $wo['comment']['Orginaltext']?>" onkeyup="Wo_EditComment(this.value,<?php echo $wo['comment']['id']?>, event)" placeholder="<?php echo $wo['lang']['edit_comment']; ?>" dir="auto">
+      </div>
+      
+   </div>
+</div>

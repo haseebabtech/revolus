@@ -1,0 +1,18 @@
+<?php
+if ($wo['loggedin'] == false) {
+    header("Location: " . Wo_SeoLink('index.php?link1=welcome'));
+    exit();
+}
+if (!empty($_GET['user']) && empty($_GET['page'])) {
+    $user_id = Wo_Secure($_GET['user']);
+    $user    = Wo_UserData($user_id);
+    if (empty($user['user_id'])) {
+        unset($user);
+    }
+}
+?>
+<div class="page-margin">
+<div class="row">
+<div class="col-md-2 leftcol"><?php echo Wo_LoadPage("sidebar/left-sidebar"); ?></div>
+</div>
+</div>

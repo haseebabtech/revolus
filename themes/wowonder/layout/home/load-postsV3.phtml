@@ -1,0 +1,24 @@
+<div id="posts">
+	<?php
+        // echo 'check'; exit;
+		if ($wo['config']['pro'] == 1) {
+		$promoted = $wo['story'] = Wo_GetPromotedPost();
+		if (count($promoted) > 0) {
+		$wo['story']['post_is_promoted'] = 1;
+	?>
+	<div class="promoted-post">
+		<span class="promoted-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award" data-toggle="tooltip" title="<?php echo $wo['lang']['promoted'];?>"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg> </span>
+		<?php echo Wo_LoadPage('story/contentV2'); ?>
+	</div>
+	<?php } } ?>
+	<?php
+		$stories = Wo_GetPosts3(array('limit' => 1, 'publisher_id' => 0,'placement' => 'multi_image_post','anonymous' => true));
+		if (count($stories) <= 0) {
+			echo Wo_LoadPage('story/no-stories');
+		} else {
+			foreach ($stories as $wo['story']) {
+				echo Wo_LoadPage('story/contentV3');
+			}
+		}
+		?>
+</div>

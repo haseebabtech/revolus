@@ -1,0 +1,30 @@
+<style>
+      
+      div#welcomeheader {
+         height: 60px;
+      }
+      ul.dropdown-menu.dropdown-menu-right.wow_lang_select_menu {
+    width: 12em;
+    height: 20em;
+    line-height: 2em;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+   </style>
+<div id="welcomeheader" class="navbar-default">
+	<div class="container">
+		<div class="logo <?php echo Wo_RightToLeft('pull-left');?>">
+			<a href="<?php echo $wo['config']['site_url'];?>"><img src="<?php echo $wo['config']['theme_url'];?>/img/logo.<?php echo $wo['config']['logo_extension'];?>" alt="Logo"> </a>
+		</div>
+		<?php if ($wo['config']['user_registration'] == 1): ?>
+			<ul class="nav navbar-nav navbar-right <?php echo Wo_RightToLeft('pull-right');?>">
+				<li class="absul-right">
+					<a class="mdbtn" href="<?php echo $wo['config']['site_url'];?>"><?php echo $wo['lang']['login']?></a>
+				</li>
+			</ul>
+		<?php endif ?>
+	</div>
+</div>

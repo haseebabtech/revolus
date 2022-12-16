@@ -1,0 +1,174 @@
+<style>
+footer .footer-wrapper, .second-footer {display: none}
+#media-div div div::before {
+    content: "CONNECTED :";
+    color: green;
+    font-size: 11px;
+    margin-right: 5px;
+    font-weight: 600;
+}
+#media-div div {
+    width: 31.33%;
+}
+#media-div video {
+    width: 100%;
+}
+#media-div div div {
+    display: block;
+    font-weight: 600;
+    text-transform: capitalize;
+    width: 100%;
+    margin-bottom: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.margin-10-0{
+    margin: 10px 0px;
+}
+@media screen and (max-width: 600px){
+    #media-div div {
+        width: 98%;
+    }
+}
+</style>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 mb-3 margin-10-0">
+            <a href="<?php echo $wo['config']['site_url']; ?>" class="btn btn-danger pull-right">Reject</a>
+        </div>
+        <div class="col-md-12">
+            <div id="media-div"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- //media.twiliocdn.com/sdk/js/video/v1/twilio-video.min.js -->
+<script src="//media.twiliocdn.com/sdk/js/video/releases/2.1.0/twilio-video.min.js"></script>
+    <script>
+    
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+        if (!navigator.getUserMedia) {
+          $('#remote-media h3').text('Sorry, WebRTC is not available in your browser.');
+        }
+
+        Twilio.Video.createLocalTracks({
+           audio: true,
+           video: { width: 300 }
+        }).then(function(localTracks) {
+           return Twilio.Video.connect("<?php echo $wo['access_token']; ?>", {
+               name: "<?php echo $wo['room_name']; ?>",
+               tracks: localTracks,
+               video: { width: 300 }
+           });
+        }).then(function(room) {
+           console.log('Successfully joined a Room: ', room.name);
+    
+           room.participants.forEach(participantConnected);
+
+        //    console.log('-----1-----');
+        //    console.log(room.localParticipant);
+        //    console.log('-----2-----');
+    
+           var previewContainer = document.getElementById(room.localParticipant.sid);
+           if (!previewContainer || !previewContainer.querySelector('video')) {
+               participantConnected(room.localParticipant, true);
+           }
+    
+           room.on('participantConnected', participantConnected);
+        //    room.on('participantConnected', function(participant) {
+        //        //console.log("Joining: '"   participant.identity   "'");
+        //        participantConnected(participant);
+        //    });
+    
+            room.on('participantDisconnected', participantDisconnected);
+            // room.on('participantDisconnected', function(participant) {
+            //     //console.log("Disconnected: '"   participant.identity   "'");
+            //     participantDisconnected(participant);
+            // });
+           
+           $(document).on('click', 'a[data-ajax]', function(e) {
+              room.disconnect();
+          });
+          $(document).on('click', '.end_vdo_call', function(e) {
+              room.disconnect();
+          });
+        });
+        
+        
+        
+        function participantConnected(participant, flg=false) {
+            //console.log('Participant "%s" connected', participant.identity);
+    
+            const div = document.createElement('div');
+            div.id = participant.sid;
+            div.setAttribute("style", "float: left; margin: 10px;");
+            div.innerHTML = "<div style='clear:both'>" +participant.identity+ "</div>";
+        
+            participant.tracks.forEach(publication => {
+                //console.log(publication);
+                if (publication.isSubscribed) {
+                    trackSubscribed(div, publication.track);
+                }
+            });
+
+            participant.on('trackSubscribed', track => trackSubscribed(div, track));
+            participant.on('trackUnsubscribed', trackUnsubscribed);
+            
+            document.getElementById('media-div').appendChild(div);
+
+            if(flg == true){
+                participant.tracks.forEach(publication => {
+                    //console.log(publication);
+                    trackSubscribed(div, publication.track);
+                });
+            }
+            
+            
+            // if (navigator.getUserMedia) {
+            //     navigator.mediaDevices.getUserMedia({audio: false, video: true}).then((stream) => {video.srcObject = stream});
+            //     $('#basic-stream').removeClass('hidden');
+            //     $('.end_vdo_call').removeClass('hidden');
+            // }
+        }
+    
+        function participantDisconnected(participant) {
+            //console.log('Participant "%s" disconnected', participant.identity);
+    
+            //participant.tracks.forEach(trackRemoved);
+            document.getElementById(participant.sid).remove();
+        }
+    
+        // function trackAdded(div, track) {
+        //     div.appendChild(track.attach());
+        //     var video = div.getElementsByTagName("video")[0];
+        //     if(video){
+        //         video.setAttribute("style", "max-width:300px;");
+        //     }
+        // }
+    
+        // function trackRemoved(track) {
+        //     track.detach().forEach( function(element) { element.remove() });
+        // }
+
+        function trackSubscribed(div, track) {
+            //console.log(div);
+            div.appendChild(track.attach());
+
+            console.log(div);
+
+            var video = div.getElementsByTagName("video")[0];
+            if(video){
+                video.setAttribute("style", "max-width:300px;");
+            }
+        }
+
+        function trackUnsubscribed(track) {
+            track.detach().forEach(element => element.remove());
+        }
+
+    </script>

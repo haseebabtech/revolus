@@ -1,0 +1,109 @@
+<?php
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
+require_once "config.phtml";
+include('Order.phtml');
+$payObj = new Order();
+$reponseType = "";
+$message = "";
+
+$postData = $_REQUEST;
+
+if(!empty($postData['card_number']) && !empty($postData['card_exp_month']) && !empty($postData['card_exp_year']) && !empty($postData['card_cvc'])){ 
+
+    require_once 'AuthorizeNetPayment.phtml';
+    $authorizeNetObj = new AuthorizeNetPayment();
+    
+    //print_r($postData);die;
+    
+    $response = $authorizeNetObj->chargeCreditCard($postData);
+    
+    //print_r($response);die;
+
+    // set customer data
+    $authorizeNetObj->customerData($postData);
+
+if ($response != null) {
+        // Check to see if the API request was successfully received and acted upon
+        if ($response->getMessages()->getResultCode() == "Ok") {
+            // Since the API request was successful, look for a transaction response
+            // and parse it to display the results of authorizing the card
+            $tresponse = $response->getTransactionResponse();
+        
+            if ($tresponse != null && $tresponse->getMessages() != null) {
+                $authCode = $tresponse->getAuthCode();
+                $authCode = $tresponse->getAuthCode();
+                $paymentResponse = $tresponse->getMessages()[0]->getDescription();
+                $reponseType = "success";
+                $message = "<div class='alert alert-success'>Your Payment has been Successful!</div>
+                <br/> AUTH CODE : " . $tresponse->getAuthCode() .  " 
+                <br/>TRANS ID  : " . $tresponse->getTransId() . "\n"; 
+            } else {
+                $authCode = "";
+                $paymentResponse = $tresponse->getErrors()[0]->getErrorText();
+                $reponseType = "failed";
+                $message = "<div class='alert alert-danger'>Credit Card ERROR :  Invalid response</div>";
+            }
+            $transactionId = $tresponse->getTransId();
+            $responseCode = $tresponse->getResponseCode();
+            $paymentStatus = $response->getMessages()->getResultCode(); 
+    
+            // Insert tansaction data into the database 
+            $time = time();
+            $payObj->setFirstName($postData["first_name"]);
+            $payObj->setLastName($postData["last_name"]);
+            $payObj->setEmail($postData["email"]);
+            $payObj->setTransactionID($transactionId);
+            $payObj->setAuthCode($authCode);
+            $payObj->setResponseCode($responseCode);
+            $payObj->setPaymentResponse($paymentResponse);
+            $payObj->setTotalAmt($postData["amount"]);
+            $payObj->setModifiedDate($time);
+            $payObj->setCreatedDate($time);
+            $payObj->setStatus($paymentStatus);
+            $studentInfo = $payObj->Orders();
+            // Or, print errors if the API request wasn't successful
+        } else {
+            //echo "Transaction Failed \n";
+            $tresponse = $response->getTransactionResponse();
+        
+            if ($tresponse != null && $tresponse->getErrors() != null) {
+                $message = "<div class='alert alert-danger'>Transaction Failed</div> 
+                <br/>Error Message  : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
+            } else {
+                $message = "<div class='alert alert-danger'>Transaction Failed</div>
+                <br/>Error Message  : " . $response->getMessages()->getMessage()[0]->getText() . "\n";
+            }
+                 
+        }
+        
+    } else {
+        $reponseType = "error";
+        $message = "<div class='alert alert-danger'>Transaction Failed! No response returned</div>";
+    }
+}
+?>
+<?php //include('header/content.phtml');?>
+<script>
+    
+</script>
+<section class="showcase">
+   <div class="container">
+    <div class="text-center">
+      <h1 class="display-3">Thank You!<?php //echo $_SESSION["card_number"];?></h1>
+      <?php if(!empty($message)) { ?>
+        <h5><?php print $message;?></h5>
+      <?php } ?>
+      <hr>
+      <p>
+        Having trouble? <a href="mailto:info@revolus.com">Contact us</a>
+      </p>
+      <p class="lead">
+        <a class="btn btn-primary btn-sm" href="https://revolus.com/wallet" role="button">Continue to wallet</a>
+      </p>
+    </div>
+    </div>
+</section>
+<br><br><br><br><br><br>
+<?php //include('../footer/content.phtml');?>

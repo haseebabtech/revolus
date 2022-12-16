@@ -1,0 +1,114 @@
+<?php
+/**
+ * @package Order class
+ *
+ * @author TechArise Team
+ *
+ * @email  info@techarise.com
+ *   
+ */
+include("DBConnection.phtml");
+class Order 
+{
+    protected $db;
+    private $_firstName;
+    private $_lastName;
+    private $_email;
+    private $_transactionID;
+    private $_authCode;
+    private $_responseCode;
+    private $_paymentResponse;
+    private $_totalAmt;
+    private $_modifiedDate;
+    private $_createdDate;
+    private $_status;
+
+    public function setFirstName($firstName) {
+        $this->_firstName = $firstName;
+    }
+    public function setLastName($lastName) {
+        $this->_lastName = $lastName;
+    }
+    public function setEmail($email) {
+        $this->_email = $email;
+    }
+    public function setTransactionID($transactionID) {
+        $this->_transactionID = $transactionID;
+    }
+    public function setAuthCode($authCode) {
+        $this->_authCode = $authCode;
+    }
+    public function setResponseCode($responseCode) {
+        $this->_responseCode = $responseCode;
+    }
+    public function setPaymentResponse($paymentResponse) {
+        $this->_paymentResponse = $paymentResponse;
+    }
+    public function setTotalAmt($totalAmt) {
+        $this->_totalAmt = $totalAmt;
+    }
+    public function setModifiedDate($modifiedDate) {
+        $this->_modifiedDate = $modifiedDate;
+    }
+    public function setCreatedDate($createdDate) {
+        $this->_createdDate = $createdDate;
+    }
+    public function setStatus($status) {
+        $this->_status = $status;
+    }
+
+    // __construct
+    public function __construct() {
+        $this->db = new DBConnection();
+        $this->db = $this->db->returnConnection();
+    }
+
+    // insert payment info
+    public function Orders() {
+		try {
+		    global $wo, $sqlConnect, $cache;
+		  //  print_r($wo['user']['user_id']);
+		  //  die;
+		    
+		    if(!empty($this->_transactionID) && !empty($this->_authCode)){
+		        $user_id = $wo['user']['user_id'];
+		    
+    		    $user_data = Wo_UserData($user_id);
+    		    //print_r($user_data);
+    		    
+    		    $wallet_amount = max(($user_data['wallet'] + $this->_totalAmt),0);
+                $balance_amount = max(($user_data['balance'] + $this->_totalAmt),0);
+                
+                $query_one = "UPDATE " . T_USERS . " SET `wallet` = '{$wallet_amount}', `balance` = '{$balance_amount}' WHERE `user_id` = {$user_id} ";
+                $query     = mysqli_query($sqlConnect, $query_one);
+                
+                $cache->delete(md5($user_id) . '_U_Data.tmp');
+		    }
+		    
+    		$sql = 'INSERT INTO anet_payment (first_name, last_name, email, transaction_id, auth_code, response_code, payment_response, total_amt, modified_date, created_date, status)  VALUES (:first_name, :last_name, :email, :transaction_id, :auth_code, :response_code, :payment_response, :total_amt, :modified_date, :created_date, :status)';
+    		$data = [
+                'first_name' => $this->_firstName,
+                'last_name' => $this->_lastName,
+                'email' => $this->_email,    
+			    'transaction_id' => $this->_transactionID,
+			    'auth_code' => $this->_authCode,
+			    'response_code' => $this->_responseCode,
+			    'payment_response' => $this->_paymentResponse,
+			    'total_amt' => $this->_totalAmt,
+			    'modified_date' => $this->_modifiedDate,
+                'created_date' => $this->_createdDate,
+			    'status' => $this->_status,
+			];
+
+	    	$stmt = $this->db->prepare($sql);
+	    	$stmt->execute($data);
+			$status = $stmt->rowCount();
+            return $status;
+
+		} catch (Exception $e) {
+    		die("Oh noes! There's an error in the query!". $e);
+		}
+
+    }
+}
+?>

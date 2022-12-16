@@ -1,0 +1,23 @@
+#change_wrap_div{ background-color: transparent !important; }#change_wrap_div{ background-repeat: repeat !important; }body{ background-color: transparent !important; }body{ background-repeat: repeat !important; }#footer{ background-color: transparent} #sub-footer { background-color: #323232 !important; } #sub-footer { background-repeat: repeat !important; } div.pp_default .pp_next:before, a.pp_previous:before { display: none !important; } div.pp_overlay { opacity: 0.7 !important; } @media only screen and (min-width: 1101px){
+#header-container.header-style-3 #header .header-wrap > .row:last-child .header-main-panel .header-col-fluid #top_right_mega_menu, 
+#header-container.header-style-4 #header .header-wrap > .row:last-child .header-main-panel .header-col-fluid #top_right_mega_menu {
+    padding-right: 0;
+}}
+.header-top-panel {
+    border-bottom: 0;
+}
+
+.dfd-single-style-advanced .post .entry-content img {
+    border: 0 solid #f7afd5;
+}
+.single-post .entry-meta{display:none;}
+@media only screen and (min-width: 800px){
+.nav-menu div.sub-nav.open {
+    top: 35px;
+}
+@media only screen and (max-width: 1200px) {
+.hide-on-1200{
+display: none;}}
+@media only screen and (min-width: 1201px) {
+.hide-to-1201{
+display: none;}}

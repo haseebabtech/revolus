@@ -1,0 +1,1699 @@
+<link rel="stylesheet" href="https://revolus.com/assets/css/style.css">
+<link rel="stylesheet" href="https://revolus.com/assets/css/font-awesome-4.7.0/css/font-awesome.min.css">
+<?php
+
+   $postImages = postAlbumImages($_GET['post_id']);
+   
+   
+  
+$query = $wo['story']['id'];
+$image = Wo_GetMedia($wo['story']['postFile']);
+if (strpos($wo['story']['postFile'],',') !== false) {
+    $explode = @explode(',', $wo['story']['postFile']);
+    $image = Wo_GetMedia($explode[0]);
+}
+if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4) {
+      $anonymous = true;
+      $wo['story']['publisher']['username'] = 'anonymous';
+      $wo['story']['publisher']['name'] = $wo['lang']['anonymous'];
+      $wo['story']['publisher']['avatar'] = Wo_GetMedia('upload/photos/incognito.png');
+      $wo['story']['publisher']['verified'] = 0;
+      $wo['story']['publisher']['type'] = '';
+	  $wo['story']['publisher']['url'] = 'javascript:void(0)';
+   }
+  
+
+
+?>
+
+<style>
+    #fb5 #fb5-book .turn-page {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: #f5f5f5 !important;
+    }
+    #fb5-ajax.fullScreen, #fb5-ajax[data-template="true"]{
+        right: 0px !important;
+        max-width: 80%;
+    }
+    #fb5 .fb5-menu#fb5-center ul li{
+        display: block;
+        width: 100%;
+    }
+    #fb5 .fb5-menu#fb5-center{
+        width: auto;
+        background: black;
+        margin-top: 9px;
+        position: absolute;
+        right: 0px !important;
+        max-width: 45px;
+        left: auto !important;
+        top: 250px;
+    }
+    
+    #fb5 .fb5-menu#fb5-left ul li{
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    #fb5 .fb5-menu#fb5-left{
+        width: auto;
+        background: black;
+        margin-top: 9px;
+        position: absolute;
+        left: 0px !important;
+        max-width: 100px;
+        top: 200px;
+        right: 0px;
+        display: none;
+    }
+    #wo_post_stat_button .stat-item {
+        border-radius: 100% !important;
+        border: 1px solid #cccccc !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        padding: 0px !important;
+        line-height: 45px;
+        background: #FFF !important;
+        top: 10px;
+        transition: all .1s ease-in-out;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        margin-bottom: 10px !important;
+        transition: 0.3s;
+    }
+    .btn-default svg.feather {
+        margin-top: -3px;
+        display: block;
+        /* width: 16px; */
+        margin-left: 12px;
+        margin-top: 12px;
+        /* height: 16px; */
+        /* padding: 0px 12px !important; */
+    }
+    #wo_post_stat_button .stat-item:hover {
+        background: white !important;
+        color: black;
+        transition: 0.3s;
+    }
+    #wo_post_stat_button .dropdown.open .stat-item, #wo_post_stat_button .stat-item:hover {
+        border-radius: 0px;
+        background: white;
+    }
+    .mb-10{
+        margin-bottom: 10px !important;
+    }
+    .wo-reaction{
+        padding: 6px 11px !important;
+        border-radius: 3px !important;
+        background: #ebeef0 !important;
+    }
+    
+    .fb5-overlay.active{
+            z-index: 999999;
+    }
+    .wo_imagecombo_lbox .comment-section{
+        max-width: 20%;
+    }
+    html .icon-rounded{
+        border: 2px solid #f5f5f5 !important;
+        width: 30px !important;
+        height: 30px !important;
+        padding: 1px !important;
+        margin-right: 0px !important;
+        padding-right: 0px !important;
+        font-size: 16px !important;
+        text-align: center !important;
+        line-height: 35px !important;
+        border-radius: 100% !important;
+    }
+    .reactions-box{
+        left: 40px;
+        z-index: 999999;
+        top: -20px;
+        width: 292px;
+    }
+    .stat-item.follow{
+        /*position: absolute;*/
+        top: 200px;
+        background: url(https://revolus.com/upload/photos/d-avatar.jpg?cache=0) no-repeat !important;
+        z-index: 999999;
+        background-size: cover !important;
+        border-radius: 100% !important;
+        border: 2px solid #cccccc !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        padding: 0px !important;
+        line-height: 45px !important;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        transition: 0.3s;
+        left: 20px;
+    }
+    .comment-inner-middle {
+        /*position: absolute;*/
+        top: 240px;
+        z-index: 999999;
+        border-radius: 4px;
+        left: 20px;
+    }
+    
+    .stat-item.follow:hover {
+        /*background: white !important;*/
+        /*color: black;*/
+        /*transition: 0.3s;*/
+    }
+    .stat-item.share{
+        /*position: absolute;*/
+        top: 300px;
+        z-index: 999999;
+        border-radius: 100% !important;
+        border: 2px solid #cccccc !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        padding: 0px !important;
+        line-height: 45px !important;
+        background: #FFF !important;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        transition: 0.3s;
+        left: 20px;
+    }
+    .stat-item.share:hover {
+        background: white !important;
+        color: black;
+        transition: 0.3s;
+    }
+    .stat-item.comment{
+        /*position: absolute;*/
+        top: 350px;
+        z-index: 999999;
+        border-radius: 100% !important;
+        border: 2px solid #cccccc !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        line-height: 45px !important;
+        padding: 0px !important;
+        background: #FFF !important;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        transition: 0.3s;
+        left: 20px;
+    }
+    .stat-item.comment:hover {
+        background: white !important;
+        color: black;
+        transition: 0.3s;
+    }
+    
+    .inline_post_emoji{
+        margin-right: 1px !important;
+    }
+    #fb5 #fb5-book .turn-page{
+        background-color: black !important;
+        position:relative;
+    }
+    #fb5 #fb5-book .turn-page:after{
+        content: "";
+        position: absolute;
+        right: 0px;
+        top: 0px;
+    }
+    #fb5 .turn-page.even .fb5-cont-page-book > .fb5-gradient-page{
+        background: none !important;
+    }
+    
+    #fb5 .fb5-menu ul li a{ transition: 0.3s;font-size:30px;transform:scale(1);margin-bottom: 6px; }
+    #fb5 .fb5-menu ul li a:hover{ transition:0.3s;transform:scale(1.4); }
+    .turn-page-wrapper{
+        box-shadow:0 0 1px 0px #f5f5f5 !important;
+        /*0 0 40px rgb(102 102 102 / 80%)*/
+    }
+    #fb5-slider li img{
+        transition:0.3s;
+        transform:scale(0.8);
+    }
+    #fb5-slider li img:hover{
+        transition:0.3s;
+        transform:scale(1);
+    }
+    #fb5 #fb5-footer .fb5-bcg-tools{
+        display: none;
+    }
+    
+    
+    .sliderUl{
+        height: 110px;
+        width: 100%;
+        margin: 0 auto;
+        display: block;
+        overflow: scroll hidden !important;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+        z-index: 100000000;
+        bottom: 0px;
+        position: absolute;
+        display: none;
+    }
+    .sliderUl ul{
+        white-space:nowrap;
+    }
+    .sliderUl ul li{
+        margin-right: 15px;
+        display: inline;
+        font-size: 12px;
+        list-style-type: none;
+    }
+    .sliderUl ul li img{
+        max-height: 100px;
+        cursor: pointer;
+    }
+    .sliderUl::-webkit-scrollbar {
+      width: 4px !important;
+    height: 4px !important;
+    }
+    .sliderUl::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+    .sliderUl::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+    .sliderUl::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
+    #fb5 #fb5-container-book{
+        /*position: initial;*/
+    }
+    #fb5-book{
+        top: -55px;
+    }
+    #fb5 #fb5-all-pages .fb5-container-pages {
+        background: black;
+        /*box-shadow: 0 0 40px rgb(102 102 102 / 80%);*/
+        box-shadow: none;
+        bottom: 0px;
+        top: auto !important;
+        height: 110px !important;
+        display: block !important;
+        z-index: 99;
+    }
+    #fb5 #fb5-slider li{
+        padding:0px !important;
+    }
+    #fb5 .fb5-overlay{
+        position: unset;
+        top: auto;
+        z-index: 10;
+    }
+    #fb5 .fb5-overlay.active{
+        background: none;
+    }
+    #fb5 .turn-page.odd .fb5-cont-page-book > .fb5-gradient-page{
+        box-shadow: none;
+        background: none;
+    }
+    #perImageModal .stat-item.follow{
+        top: 40px;
+    }
+    #perImageModal .stat-item.share{
+        top: 92px;
+    }
+    #perImageModal .stat-item.comment{
+        top: 382px;
+    left: 20px;
+    }
+    #perImageModal .stat-item{
+        transform: scale(0.9);
+        transition: 0.3s;
+    }
+    #perImageModal .stat-item:hover{
+        transform: scale(1.3);
+        transition: 0.3s;
+    }
+    #perImageModal .like-btn{
+        /*top: -3px;*/
+        font-size: 8px !important;
+    }
+    #perImageModal .modal-dialog{
+        width: 1000px;
+    }
+    #perImageModal .reactions-box{
+        top: -5px;
+        left: 50px;
+    }
+    #perImageModal .stat-item.download{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 255px;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.forward{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 435px !important;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.reply{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 358px;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.logo{
+        /*position: absolute;*/
+        left: 20px;
+        top: 512px;
+        width: 48px;
+        background-color: none !important;
+        background: url(https://revolus.com/themes/wowonder/img/icon.png) no-repeat;
+        background-size: cover;
+        height: 46px;
+        object-fit: cover;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.call{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 242px !important;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .post-text {
+        display: none;
+    }
+    #perImageModal .stat-item.vcall{
+        /*position: absolute;*/
+        left: 20px;
+        top: 410px;
+        background: white;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    .stat-item.follow button {
+        /*position: absolute;*/
+        padding: 8px 5px;
+        line-height: 0px;
+        border-radius: 10px;
+        background: white;
+        text-align: center;
+        border: none;
+        top: -5px;
+        height: 18px;
+        width: 18px;
+        right: -5px;
+        box-shadow: 2px 1px 12px #f2f3f5;
+    }
+    #fb5 #fb5-slider {
+        /*position: absolute;*/
+        left: 0;
+        width: 100% !important;
+        list-style: none;
+        height: inherit; 
+        display: flex;
+        vertical-align: middle;
+        align-items: center;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        overflow: scroll hidden;
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar {
+      width: 4px !important;
+    height: 4px !important;
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
+    #perImageModal button.close {
+        position: absolute;
+        right: 0px;
+        color: black;
+        background: white;
+        opacity: 1;
+        height: 30px;
+        width: 30px;
+        line-height: 0px;
+        z-index: 999999;
+        top: 0px;
+    }
+    .p-0{
+        padding: 0px !important;
+    }
+    #fb5 .turn-page.even .fb5-cont-page-book > .fb5-gradient-page{
+        cursor: pointer;
+    }
+    .svgIcon{
+        max-width: 25px;
+        max-height: 25px;
+        margin-top: 0px;
+        margin-left: -2px;
+    }
+    .fixedNavigation{
+        position: absolute;
+        left: 15px;
+        top: 20px;
+        width: 50px;
+    }
+    @media (max-width: 800px){
+        #perImageModal button.close {
+            top: 0px;
+        }
+        #fb5 .fb5-menu ul li a{
+            font-size: 20px;
+        }
+        #fb5 #fb5-all-pages .fb5-container-pages{
+            bottom: 35%;
+            top: auto !important;
+            height:60px !important;
+        }
+        .stat-item.follow{
+            top: 20px;
+        }
+        /*#wo_post_stat_button {*/
+        /*    margin: 1px -15px 0;*/
+        /*    left: 34px !important;*/
+        /*    width: calc(100% + 30px);*/
+        /*    top: 40px;*/
+        /*}*/
+        /*#perImageModal .stat-item.share{*/
+        /*    top: 210px;*/
+        /*}*/
+        .sliderUl{
+            bottom: 35%;
+        }
+        #fb5-book{
+            top: 65px;
+        }
+        #fb5-ajax.fullScreen, #fb5-ajax[data-template="true"]{
+            max-width: 100%;
+        }
+        .comment-inner-middle {
+            /*position: absolute;*/
+            top: 75px;
+            z-index: 999999;
+            border-radius: 4px;
+            left: 1px !important;
+        }
+        .sliderUl{
+            height: 70px;
+        }
+        .sliderUl ul li img {
+            max-height: 60px;
+        }
+        .wo_imagecombo_lbox .comment-section{
+            height: auto !important;
+            bottom: 0px;
+            position: absolute;
+            top: auto;
+            max-height: 35%;
+            max-width: 100%;
+            overflow: hidden scroll;
+            display:noe;
+        }
+        #fb5-ajax.fullScreen, #fb5-ajax[data-template="true"]{
+            right: 0px !important;
+        }
+        #fb5 #fb5-button-back{
+            botton: auto;
+            top: 50px;
+        }
+        #fb5 .fb5-menu#fb5-center{
+            width: auto;
+            margin-top: 9px;
+            top: 0px;
+            position: absolute;
+            max-width: 100%;
+            left: 18% !important;
+        }
+        #fb5 .fb5-menu#fb5-center ul li{
+            display: inline-block;
+            width: auto;
+        }
+        #perImageModal .modal-body{
+            min-height: 90vh;
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            background: black;
+        }
+        
+    }
+    
+    
+    
+    .navTopRight{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        right: 18px;
+        top: 0px;
+        transform: rotate(-46deg);
+    }
+    .navBottomRight{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        right: 18px;
+        bottom: 5px;
+        transform: rotate(-135deg);
+    }
+    
+    
+    .navTopLeft{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        left: 18px;
+        top: 0px;
+        transform: rotate(220deg);
+    }
+    .navBottomLeft{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        left: 18px;
+        bottom: 5px;
+        transform: rotate(55deg);
+    }
+    
+    
+    
+</style>
+
+<!--<div data-test="i am here"  class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div>-->
+<div class="lightbox-content post wo_imagecombo_lbox lightpost-<?php echo $wo['story']['id'];?>" id="post-<?php echo $wo['story']['id'];?>" data-post-id="<?php echo $wo['story']['id'];?>">
+	     <div id="fb5-ajax" data-cat="your_book_name" data-template="true">
+	            
+	   
+                
+                
+                
+                
+                
+         <!-- BACKGROUND FLIPBOOK -->
+         <div class="fb5-bcg-book"></div>
+         <!--  BEGIN PRELOADER -->
+         <div class="fb5-preloader"></div>
+         <!-- END PRELOADER -->
+         <!-- BEGIN STRUCTURE HTML FLIPBOOK -->      
+         <div class="fb5" id="fb5">
+            <!-- CONFIGURATION BOOK -->
+            <section id="config">
+               <ul>
+                  <li key="page_width">620</li>
+                  <!-- width for page -->
+                  <li key="page_height">720</li>
+                  <!-- height for page -->
+                  <li key="gotopage_width">25</li>
+                  <!-- width for field input goto page -->
+                  <li key="zoom_double_click">1</li>
+                  <!-- value zoom after double click -->
+                  <li key="zoom_step">0.1</li>
+                  <!-- zoom step ( if click icon zoomIn or zoomOut -->
+                  <li key="toolbar_visible">true</li>
+                  <!-- enabled/disabled toolbar -->
+                  <li key="tooltip_visible">true</li>
+                  <!-- enabled/disabled tooltip for icon -->
+                  <li key="deeplinking_enabled">false</li>
+                  <!-- enabled/disabled deeplinking -->  
+                  <li key="lazy_loading_pages">true</li>
+                  <!-- enabled/disabled lazy loading for pages in flipbook -->
+                  <li key="lazy_loading_thumbs">true</li>
+                  <!-- enabled/disabled lazdy loading for thumbs -->
+                  <li key="double_click_enabled">true</li>
+                  <!-- enabled/disabled double click mouse for flipbook -->                 
+                  <li key="rtl">false</li>
+                  <!-- enabled/disabled 'right to left' for eastern countries -->
+                  <li key="pdf_url"></li>
+                  <!-- pathway to a pdf file ( the file will be read live ) -->
+                  <li key="pdf_scale">1</li>
+                  <!-- to live a pdf file (if you want to have a strong zoom - increase the value) -->
+                  <li key="page_mode">double</li>
+                  <!-- value to 'single', 'double', or 'auto' -->
+                  <li key="sound_sheet"></li>
+                  <!-- sound for sheet -->
+               </ul>
+            </section>
+            <!-- BEGIN BACK BUTTON -->
+            <a href="#" id="fb5-button-back">&lt; Back </a>
+            <!-- END BACK BUTTON -->                        
+            <!-- BEGIN CONTAINER BOOK -->
+           <!-- <section class="sliderUl">-->
+          
+           <!--    <ul>-->
+           <!--                <img alt="" data-src="" src="">-->
+           <!--             </li>-->
+           <!--    </ul>-->
+           <!--</section>-->
+            <div id="fb5-container-book">
+               <!-- BEGIN deep linking -->  
+               <section id="fb5-deeplinking">
+                  <ul>
+                      <?php 
+                           $k=0;
+                            foreach ($postImages as $postImage) {
+                          
+                      
+                      $k++;
+                      ?>
+                     <li data-address="page<?php echo $k; ?>" data-page="<?php echo $k; ?>"></li>
+                     <?php } ?>
+                     
+                  </ul>
+               </section>
+               
+               <!-- END deep linking -->  
+               <!-- BEGIN ABOUT -->
+               <section id="fb5-about">
+               </section>
+               <!-- END ABOUT -->
+               <!-- BEGIN LINKS -->
+               <section id="links">
+               </section>
+               <!-- END LINKS -->                         
+               <!-- BEGIN PAGES -->
+               
+               <div id="fb5-book">
+                   <?php 
+                   $k=0;
+                   foreach ($postImages as $postImage) {
+                      
+                      $k++;
+                   ?>
+                  <!-- begin page 1 -->          
+                  <div onclick="imgModal($(this))" data-image-url="<?php echo $postImage['imageUrl'];?>" data-url="<?php echo $postImage['imageUrl'] . "?cache=" . time();?>" data-id="<?php echo $postImage['post_id'] ?>"  data-image-id="<?php echo $postImage['id'] ?>" style="background-image: url(<?php echo $postImage['imageUrl'] . "?cache=" . time();?>);">
+                      
+                        <!--<div id="pointer"></div>-->
+                        <?php if ($k % 2 == 0) { ?>
+                            <i class="fa fa-angle-left navTopLeft"></i>
+                            <i class="fa fa-angle-right navBottomLeft"></i>
+                        <?php }else{ ?>
+                            <i class="fa fa-angle-left navTopRight"></i>
+                            <i class="fa fa-angle-right navBottomRight"></i>
+                        <?php } ?>
+                     
+                      
+                      
+                      
+                      
+                     <!-- container page book --> 
+                     <div class="fb5-cont-page-book">
+                        <!-- gradient for page -->
+                        <div class="fb5-gradient-page"></div>
+                        <!-- PDF.js --> 
+                        <canvas id="canv<?php echo $k; ?>"></canvas>
+                        <!-- description for page --> 
+                        <div class="fb5-page-book">
+                        </div>
+                     </div>
+                     <!-- end container page book --> 
+                  </div>
+                  <?php } ?>
+                  <!-- end page 1 -->
+               </div>
+               <!-- END PAGES -->
+            </div>
+            <!-- END CONTAINER BOOK -->
+            <!-- BEGIN FOOTER -->
+            <div id="fb5-footer">
+               <div class="fb5-bcg-tools"></div>
+               <a id="fb5-logo" target="_blank" href="#">
+               <img alt="" src="img/logo.png">
+               </a>
+               <div class="fb5-menu" id="fb5-left">
+               </div>
+               <div class="fb5-menu" id="fb5-center">
+                  <ul>
+                     <!-- icon_home -->
+                     <li>
+                        <a title="show home page" class="fb5-home"><i class="fa fa-home"></i></a>
+                     </li>
+                     <!-- icon download -->
+                     
+                     <!-- icon arrow left -->
+                     <li>
+                        <a title="prev page" class="fb5-arrow-left" onclick="changeImage($(this))" data-id="0"><i class="fa fa-chevron-left"></i></a>
+                     </li>
+                     <!-- icon arrow right -->
+                     <li>
+                        <a title="next page" class="fb5-arrow-right" onclick="changeImage($(this))" data-id="0"><i class="fa fa-chevron-right"></i></a>
+                     </li>
+                     <!-- icon_zoom_in -->                     
+                     <li>
+                        <a title="zoom in" class="fb5-zoom-in"><i class="fa fa-search-plus"></i></a>
+                     </li>
+                     <!-- icon_zoom_out -->                 
+                     <li>
+                        <a title="zoom out" class="fb5-zoom-out"><i class="fa fa-search-minus"></i></a>
+                     </li>
+                     <!-- icon_zoom_auto -->
+                     <li>
+                        <a title="zoom auto" class="fb5-zoom-auto"><i class="fa fa-search"></i></a>
+                     </li>
+                     
+                      <!-- icon_allpages -->
+                    <li>
+                        <a title="show all pages" class="fb5-show-all"><i class="fa fa-list"></i></a>
+                    </li>
+                     
+                     <!-- icon fullscreen -->                 
+                     <li>
+                        <a title="full/normal screen" class="fb5-fullscreen"><i class="fa fa-expand"></i></a>
+                     </li>
+                  </ul>
+               </div>
+               <div class="fb5-menu" id="fb5-right">
+                  <ul>
+                     <!-- icon page manager -->                 
+                     <li class="fb5-goto">
+                        <label for="fb5-page-number" id="fb5-label-page-number"></label>
+                        <input type="text" id="fb5-page-number" style="width: 25px;"> 
+                        <span id="fb5-page-number-two"></span>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <!-- END FOOTER -->
+            <!-- BEGIN ALL PAGES -->
+            <div id="fb5-all-pages" class="fb5-overlay">
+               <section class="fb5-container-pages">
+                  <div id="fb5-menu-holder">
+                     <ul id="fb5-slider">
+                        <!-- thumb 1 -->
+                         <?php
+                         $k=0;
+                         foreach ($postImages as $postImage) {
+                      
+                      $k++;
+                         ?>
+                         <?php
+                            if($k == 1){?>
+                                <input type="hidden" id="firstImage" value="<?php echo $postImage['id']; ?>">
+                            <?php }?>
+                        <li class="<?php echo $k; ?>" onclick="changeImage($(this))" data-id="<?php echo $postImage['id']; ?>" data-post-id="<?php echo $wo['story']['id']; ?>" data-publisher-id="<?php echo $wo['story']['publisher']['id']; ?>">
+                           <img alt="" data-src="<?php echo $postImage['imageUrl']. "?cache=" . time();?>" >
+                           
+                        </li>
+                        <?php } ?>
+                        
+                       
+                     </ul>
+                  </div>
+               </section>
+            </div>
+            <!-- END ALL PAGES -->           
+            <!-- BEGIN SOUND FOR SHEET  -->
+            <audio preload="auto" id="sound_sheet"></audio>
+            <!-- END SOUND FOR SHEET -->
+            <!-- BEGIN CLOSE LIGHTBOX  -->
+            <div id="fb5-close-lightbox">
+               <i class="fa fa-times pull-right"></i>
+            </div>
+            <!-- END CLOSE LIGHTBOX -->
+         </div>
+         <!-- END STRUCTURE HTML FLIPBOOK -->
+      </div>
+      
+	<div class="comment-section">
+		<div class="wow_lightbox_right">
+			<div class="comment-section-inner">
+				<div class="comment-inner-header">
+					<div class="<?php echo Wo_RightToLeft('pull-right');?> close-lightbox" onclick="Wo_CloseLightbox();">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x" style="margin-top: 0px;width: 24px;height: 24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+					</div>
+					<div class="user-avatar <?php echo Wo_RightToLeft('pull-left');?>">
+						<img src="<?php echo $wo['story']['publisher']['avatar'];?>" alt="">
+					</div>
+					<div class="user-name h5">
+						<?php if (!isset($anonymous)) { ?>
+						<span class="user-popover" data-type="<?php echo $wo['story']['publisher']['type']; ?>" data-id="<?php echo $wo['story']['publisher']['id']; ?>">
+							<a href="<?php echo $wo['story']['publisher']['url'];?>"><?php echo $wo['story']['publisher']['name'];?></a>
+						</span>
+						<?php }else{ ?>
+						<?php echo $wo['story']['publisher']['name'];?>
+						<?php } ?>
+					</div>
+					<h6>
+						<div class="time" style="color:#9197a3">
+							<span class="ajax-time" title="<?php echo date('c',$wo['story']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?></span>
+						</div>
+					</h6>
+				</div>
+				<div class="clear"></div>
+				
+			</div>
+			<div class="comment-inner-footer lightbox-post-footer <?php echo ($wo['story']['comments_status'] == 0) ? 'hidden' : '';?>">
+				<div id="hidden_inputbox_comment_lighbox"></div>
+				<?php if($wo['story']['post_comments'] > 3 && $wo['story']['limited_comments'] === true && $wo['story']['comments_status'] == 1) { ?>
+				<div class="view-more-wrapper load-more-comments" onclick="Wo_loadAllCommentslightbox(<?php echo $wo['story']['id']; ?>);">
+					<span><?php echo $wo['lang']['view_more_comments'];?></span>
+					<div class="ball-pulse <?php echo Wo_RightToLeft('pull-right');?>" style="line-height: 20px;"><div></div><div></div><div></div></div>
+				</div>
+				<?php } ?>
+				<div class="comments-list comments-list-lightbox">
+					<div class="comment comment-container"></div>
+					<div class="comment comment-container"></div>
+				    <div id="ajaxComments">
+				        <?php 
+						foreach($wo['story']['get_post_comments'] as $wo['comment']) {
+							echo Wo_LoadPage('comment/lightbox-content');
+						}
+					?>
+				    </div>
+					
+					<?php  if (empty($wo['story']['get_post_comments'])) { ?>
+					<div class="lightbox-no-comments">
+						<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 58 58" style="enable-background:new 0 0 58 58;" xml:space="preserve"> <g> <path style="fill:#2CB742;" d="M33.224,10.494H13.776C6.168,10.494,0,16.661,0,24.27v11.345c0,7.608,6.392,13.879,14,13.879h0 v7.446c0,0.503,0.384,0.755,0.74,0.4l1.521-1.521c4.116-4.116,9.699-6.325,15.52-6.325h1.443C40.832,49.494,47,43.223,47,35.615 V24.27C47,16.661,40.832,10.494,33.224,10.494z"/> <g> <path style="fill:#9BC0EA;" d="M44.224,0.494H24.776c-6.371,0-11.717,4.332-13.292,10.206c0.747-0.125,1.509-0.206,2.292-0.206 h19.448C40.832,10.494,47,16.661,47,24.27v11.345c0,1.259-0.183,2.476-0.5,3.639C52.957,38.061,58,32.37,58,25.615V14.27 C58,6.661,51.832,0.494,44.224,0.494z"/> </g> <circle style="fill:#FFFFFF;" cx="12" cy="30.494" r="3"/> <circle style="fill:#FFFFFF;" cx="24" cy="30.494" r="3"/> <circle style="fill:#FFFFFF;" cx="36" cy="30.494" r="3"/> </g></svg>
+						<h5><?php echo $wo['lang']['no_comments_found'];?></h5>
+					</div>
+					<?php } ?>
+				</div>
+			</div>
+			<div class="lightbox-post-footer post-comments <?php echo ($wo['story']['comments_status'] == 0) ? 'hidden' : '';?>" id="post-comments-<?php echo $wo['story']['id'];?>"  <?php if ($wo['loggedin'] != true) { ?>onclick="location.href= '<?php echo $wo['config']['site_url'];?>'"<?php } ?>>
+				<div class="post-commet-textarea dropup">
+					<!-- There was $wo['story']['id'] Now $wo['story']['post_id']-->
+					<textarea class="form-control lighbox comment-textarea textarea" id="comment-textarea" placeholder="<?php echo $wo['lang']['write_comment'];?>" type="text" onkeyup="Wo_RegisterComment(this.value,<?php echo $wo['story']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, event, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>)"  onkeydown="textAreaAdjust(this, 30,'lightbox')" dir="auto" disabled></textarea>
+					<span class="input-group-btn emo-comment dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" >
+						<span class="btn btn-file">
+							<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" class="feather feather-user-plus"><path d="M0 0h24v24H0z" fill="none"/><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>
+						</span>
+					</span>
+					<div class="emo-post-container dropdown-menu" role="menu">
+						<?php  
+							foreach ($wo['emo'] as $code => $name) {
+								$code   = $code;
+								echo  '<span onclick="Wo_AddEmoToCommentInput(' . $wo["story"]["id"] . ', \'' . $code . '\', \'lightbox-post-footer\');"><i class="pointer twa-lg twa twa-' . $name . '"></i></span>'; 
+							} 
+						?>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+<div id="perImageModal" class="modal fade perImageModal" role="dialog" data-backdrop="static" data-keyboard="false" >
+  <div class="modal-dialog">
+
+    <!-- PerImage Modal content-->
+    <div class="modal-content">
+      <div class="modal-body text-center p-0">
+            
+            <!-- Close Button Starts -->
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <!-- Close Button Ends -->
+            
+            <!-- Image Starts -->
+            <img id="imgModalImg" src="" alt="" class="w-100"/>
+            <!-- Image Ends -->
+            <input type="hidden" id="postID">
+            <input type="hidden" id="imagePath">
+            <input type="hidden" id="imageID">
+           
+            
+            <div class="fixedNavigation">
+                
+            
+            
+            <div class="comment-inner-middle" <?php if ($wo['loggedin'] != true) { ?>onclick="location.href= '<?php echo $wo['config']['site_url'];?>'"<?php } ?>>
+
+				<div class="stats buttons" style="display: flex;">
+					<?php if ($wo['config']['second_post_button'] == 'reaction') { ?>
+						<div class="like-stat  stat-item post-like-status" style="width: inherit;">
+							<span class="like-emo post-reactions-icons-<?php echo $wo['story']['id']; ?>" onclick="Wo_OpenPostReactedUsers(<?php echo $wo['story']['id']; ?>);">
+								<!--<?php echo Wo_GetPostReactions($wo['story']['id']);?>-->
+							</span>
+							 <!--<span class="like-details">Arkaprava Majumder and 1k others</span> -->
+						</div>
+					<?php }?>
+				</div>
+				<?php if ($wo['config']['second_post_button'] == 'reaction') { ?>
+				<?php } ?>
+				<div class="stats" id="wo_post_stat_button">
+					<div class="wo-reaction wo-reaction-lightbox stat-item unselectable" >
+                           <span class="like-btn like-btn-lightbox unselectable" onclick="reactionEmoji2($(this))" id="deactive">
+                              <span class="status-reaction-364 active-like" style="color: rgb(243, 183, 21);">
+                                 <div class="inline_post_emoji no_anim">
+                                    <div class="emoji emoji--wow">
+                                       <div class="emoji__face">
+                                          <div class="emoji__eyebrows"></div>
+                                          <div class="emoji__eyes"></div>
+                                          <div class="emoji__mouth"></div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <!--WoW-->
+                              </span>
+                           </span>
+                           <ul class="reactions-box  reactionBox" id="reactionCartoons" data-id="364" style="right: auto; display: none;">
+                              <li class="reaction reaction-1" data-reaction="Like" data-reaction-id="1" data-reaction-lang="Like" data-post-id="<?php echo $wo['story']['id']; ?>" onclick="Wo_RegisterReactionV3(this,'',1);">
+                                 <div class="emoji emoji--like">
+                                    <div class="emoji__hand">
+                                       <div class="emoji__thumb"></div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-2" data-reaction="Love" data-reaction-id="2" data-reaction-lang="Love" data-post-id="<?php echo $wo['story']['id']; ?>" onclick="Wo_RegisterReactionV3(this,'',1);">
+                                 <div class="emoji emoji--love">
+                                    <div class="emoji__heart"></div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-3" data-reaction="HaHa" data-reaction-id="3" data-reaction-lang="HaHa" data-post-id="<?php echo $wo['story']['id']; ?>" onclick="Wo_RegisterReactionV3(this,'',1);">
+                                 <div class="emoji emoji--haha">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth">
+                                          <div class="emoji__tongue"></div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-4" data-reaction="WoW" data-reaction-id="4" data-reaction-lang="WoW" data-post-id="<?php echo $wo['story']['id']; ?>" onclick="Wo_RegisterReactionV3(this,'',1);">
+                                 <div class="emoji emoji--wow">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyebrows"></div>
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth"></div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-5" data-reaction="Sad" data-reaction-id="5" data-reaction-lang="Sad" data-post-id="<?php echo $wo['story']['id']; ?>" onclick="Wo_RegisterReactionV3(this,'',1);">
+                                 <div class="emoji emoji--sad">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyebrows"></div>
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth"></div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-6" data-reaction="Angry" data-reaction-id="6" data-reaction-lang="Angry" data-post-id="<?php echo $wo['story']['id']; ?>" onclick="Wo_RegisterReactionV3(this,'',1);">
+                                 <div class="emoji emoji--angry">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyebrows"></div>
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth"></div>
+                                    </div>
+                                 </div>
+                              </li>
+                            
+                        </ul>
+                    </div>
+				</div>
+			</div>
+			<?php if (!isset($anonymous)) { ?>
+			<?php if($wo['user']['user_id'] != $wo['story']['publisher']['id']) { ?>
+			<div class="btn btn-default stat-item follow mb-10" style="background: url(<?php echo $wo['story']['publisher']['avatar'];?>) no-repeat !important;background-size:cover !important;" title="Follow" onclick="follow()">
+			    <input type="hidden" id="currentFollowStatus" value="<?php echo Wo_GetFollowButton2($wo['story']['publisher']['id']); ?>"
+			    <button class="user-follow-button"><span id="followUnFollow"><?php if(Wo_GetFollowButton2($wo['story']['publisher']['id']) == 'Follow') { echo 'Follow'; } elseif(Wo_GetFollowButton2($wo['story']['publisher']['id']) == 'UnFollow'){ echo 'UnFollow'; } ?> </span></button>
+			    
+                <span class="like-btn-mobile"></span>
+            </div>
+            <?php } ?>
+             <?php } ?>
+			<div class="btn btn-default stat-item share mb-10" title="Share" onclick="Wo_SharePostOn(<?php echo $wo['story']['id']; ?>,0,'timeline')">
+                <!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">-->
+                <!--    <circle cx="18" cy="5" r="3"></circle>-->
+                <!--    <circle cx="6" cy="12" r="3"></circle>-->
+                <!--    <circle cx="18" cy="19" r="3"></circle>-->
+                <!--    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>-->
+                <!--    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>-->
+                <!--</svg>-->
+                <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                <svg class="svgIcon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                <g>
+                	<polygon style="fill:#0095FF;" points="177.47,244.428 162.118,218.646 333.856,115.459 349.208,141.24 	"/>
+                	<polygon style="fill:#0095FF;" points="332.274,401.58 166.791,317.011 180.326,290.233 345.81,374.803 	"/>
+                </g>
+                <g>
+                	<path style="fill:#00ABE9;" d="M406,0c-49.501,0-90,40.499-90,90c0,49.499,40.499,90,90,90s90-40.501,90-90
+                		C496,40.499,455.501,0,406,0z"/>
+                	<path style="fill:#00ABE9;" d="M406,332c-49.501,0-90,40.499-90,90c0,49.499,40.499,90,90,90s90-40.501,90-90
+                		C496,372.499,455.501,332,406,332z"/>
+                	<path style="fill:#00ABE9;" d="M106,181c-49.501,0-90,40.499-90,90c0,49.499,40.499,90,90,90s90-40.501,90-90
+                		C196,221.499,155.501,181,106,181z"/>
+                </g>
+                <g>
+                	<path style="fill:#0095FF;" d="M496,422c0,49.499-40.499,90-90,90V332C455.501,332,496,372.499,496,422z"/>
+                	<path style="fill:#0095FF;" d="M406,180V0c49.501,0,90,40.499,90,90C496,139.499,455.501,180,406,180z"/>
+                	<path style="fill:#0095FF;" d="M196,271c0,49.499-40.499,90-90,90V181C155.501,181,196,221.499,196,271z"/>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                <g>
+                </g>
+                </svg>
+
+                <span class="like-btn-mobile"></span>
+            </div>
+            <div class="btn btn-default stat-item comment mb-10" title="Comment" onclick="comment()" >
+                <!--<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" class="feather feather-user-plus"><path d="M0 0h24v24H0z" fill="none"/><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>-->
+                
+                <svg class="svgIcon" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m444.394 3.996h-285.072c-37.183 0-67.606 30.423-67.606 67.606v23.004h257.871c37.183 0 67.606 30.423 67.606 67.606v168.547h27.201c37.183 0 67.606-30.423 67.606-67.606v-191.551c0-37.184-30.423-67.606-67.606-67.606z" fill="#6c7ed6"/><path d="m396.461 91.515h-285.072c-6.836 0-13.441 1.036-19.673 2.946v.145h257.871c37.183 0 67.606 30.423 67.606 67.606v168.547h27.2c6.836 0 13.441-1.036 19.673-2.946v-168.692c.001-37.183-30.422-67.606-67.605-67.606z" fill="#4f67d2"/><path d="m352.678 91.515h-285.072c-37.183 0-67.606 30.423-67.606 67.606v191.55c0 37.183 30.423 67.606 67.606 67.606h171.096c7.335 0 12.811 6.826 11.133 13.966-4.537 19.317-11.48 39.745-21.744 60.686-4.609 9.405 5.876 18.966 14.782 13.454 25.751-15.937 62.389-42.61 93.244-80.317 4.056-4.957 10.156-7.79 16.561-7.79 37.183 0 67.606-30.423 67.606-67.606v-191.55c0-37.182-30.423-67.605-67.606-67.605z" fill="#60b8fe"/><path d="m293.618 432.243c1.677-7.141-3.798-13.966-11.133-13.966h-43.783c7.335 0 12.81 6.825 11.133 13.966-4.537 19.317-11.48 39.745-21.744 60.686-4.609 9.405 5.876 18.966 14.782 13.454 9.88-6.115 21.365-13.816 33.509-23.108 7.832-17.563 13.399-34.696 17.236-51.032z" fill="#23a8fe"/><path d="m43.783 350.671v-191.55c0-37.183 30.423-67.606 67.606-67.606h-43.783c-37.183 0-67.606 30.423-67.606 67.606v191.55c0 37.183 30.423 67.606 67.606 67.606h43.783c-37.184 0-67.606-30.422-67.606-67.606z" fill="#23a8fe"/><g fill="#dfebfa"><circle cx="93.714" cy="260.397" r="22.434"/><circle cx="166.174" cy="260.397" r="22.434"/><circle cx="238.633" cy="260.397" r="22.434"/><circle cx="311.093" cy="260.397" r="22.434"/></g><path d="m93.714 260.397c0-8.302 4.514-15.546 11.217-19.425-3.301-1.91-7.129-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.917-1.099 11.217-3.009-6.704-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/><path d="m166.174 260.397c0-8.302 4.514-15.546 11.217-19.425-3.301-1.91-7.129-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.916-1.099 11.217-3.009-6.704-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/><path d="m238.633 260.397c0-8.302 4.514-15.546 11.217-19.425-3.301-1.91-7.13-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.917-1.099 11.217-3.009-6.703-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/><path d="m311.093 260.397c0-8.302 4.513-15.546 11.217-19.425-3.301-1.91-7.13-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.917-1.099 11.217-3.009-6.704-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/></svg>
+                <span class="like-btn-mobile"></span>
+            </div>
+            <div class="btn btn-default stat-item download download2 mb-10" title="Download" >
+                <svg class="svgIcon" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><g><path d="m512 212.575c0 46.635-37.81 84.44-84.45 84.44h-343.1c-46.64 0-84.45-37.805-84.45-84.44 0-36.896 23.67-68.242 56.66-79.731-2.71-41.495 30.2-75.981 71.1-75.981 11.02 0 21.45 2.51 30.76 6.969 16.4-37.575 53.87-63.832 97.48-63.832s81.08 26.257 97.48 63.832c9.31-4.46 19.74-6.969 30.76-6.969 40.99 0 73.81 34.576 71.11 75.981 32.98 11.489 56.65 42.835 56.65 79.731z" fill="#a8ebfa"/><path d="m512 212.575c0 46.635-37.81 84.44-84.45 84.44h-171.55v-297.015c43.61 0 81.08 26.257 97.48 63.832 9.31-4.46 19.74-6.969 30.76-6.969 40.99 0 73.81 34.576 71.11 75.981 32.98 11.489 56.65 42.835 56.65 79.731z" fill="#7dd5f4"/><path d="m476.89 441.878v55.123c0 8.279-6.72 14.998-15 14.998h-411.78c-8.28 0-15-6.719-15-14.998v-55.123c0-8.279 6.72-14.998 15-14.998 8.29 0 15 6.719 15 14.998v40.125h381.78v-40.125c0-8.279 6.71-14.998 15-14.998 8.28 0 15 6.719 15 14.998z" fill="#5e54ac"/><g><path d="m375.06 350.449-106.71 125.075c-2.8 4.069-7.42 6.499-12.35 6.499h-.01c-4.94 0-9.56-2.43-12.36-6.499l-106.69-125.055c-6.84-9.934.299-23.507 12.36-23.507h48.89l.01-196.377c0-8.279 6.71-14.988 14.99-14.988h42.81l42.81-.01c8.335 0 15 6.762 15 14.998l-.01 196.377 48.9-.01c12.056 0 19.2 13.563 12.36 23.497z" fill="#4793ff"/></g><path d="m375.06 350.449-106.71 125.075c-2.8 4.069-7.42 6.499-12.35 6.499v-366.426l42.81-.01c8.335 0 15 6.762 15 14.998l-.01 196.377 48.9-.01c12.056 0 19.2 13.563 12.36 23.497z" fill="#525cdd"/><path d="m476.89 441.878v55.123c0 8.279-6.72 14.998-15 14.998h-205.89v-29.996h190.89v-40.125c0-8.279 6.71-14.998 15-14.998 8.28 0 15 6.719 15 14.998z" fill="#453d81"/></g></svg>
+                <span class="like-btn-mobile"></span>
+            </div>
+        	
+            <div class="btn btn-default stat-item forward mb-10" title="Forward" onclick="forward()">
+                <!--<svg class="svgIcon" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="256" x2="256" y1="481.01" y2="30.99"><stop offset="0" stop-color="#5558ff"/><stop offset="1" stop-color="#00c0ff"/></linearGradient><g><g><g><path d="m505.73 183.801-212-150c-4.6-3.296-10.606-3.721-15.586-1.128-5.01 2.563-8.145 7.705-8.145 13.33v75.396c-150.204 7.822-269.999 132.495-269.999 284.604v60c0 7.485 5.508 13.813 12.92 14.854 7.233 1.055 14.424-3.428 16.494-10.723l2.314-8.101c30.762-107.636 127.471-184.218 238.272-190.605v74.575c0 5.625 3.135 10.767 8.145 13.33 4.98 2.593 10.986 2.139 15.586-1.128l212-150c3.926-2.813 6.27-7.354 6.27-12.202s-2.345-9.39-6.271-12.202z" fill="url(#SVGID_1_)"/></g></g></g></svg>-->
+                <img class="svgIcon" src="https://revolus.com/assets/img/forward-message.png">
+                <span class="like-btn-mobile"></span>
+            </div>
+            <?php if (!isset($anonymous)) { ?>
+        	<?php if($wo['user']['user_id'] != $wo['story']['publisher']['id']) { ?>
+            <div class="btn btn-default stat-item reply mb-10" title="Reply" onclick="reply()">
+                <svg class="svgIcon" enable-background="new 0 0 24 24" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m21 24h-18c-1.654 0-3-1.346-3-3v-8c0-.553.447-1 1-1s1 .447 1 1v8c0 .551.448 1 1 1h18c.552 0 1-.449 1-1v-14c0-.551-.448-1-1-1h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c1.654 0 3 1.346 3 3v14c0 1.654-1.346 3-3 3z" fill="#607d8b"/><path d="m8.25 4h-.25v-3.25c0-.307-.186-.581-.47-.695-.283-.116-.609-.047-.82.175l-6.5 6.75c-.28.289-.28.75 0 1.039l6.5 6.75c.212.222.539.291.82.176.284-.114.47-.388.47-.695v-3.25h1.188c3.145 0 5.973 1.748 7.382 4.566l.013.024c.129.256.39.41.667.41l.175-.021c.338-.081.575-.382.575-.729v-1.5c0-5.376-4.374-9.75-9.75-9.75z" fill="#2196f3"/><path d="m1 12c-.553 0-1 .447-1 1v8c0 1.654 1.346 3 3 3h9v-2h-9c-.552 0-1-.449-1-1v-8c0-.553-.447-1-1-1z" fill="#546d79"/><path d="m7.273 0h-.049c-.191.006-.377.086-.514.23l-6.5 6.75c-.136.141-.206.322-.21.505v.03c.004.183.074.364.21.505l6.5 6.75c.144.15.341.23.541.23.094 0 .189-.018.28-.055.283-.114.469-.388.469-.695v-3.25h1.188c.979 0 1.928.169 2.812.488v-6.738c-1.155-.483-2.422-.75-3.75-.75h-.25v-3.25c0-.307-.186-.581-.47-.695-.083-.034-.17-.052-.257-.055z" fill="#1d83d4"/></svg>
+                <span class="like-btn-mobile"></span>
+            </div>
+            <?php } ?>
+            <?php } ?> 
+        	<?php if (!isset($anonymous)) { ?>
+            <?php if($wo['user']['user_id'] != $wo['story']['publisher']['id']) { ?>
+            <div class="btn btn-default stat-item call mb-10" title="Call" onclick="Wo_GenerateVoiceCallV3()">
+                <!--<svg class="svgIcon" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="256" x2="256" y1="481.01" y2="30.99"><stop offset="0" stop-color="#5558ff"/><stop offset="1" stop-color="#00c0ff"/></linearGradient><g><g><g><path d="m505.73 183.801-212-150c-4.6-3.296-10.606-3.721-15.586-1.128-5.01 2.563-8.145 7.705-8.145 13.33v75.396c-150.204 7.822-269.999 132.495-269.999 284.604v60c0 7.485 5.508 13.813 12.92 14.854 7.233 1.055 14.424-3.428 16.494-10.723l2.314-8.101c30.762-107.636 127.471-184.218 238.272-190.605v74.575c0 5.625 3.135 10.767 8.145 13.33 4.98 2.593 10.986 2.139 15.586-1.128l212-150c3.926-2.813 6.27-7.354 6.27-12.202s-2.345-9.39-6.271-12.202z" fill="url(#SVGID_1_)"/></g></g></g></svg>-->
+                
+<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg class="svgIcon" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve">
+<path style="fill:#0D70B2;" d="M477.202,461.601l-127.2-127.2c-5.7-6-15.3-6-21-0.3c-17.701,17.699-46.201,17.699-63.9,0.3
+	l-87.501-88.176c-17.401-17.701-17.401-46.199,0.3-63.9c5.7-5.7,5.7-15.3-0.3-21l-127.2-127.2c-5.7-6-15.3-6-21,0
+	c-18.9,18.6-29.399,52.8-29.399,95.7c-0.3,72.9,32.3,183.876,116.6,268.176s191.7,114,264.3,114c0,0,0.3,0,0.601,0
+	c42.9,0,77.1-10.499,95.7-29.399C483.202,476.902,483.202,467.301,477.202,461.601z"/>
+<path style="fill:#0059AA;" d="M477.202,461.601c6,5.7,6,15.3,0,21c-18.6,18.9-52.8,29.399-95.7,29.399c-0.3,0-0.601,0-0.601,0
+	c-72.599,0-180-29.7-264.3-114L222.8,292.099l42.301,42.301c17.699,17.399,46.199,17.399,63.9-0.3c5.7-5.7,15.3-5.7,21,0.3
+	L477.202,461.601z"/>
+<path style="fill:#17ACE8;" d="M198.901,97.725L114,12.824c-16.8-17.098-46.8-17.098-63.9,0l-20.7,21l148.5,148.5l21-20.7v-0.3
+	C216.6,143.925,216.6,115.126,198.901,97.725z"/>
+<path style="fill:#1689FC;" d="M498.501,398.001L413.602,313.1c-16.8-17.1-46.8-17.1-63.9,0l-20.7,21l148.5,148.5l20.999-20.7
+	c0-0.3,0-0.3,0-0.3C516.202,444.201,516.202,415.4,498.501,398.001z"/>
+<g>
+	<path style="fill:#1DE8F1;" d="M512.001,225.001c0,19.799-30,19.799-30,0c0-53.701-21.899-102.601-56.999-138.001
+		c-35.402-35.099-84.3-56.999-138.001-56.999c-19.799,0-19.799-30,0-30c62.1,0,118.5,25.199,159,65.999
+		C486.802,106.501,512.001,162.901,512.001,225.001z"/>
+	<path style="fill:#1DE8F1;" d="M452.001,225.001c0,19.799-30,19.799-30,0c0-37.202-15.3-71.1-39.6-95.402
+		c-24.3-24.3-58.2-39.598-95.4-39.598c-19.799,0-19.799-30,0-30c45.601,0,86.7,18.3,116.7,48.3S452.001,179.4,452.001,225.001z"/>
+	<path style="fill:#1DE8F1;" d="M392.001,225.001c0,19.799-30,19.799-30,0c0-20.7-8.399-39.3-21.899-53.101
+		c-13.801-13.5-32.401-21.899-53.101-21.899c-19.799,0-19.799-30,0-30c29.101,0,55.201,11.699,74.101,30.899
+		C380.301,169.8,392.001,195.9,392.001,225.001z"/>
+	<path style="fill:#1DE8F1;" d="M332.001,225.001c0,19.799-30,19.799-30,0c0-4.2-1.5-8.101-4.499-10.501
+		c-2.401-2.999-6.301-4.499-10.501-4.499c-19.799,0-19.799-30,0-30c12.301,0,23.701,5.099,31.8,13.2
+		C326.902,201.3,332.001,212.7,332.001,225.001z"/>
+</g>
+<g>
+	<path style="fill:#1BD9DE;" d="M302.001,225.001c0-4.2-1.5-8.101-4.499-10.501l21.299-21.299c8.101,8.099,13.2,19.499,13.2,31.8
+		C332.001,244.8,302.001,244.8,302.001,225.001z"/>
+	<path style="fill:#1BD9DE;" d="M362.001,225.001c0-20.7-8.399-39.3-21.899-53.101l21-21c19.199,18.9,30.899,45,30.899,74.101
+		C392.001,244.8,362.001,244.8,362.001,225.001z"/>
+	<path style="fill:#1BD9DE;" d="M422.001,225.001c0-37.202-15.3-71.1-39.6-95.402l21.301-21.299c30,30,48.3,71.1,48.3,116.7
+		C452.001,244.8,422.001,244.8,422.001,225.001z"/>
+	<path style="fill:#1BD9DE;" d="M512.001,225.001c0,19.799-30,19.799-30,0c0-53.701-21.899-102.601-56.999-138.001l20.999-21
+		C486.802,106.501,512.001,162.901,512.001,225.001z"/>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+</svg>
+
+                <span class="like-btn-mobile"></span>
+            </div>
+            <div class="btn btn-default stat-item vcall mb-10" title="Video Call" onclick="Wo_GenerateVideoCallV3()">
+                <!--<svg class="svgIcon" enable-background="new 0 0 24 24" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m21 24h-18c-1.654 0-3-1.346-3-3v-8c0-.553.447-1 1-1s1 .447 1 1v8c0 .551.448 1 1 1h18c.552 0 1-.449 1-1v-14c0-.551-.448-1-1-1h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c1.654 0 3 1.346 3 3v14c0 1.654-1.346 3-3 3z" fill="#607d8b"/><path d="m8.25 4h-.25v-3.25c0-.307-.186-.581-.47-.695-.283-.116-.609-.047-.82.175l-6.5 6.75c-.28.289-.28.75 0 1.039l6.5 6.75c.212.222.539.291.82.176.284-.114.47-.388.47-.695v-3.25h1.188c3.145 0 5.973 1.748 7.382 4.566l.013.024c.129.256.39.41.667.41l.175-.021c.338-.081.575-.382.575-.729v-1.5c0-5.376-4.374-9.75-9.75-9.75z" fill="#2196f3"/><path d="m1 12c-.553 0-1 .447-1 1v8c0 1.654 1.346 3 3 3h9v-2h-9c-.552 0-1-.449-1-1v-8c0-.553-.447-1-1-1z" fill="#546d79"/><path d="m7.273 0h-.049c-.191.006-.377.086-.514.23l-6.5 6.75c-.136.141-.206.322-.21.505v.03c.004.183.074.364.21.505l6.5 6.75c.144.15.341.23.541.23.094 0 .189-.018.28-.055.283-.114.469-.388.469-.695v-3.25h1.188c.979 0 1.928.169 2.812.488v-6.738c-1.155-.483-2.422-.75-3.75-.75h-.25v-3.25c0-.307-.186-.581-.47-.695-.083-.034-.17-.052-.257-.055z" fill="#1d83d4"/></svg>-->
+                <img class="svgIcon" src="https://revolus.com/assets/img/video-call.png">
+                <!--<svg class="svgIcon" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="278.5" x2="278.5" y1="376" y2="0"><stop offset="0" stop-color="#ffc2cc"/><stop offset="1" stop-color="#fff2f4"/></linearGradient><linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="195.5" x2="195.5" y1="512" y2="121"><stop offset="0" stop-color="#fd3a84"/><stop offset="1" stop-color="#ffa68d"/></linearGradient><g><g><g><path d="m333.227 201.361c-7.411-5.13-16.758-6.748-26.777-3.691l-52.412 17.461c-4.249-11.309-15.059-19.131-28.038-19.131h-151c-16.816 0-30 13.184-30 30v120c0 16.816 13.184 30 30 30h151c12.979 0 23.789-7.852 28.037-19.131l51.445 17.08c9.351 3.86 20.599 2.063 28.389-3.779 7.705-5.977 12.129-14.766 12.129-24.17v-120c0-9.404-4.424-18.193-12.773-24.639zm133.773-141.361h-16v-45c0-6.064-3.662-11.543-9.258-13.857-5.566-2.314-12.041-1.055-16.348 3.252l-55.605 55.605h-83.789c-24.814 0-45 20.186-45 45v31c0 8.291 6.709 15 15 15h90c8.262 0 15 6.738 15 15v90c0 8.291 6.709 15 15 15h91c24.814 0 45-20.186 45-45v-121c0-24.814-20.186-45-45-45z" fill="url(#SVGID_1_)"/></g></g><g><g><path d="m346 121h-301c-24.901 0-45 20.1-45 45v241c0 24.899 20.099 45 45 45h15v45c0 8.388 7.038 15 15 15 3.9 0 7.8-1.499 10.499-4.501l55.802-55.499h204.699c24.901 0 45-20.101 45-45v-241c0-24.9-20.099-45-45-45zm-15 225c0 4.799-2.401 9.3-6.301 12.299-3.389 2.543-9.039 3.586-13.499 1.8l-70.2-23.399v9.3c0 8.399-6.599 15-15 15h-151c-8.401 0-15-6.601-15-15v-120c0-8.401 6.599-15 15-15h151c8.401 0 15 6.599 15 15v9.3l70.201-23.401c4.799-1.5 9.598-.899 13.499 1.8 3.9 3.001 6.301 7.5 6.301 12.301v120z" fill="url(#SVGID_2_)"/></g></g></g></svg>-->
+                <span class="like-btn-mobile"></span>
+            </div>
+            <?php } ?>
+            <?php } ?>
+                   <div class="btn btn-default stat-item logo mb-10" title="Home" onclick="document.location.href = 'https://revolus.com';">
+                    <!--<svg class="svgIcon" enable-background="new 0 0 24 24" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m21 24h-18c-1.654 0-3-1.346-3-3v-8c0-.553.447-1 1-1s1 .447 1 1v8c0 .551.448 1 1 1h18c.552 0 1-.449 1-1v-14c0-.551-.448-1-1-1h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c1.654 0 3 1.346 3 3v14c0 1.654-1.346 3-3 3z" fill="#607d8b"/><path d="m8.25 4h-.25v-3.25c0-.307-.186-.581-.47-.695-.283-.116-.609-.047-.82.175l-6.5 6.75c-.28.289-.28.75 0 1.039l6.5 6.75c.212.222.539.291.82.176.284-.114.47-.388.47-.695v-3.25h1.188c3.145 0 5.973 1.748 7.382 4.566l.013.024c.129.256.39.41.667.41l.175-.021c.338-.081.575-.382.575-.729v-1.5c0-5.376-4.374-9.75-9.75-9.75z" fill="#2196f3"/><path d="m1 12c-.553 0-1 .447-1 1v8c0 1.654 1.346 3 3 3h9v-2h-9c-.552 0-1-.449-1-1v-8c0-.553-.447-1-1-1z" fill="#546d79"/><path d="m7.273 0h-.049c-.191.006-.377.086-.514.23l-6.5 6.75c-.136.141-.206.322-.21.505v.03c.004.183.074.364.21.505l6.5 6.75c.144.15.341.23.541.23.094 0 .189-.018.28-.055.283-.114.469-.388.469-.695v-3.25h1.188c.979 0 1.928.169 2.812.488v-6.738c-1.155-.483-2.422-.75-3.75-.75h-.25v-3.25c0-.307-.186-.581-.47-.695-.083-.034-.17-.052-.257-.055z" fill="#1d83d4"/></svg>-->
+                    <span class="like-btn-mobile"></span>
+                </div>
+            </div>
+            
+            
+            
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PerImage Modals Ends -->
+
+
+<div class="modal fade forward_modal" id="forward_modal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></button>
+				<h4 class="modal-title">Forward</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+				    <div class="col-md-12">
+				        <label>Select Username</label>
+				     
+				        <select class="form-control usernameField select2" id="usernameField" style="width:100%">
+				        <?php 
+				            foreach(Wo_GetUsers() as $user){?>
+				                <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
+			            <?php }?>    
+				        </select>
+
+				    </div>
+				    <div class="col-md-12 text-right" style="margin-top:10px;">
+				        <button class="btn btn-default">Cancel</button>
+				        <button class="btn btn-success" onclick="forwardImage()">Forward</button>    
+				    </div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<script src="https://revolus.com/themes/wowonder/javascript/script.js?version=3.0.4"></script>-->
+<script src="https://revolus.com/assets/js/jquery.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://revolus.com/assets/js/turn.js"></script>
+<script src="https://revolus.com/assets/js/wait.js"></script>
+<script src="https://revolus.com/assets/js/jquery.mousewheel.js"></script>
+<script src="https://revolus.com/assets/js/jquery.fullscreen.js"></script>
+<script src="https://revolus.com/assets/js/jquery.address-1.6.min.js"></script>
+<script src="https://revolus.com/assets/js/pdf.js"></script>
+<script src="https://revolus.com/assets/js/onload.js"></script>
+
+<script>
+    
+    fb5Thumb();
+    setInterval(fb5Thumb, 1000);
+    function fb5Thumb() {
+        if($("#fb5-all-pages").hasClass('active')){
+        }
+        else{
+            $(".fb5-show-all").click();
+        }
+    }
+    var imageID = $("#firstImage").val();
+    $.ajax({
+         url: Wo_Ajax_Requests_File() + '?f=image_comments',
+         method: 'GET',
+         data : {
+            'imageID' : imageID,
+            'postID' : <?php echo $wo['story']['id']; ?>,
+         },
+         success:function(res){
+             $("#SentContent").html(null); 
+             $("#ajaxComments").html(null);
+             $("#ajaxComments").html(res);
+             
+         },
+         error:function(res){
+             console.log(res);
+         }
+    })
+
+
+
+ 
+
+$(document).ready(function(){
+    // setTimeout(function(){ 
+    //     $(".fb5-show-all").click();
+    // }, 3000);
+    $(".comment-inner-middle").click(function(event){
+      $('#perImageModal ul.reactions-box').fadeIn();
+      event.stopPropagation();
+    //   e.stopPro
+    });
+});
+
+// document.getElementByClassName("fb5-show-all").click();
+
+
+function imgModal(elm){
+    var imageID = elm.attr('data-image-id');
+    var postID = elm.attr('data-id');
+    var img = elm.attr('data-image-url');
+    
+    $("#postID").val(postID);
+    $("#imageID").val(imageID);
+    $("#imagePath").val(img);
+    $("#imgModalImg").attr("src",img);
+    $(".perImageModal").modal('show');
+    $("#deactive").attr('data-id',postID);
+    $("#reactionCartoons").addClass('reactions-lightbox-container-'+postID);
+    
+    $(".reactions-box").hide();
+    
+    $.ajax({
+      type : "GET",
+      url  : Wo_Ajax_Requests_File() + '?f=get-post-reactionV2',
+      data : {
+         'post_id' : postID,
+         'image_id' : imageID,
+      },
+      success : function(res){
+          $("#deactive").html(res);
+      },
+      error   : function(res){
+           
+      }
+    });
+};
+
+function changeImage(elm){
+    var imageID = elm.attr('data-id');
+    var postID = elm.attr('data-post-id');
+     $("#comment-textarea").attr('disabled',true);
+    if(imageID == 0){
+        
+    }
+    else{
+        
+        $.ajax({
+             url: Wo_Ajax_Requests_File() + '?f=image_comments',
+             method: 'GET',
+             data : {
+                'imageID' : imageID,
+                'postID' : postID,
+             },
+             success:function(res){
+                 
+                 $("#ajaxComments").html(null);
+                 $("#ajaxComments").html(res);
+                 
+             },
+             error:function(res){
+                 console.log(res);
+             }
+        })
+    }
+}
+
+
+
+
+function Wo_GenerateVoiceCallV3(){
+     var user_id1 = "<?php echo $wo['user']['user_id']; ?>";
+     var user_id2 = '<?php echo $wo['story']['publisher']['id']; ?>'
+      $.get(Wo_Ajax_Requests_File(), {f:'create_new_audio_call', 'new': 'true', user_id1: user_id1, user_id2:user_id2}, function(data) {
+          if (data.status == 200) {
+              $('body').append(data.html);
+              $('#calling-modal').modal({
+                 show: true
+              });
+              checkcalls = setTimeout(function () {
+                  Wo_CheckForAudioCallAnswer(data.id);
+              }, 2000);
+              setTimeout(function() {
+                $('#calling-modal').find('.modal-title').html('<i class="fa fa fa-phone"></i> ' + data.text_no_answer);
+                $('#calling-modal').find('.modal-body p').text(data.text_please_try_again_later);
+                clearTimeout(checkcalls);
+                Wo_PlayAudioCall('stop');
+              }, 43000);
+              Wo_PlayAudioCall('play');
+        }
+  });
+}
+
+
+function Wo_GenerateVideoCallV3() {
+     var user_id1 = "<?php echo $wo['user']['user_id']; ?>";
+      var user_id2 = '<?php echo $wo['story']['publisher']['id']; ?>';
+     
+  $.get(Wo_Ajax_Requests_File(), {f:'create_new_video_call', 'new': 'true', user_id1: user_id1, user_id2:user_id2}, function(data) {
+      if (data.status == 200) {
+          $('body').append(data.html);
+          $('#calling-modal').modal({
+             show: true
+          });
+          checkcalls = setTimeout(function () {
+              Wo_CheckForCallAnswer(data.id);
+          }, 2000);
+          setTimeout(function() {
+            $('#calling-modal').find('.modal-title').html('<i class="fa fa fa-video-camera"></i> ' + data.text_no_answer);
+            $('#calling-modal').find('.modal-body p').text(data.text_please_try_again_later);
+            clearTimeout(checkcalls);
+            Wo_PlayAudioCall('stop');
+          }, 43000);
+          Wo_PlayAudioCall('play');
+    }
+  });
+}
+
+
+function follow(){
+    var postID  = $("#postID").val();
+    var currentStatus = $("#currentFollowStatus").val();
+    if(currentStatus == "Follow"){
+        $("#currentFollowStatus").val('UnFollow');
+        $("#followUnFollow").html('UnFollow');
+    }
+    else{
+        $("#currentFollowStatus").val('Follow');
+        $("#followUnFollow").html('Follow');
+    }
+    
+    $.ajax({
+         url: Wo_Ajax_Requests_File() + '?f=validate_follow',
+         method: 'GET',
+         dataType: 'json',
+         data : {
+            'id' : postID,  
+         },
+         success:function(res){
+        //   $("#followUnFollow").html('UnFollow');
+         },
+         error:function(res){
+             console.log(res);
+         }
+    })
+}
+
+let btnDownloadV1 = document.querySelector('.download2');
+let imgV1 = document.querySelector('#imgModalImg');
+
+btnDownloadV1.addEventListener('click', () => {
+    
+    let imagePathV2 = imgV1.getAttribute('src');
+    let fileNameV2 = getFileName2(imagePathV2);
+    saveAs(imagePathV2, fileNameV2);
+});
+
+function getFileName2(str) {
+
+    return str.substring(str.lastIndexOf('/') + 1)
+}
+function comment(){
+    $("#perImageModal").modal('hide');
+    $("#comment-textarea").attr('disabled',false);
+    $("#comment-textarea").focus();
+}
+
+function reply(){
+    var img = $("#imgModalImg").attr('src');
+    var postID  = $("#postID").val();
+    $.ajax({
+        type : "GET",
+            url  : "https://revolus.com/requests.php?f=send_reply",
+        data : {
+            
+          'sendMessageFile' : img,
+          'post_id'        : postID
+        },
+        success: function(res){
+            if(res.success == true){
+                 document.location.href = 'https://revolus.com/messages/'+res.publisher_id;
+            }
+        },
+        error: function(res){
+            
+        }
+    });    
+}
+
+
+function forward(){
+    $("#forward_modal").modal('show');
+}
+
+function forwardImage(){
+    var img = $("#imgModalImg").attr('src');
+    var postID  = $("#postID").val();
+    var userID = $("#usernameField").val();
+    $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=send_forward",
+        data : {
+            
+          'sendMessageFile' : img,
+          'post_id'        : postID,
+          'user_id'        : userID,
+        },
+        success: function(res){
+         if(res.success == true){
+             document.location.href = 'https://revolus.com/messages/'+userID; 
+         }
+            
+           
+        },
+        error: function(res){
+            
+        }
+    });   
+}
+
+$(document).keydown(function(e) {
+    if (e.keyCode == 27) {
+        Wo_CloseLightbox();
+    }
+    $(".lighbox.textarea").triggeredAutocomplete({
+       hidden: '#hidden_inputbox_comment_lighbox',
+       source: Wo_Ajax_Requests_File() + "?f=mention",
+       trigger: "@" 
+    });
+});
+$( ".story-img" ).mouseover(function() {
+  $( ".changer" ).fadeIn(200);
+});
+$( ".story-img" ).mouseleave(function() {
+  $( ".changer" ).fadeOut(200);
+});
+
+function zoomin(id){
+	var myImg = document.getElementById("wo_zoom_<?php echo $wo['story']['id'];?>");
+	$(myImg).addClass("double_zoom");
+	$('#draggableHelper').draggable({ cursor: "move", revert: true, disabled: false });
+}
+function zoomout(id){
+	var myImg = document.getElementById("wo_zoom_<?php echo $wo['story']['id'];?>");
+	$(myImg).removeClass("double_zoom");
+	$('#draggableHelper').draggable({ disabled: true, revert: true });
+}
+
+var angle = 0;
+function rotate(id){
+	angle += 90;
+	$('#wo_zoom_<?php echo $wo['story']['id'];?>').css({'transform': 'rotate(-' + angle + 'deg)'});
+	$.get(Wo_Ajax_Requests_File(), {
+		f: 'rotate_image',
+		angle: angle,
+		image: '<?php echo $wo[l]['id'];?>'
+	}, function (data) {
+		
+	});
+}
+function Wo_SharePostOn(post_id, owner_id,type){
+
+  if (!post_id) {
+    return false;
+  }
+    
+    $('#share_post_modal').modal('hide');
+    $('#share_post_modal').remove();
+    $.ajax({
+      url: Wo_Ajax_Requests_File(),
+      type: 'GET',
+      dataType: 'json',
+      data: {f: 'get_share_post',post_id:post_id},
+    })
+    .done(function(data) {
+      if (data.status == 200) {
+        $('body').append(data.html);
+        $('#SearchForInputPostId').val(post_id);
+        $('#SearchForInputTypeId').val(owner_id);
+        $('#share_post_modal').modal('show');
+      }
+    })
+    .fail(function() {
+    })
+    .always(function() {
+    });
+    
+}
+
+
+ 
+function reactionEmoji2(elm){
+    var status = elm.attr('id');
+    var id = elm.attr('data-id');
+    $(".reactions-lightbox-container-"+id).show();
+}
+function Wo_RegisterReactionV3(element,reaction_icon,is_html){
+    $(".reactionBox").show();
+    $(".how_reacted").show();
+    var reaction = parseInt($(element).attr('data-reaction-id'));
+    var post_id   = $("#postID").val();
+    var image_id = $("#imageID").val();
+    var path = "<?php echo $wo['config']['theme_url']?>";
+    var lang = $(element).attr('data-reaction-lang');
+    if (!post_id || !reaction) {
+      return false;
+    }
+
+    $('.reactions-box-container-'+post_id).fadeOut(1);
+
+    var reaction_color = '';
+    if (is_html == 1) {
+      switch (reaction) {
+          case 1:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--like"><div class="emoji__hand"><div class="emoji__thumb"></div></div></div></div>';
+              reaction_color = '#1da1f2';
+              break;
+          case 2:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--love"><div class="emoji__heart"></div></div></div>';
+              reaction_color = '#f25268';
+              break;
+          case 3:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--haha"><div class="emoji__face"><div class="emoji__eyes"></div><div class="emoji__mouth"><div class="emoji__tongue"></div></div></div></div></div>';
+              reaction_color = '#f3b715';
+              break;
+          case 4:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--wow"><div class="emoji__face"><div class="emoji__eyebrows"></div><div class="emoji__eyes"></div><div class="emoji__mouth"></div></div></div></div>';
+              reaction_color = '#f3b715';
+              break;
+          case 5:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--sad"><div class="emoji__face"><div class="emoji__eyebrows"></div><div class="emoji__eyes"></div><div class="emoji__mouth"></div></div></div></div>';
+              reaction_color = '#f3b715';
+              break;
+          case 6:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--angry"><div class="emoji__face"><div class="emoji__eyebrows"></div><div class="emoji__eyes"></div><div class="emoji__mouth"></div></div></div></div>';
+              reaction_color = '#f7806c';
+              break;
+      }
+
+    }
+    else{
+      reaction_html = '<div class="inline_post_count_emoji reaction"><img src="'+reaction_icon+'"></div>&nbsp;&nbsp;';
+      reaction_color = '';
+    }
+
+    $('#deactive').html(''+reaction_html+'').css({"color": reaction_color});
+    $('#deactive').addClass("active-like");
+    $.get(Wo_Ajax_Requests_File(), {f: 'posts', s: 'register_reactionV2', post_id: post_id, reaction: reaction, image_id : image_id}, function (data) {
+      if(data.status == 200) {
+        $('.post-reactions-icons-'+post_id).html(data.reactions);
+		  $(".test123").hide();
+	        $(".reactions-box").hide();	 
+      }
+      if (data.can_send == 1) {
+        Wo_SendMessages();
+      }
+      $('#react_'+post_id).attr('data_react','1');
+      
+    });
+}
+
+</script>

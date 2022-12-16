@@ -1,0 +1,3143 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html>
+   <head>
+      <title><?php echo $wo['title'];?></title>
+      <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
+      <meta name="title" content="<?php echo $wo['title'];?>">
+      <meta name="description" content="<?php echo $wo['description'];?>">
+      <meta name="keywords" content="<?php echo $wo['keywords'];?>">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <meta name="pinterest-rich-pin" content="false" />
+
+      <meta http-equiv="expires" content="Mon, 26 Jul 1997 05:00:00 GMT"/>
+      <meta http-equiv="pragma" content="no-cache" />
+
+      <?php if ($wo['page'] == 'maintenance') { ?>
+      <meta name="robots" content="noindex">
+      <meta name="googlebot" content="noindex">
+      <?php } ?>
+      <?php if ($wo['page'] == 'watch_movie') { ?>
+      <meta property="og:title" content="<?php echo $wo['movie']['name']; ?>" />
+      <meta property="og:type" content="article" />
+      <meta property="og:url" content="<?php echo $wo['movie']['url']; ?>" />
+      <meta property="og:image" content="<?php echo $wo['movie']['cover']; ?>" />
+      <meta property="og:image:secure_url" content="<?php echo $wo['movie']['cover']; ?>" />
+      <meta property="og:description" content="<?php echo $wo['movie']['description']; ?>" />
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="<?php echo $wo['movie']['name']; ?>" />
+      <meta name="twitter:description" content="<?php echo $wo['movie']['description']; ?>" />
+      <meta name="twitter:image" content="<?php echo $wo['movie']['cover']; ?>" />
+      <?php } ?>
+      <?php if ($wo['page'] == 'page' && !empty($wo['page_profile'])) { ?>
+      <meta property="og:title" content="<?php echo $wo['page_profile']['page_name']; ?>" />
+      <meta property="og:type" content="article" />
+      <meta property="og:url" content="<?php echo $wo['page_profile']['url']; ?>" />
+      <meta property="og:image" content="<?php echo $wo['page_profile']['avatar']; ?>" />
+      <meta property="og:image:secure_url" content="<?php echo $wo['page_profile']['avatar']; ?>" />
+      <meta property="og:description" content="<?php echo $wo['page_profile']['page_description']; ?>" />
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="<?php echo $wo['page_profile']['page_name']; ?>" />
+      <meta name="twitter:description" content="<?php echo $wo['page_profile']['page_description']; ?>" />
+      <meta name="twitter:image" content="<?php echo $wo['page_profile']['avatar']; ?>" />
+
+
+      <?php } ?>
+
+      <link rel="stylesheet" href="assets/js/select2.css">
+      <?php if ($wo['page'] == 'group' && !empty($wo['group_profile'])) { ?>
+      <meta property="og:title" content="<?php echo $wo['group_profile']['group_name']; ?>" />
+      <meta property="og:type" content="article" />
+      <meta property="og:url" content="<?php echo $wo['group_profile']['url']; ?>" />
+      <meta property="og:image" content="<?php echo $wo['group_profile']['avatar']; ?>" />
+      <meta property="og:image:secure_url" content="<?php echo $wo['group_profile']['avatar']; ?>" />
+      <meta property="og:description" content="<?php echo $wo['group_profile']['about']; ?>" />
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="<?php echo $wo['group_profile']['group_name']; ?>" />
+      <meta name="twitter:description" content="<?php echo $wo['group_profile']['about']; ?>" />
+      <meta name="twitter:image" content="<?php echo $wo['group_profile']['avatar']; ?>" />
+      <?php } ?>
+      <?php if ($wo['page'] == 'game' && !empty($wo['game'])) { ?>
+      <meta property="og:title" content="<?php echo $wo['game']['game_name']; ?>" />
+      <meta property="og:type" content="game" />
+      <meta property="og:url" content="<?php echo $wo['game']['game_link']; ?>" />
+      <meta property="og:image" content="<?php echo $wo['game']['game_avatar']; ?>" />
+      <meta property="og:image:secure_url" content="<?php echo $wo['game']['game_avatar']; ?>" />
+      <meta property="og:description" content="<?php echo $wo['game']['game_name']; ?>" />
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="<?php echo $wo['game']['game_name']; ?>" />
+      <meta name="twitter:description" content="<?php echo $wo['game']['game_name']; ?>" />
+      <meta name="twitter:image" content="<?php echo $wo['game']['game_avatar']; ?>" />
+      <?php } ?>
+      <?php if ($wo['page'] == 'welcome') { ?>
+      <meta property="og:title" content="<?php echo $wo['title'];?>" />
+      <meta property="og:type" content="article" />
+      <meta property="og:url" content="<?php echo $wo['config']['site_url'];?>" />
+      <meta property="og:image" content="<?php echo $wo['config']['theme_url'];?>/img/og.jpg" />
+      <meta property="og:image:secure_url" content="<?php echo $wo['config']['theme_url'];?>/img/og.jpg" />
+      <meta property="og:description" content="<?php echo $wo['description'];?>" />
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="<?php echo $wo['title'];?>" />
+      <meta name="twitter:description" content="<?php echo $wo['description'];?>" />
+      <meta name="twitter:image" content="<?php echo $wo['config']['theme_url'];?>/img/og.jpg" />
+
+      <?php } ?>
+      <?php
+      if (!empty($wo['story']['postFile'])) {
+          echo Wo_LoadPage('header/og-meta');
+      }
+      if (!empty($wo['story']['postSticker'])) {
+          echo Wo_LoadPage('header/og-meta-5');
+      }
+      if (!empty($wo['story']['postLink'])) {
+          echo Wo_LoadPage('header/og-meta-2');
+      }
+
+      if (!empty($wo['story']['product_id'])) {
+          echo Wo_LoadPage('header/og-meta-4');
+          // print_r($wo['story']['product']);
+          // exit();
+      }
+      if ($wo['page'] == 'timeline') { ?>
+      <meta property="og:type" content="article" />
+      <meta property="og:image" content="<?php echo $wo['user_profile']['avatar']?>" />
+      <meta property="og:image:secure_url" content="<?php echo $wo['user_profile']['avatar'];?>" />
+      <meta property="og:description" content="<?php echo $wo['description'];?>" />
+      <meta property="og:title" content="<?php echo $wo['title'];?>" />
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="<?php echo $wo['title'];?>" />
+      <meta name="twitter:description" content="<?php echo $wo['description'];?>" />
+      <meta name="twitter:image" content="<?php echo $wo['user_profile']['avatar']; ?>" />
+      <?php if ($wo['user_profile']['share_my_data'] == 0) { ?>
+      <meta name="robots" content="noindex,nofollow">
+      <meta name="googlebot" content="noindex">
+      <?php } ?>
+      <?php } ?>
+      <?php if (!empty($wo['story']['fund'])) {  ?>
+      <meta property="og:title" content="<?php echo $wo['story']['fund']['fund']['title'];?>" />
+      <meta property="og:type" content="funding" />
+      <meta property="og:image" content="<?php echo $wo['story']['fund']['fund']['image'];?>" />
+      <meta property="og:description" content="<?php echo $wo['story']['fund']['fund']['description'];?>" />
+      <meta name="twitter:title" content="<?php echo $wo['story']['fund']['fund']['title'];?>" />
+      <meta name="twitter:description" content="<?php echo $wo['story']['fund']['fund']['description'];?>" />
+      <meta name="twitter:image" content="<?php echo $wo['story']['fund']['fund']['image'];?>" />
+      <?php } ?>
+      <?php if (!empty($wo['story']['fund_data'])) {  ?>
+      <meta property="og:title" content="<?php echo $wo['story']['fund_data']['title'];?>" />
+      <meta property="og:type" content="funding" />
+      <meta property="og:image" content="<?php echo $wo['story']['fund_data']['image'];?>" />
+      <meta property="og:description" content="<?php echo $wo['story']['fund_data']['description'];?>" />
+      <meta name="twitter:title" content="<?php echo $wo['story']['fund_data']['title'];?>" />
+      <meta name="twitter:description" content="<?php echo $wo['story']['fund_data']['description'];?>" />
+      <meta name="twitter:image" content="<?php echo $wo['story']['fund_data']['image'];?>" />
+      <?php } ?>
+      <?php if (!empty($wo['fund'])) {  ?>
+      <meta property="og:title" content="<?php echo $wo['fund']['title'];?>" />
+      <meta property="og:type" content="funding" />
+      <meta property="og:image" content="<?php echo $wo['fund']['image'];?>" />
+      <meta property="og:description" content="<?php echo $wo['fund']['description'];?>" />
+      <meta name="twitter:title" content="<?php echo $wo['fund']['title'];?>" />
+      <meta name="twitter:description" content="<?php echo $wo['fund']['description'];?>" />
+      <meta name="twitter:image" content="<?php echo $wo['fund']['image'];?>" />
+      <?php } ?>
+      <?php if (!empty($wo['story']['job'])) {  ?>
+      <meta property="og:title" content="<?php echo $wo['story']['job']['title'];?>" />
+      <meta property="og:type" content="job" />
+      <meta property="og:image" content="<?php echo Wo_GetMedia($wo['story']['job']['image']);?>" />
+      <meta property="og:description" content="<?php echo $wo['story']['job']['description'];?>" />
+      <meta name="twitter:title" content="<?php echo $wo['story']['job']['title'];?>" />
+      <meta name="twitter:description" content="<?php echo $wo['story']['job']['description'];?>" />
+      <meta name="twitter:image" content="<?php echo Wo_GetMedia($wo['story']['job']['image']);?>" />
+      <?php } ?>
+      <?php if ($wo['page'] == 'read-blog') { ?>
+      <meta property="og:type" content="article" />
+      <meta property="og:image" content="<?php echo $wo['article']['thumbnail']?>" />
+      <meta property="og:image:secure_url" content="<?php echo $wo['article']['thumbnail']?>" />
+      <meta property="og:description" content="<?php echo $wo['article']['description'];?>" />
+      <meta property="og:title" content="<?php echo $wo['article']['title'];?>" />
+      <meta property="og:url" content="<?php echo $wo['article']['url'];?>" />
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="<?php echo $wo['article']['title'];?>" />
+      <meta name="twitter:description" content="<?php echo $wo['article']['description'];?>" />
+      <meta name="twitter:image" content="<?php echo $wo['article']['thumbnail']; ?>" />
+      <?php } ?>
+      <?php if (!empty($_SERVER) && !empty($_SERVER['REQUEST_URI'])) {
+        $link_text = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        //$link_text = substr($wo['config']['site_url'], 0,strpos($wo['config']['site_url'], '://') + 2).parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+         ?>
+         <link rel="canonical" href="<?php echo($link_text) ?>" />
+      <?php } ?>
+      <link rel="shortcut icon" type="image/png" href="<?php echo $wo['config']['theme_url'];?>/img/icon.png"/>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/general-style-plugins.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>">
+      <?php if($wo['language_type'] == 'rtl' && $wo['page'] != 'welcome') { ?>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/bootsrap-rtl.min.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>">
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/style_rtl.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>">
+      <?php } ?>
+      <?php if ($wo['page'] == 'create_blog' || $wo['page'] == 'edit-blog') { ?>
+      <script src="<?php echo $wo['config']['theme_url'];?>/javascript/tinymce/js/tinymce/tinymce.min.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php } ?>
+
+      <?php if ($wo['page'] == 'welcome') { ?>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/welcome.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>">
+      <?php } else { ?>
+        <!-- https://media.twiliocdn.com/sdk/js/video/v1/twilio-video.min.js?version=3.0.10 -->
+      <script src="//media.twiliocdn.com/sdk/js/video/releases/2.1.0/twilio-video.min.js"></script>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/style.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>">
+      <?php } ?>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/font-awesome-4.7.0/css/font-awesome.min.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>">
+
+	  <?php if ($wo['page'] == 'messages') { ?>
+	  <link href="https://fonts.googleapis.com/css?family=Krub" rel="stylesheet">
+	  <?php } ?>
+
+     <?php if ($wo['page'] == 'welcome' && $wo['language_type'] == 'rtl') { ?>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/welcome_rtl.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>">
+      <?php } ?>
+
+      <script src="<?php echo $wo['config']['theme_url'];?>/javascript/jquery-3.1.1.min.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <script src="https://cdn.jsdelivr.net/npm/jquery-ui-touch-punch@0.2.3/jquery.ui.touch-punch.min.js?version=<?php echo $wo['config']['version']; ?>"></script>
+
+      <?php //if ($wo['page'] == 'ads'): ?>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css?version=<?php echo $wo['config']['version']; ?>">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php //endif; ?>
+
+	  <?php if ($wo['page'] == 'friends_nearby'): ?>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/leaflet.css?version=<?php echo $wo['config']['version']; ?>">
+      <script src="<?php echo $wo['config']['theme_url'];?>/javascript/leaflet.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php endif; ?>
+
+      <?php if ($wo['page'] == 'forum') { ?>
+        <script src="<?php echo $wo['config']['theme_url'];?>/javascript/forum/script.master.js?version=<?php echo $wo['config']['version']; ?>"></script>
+        <script src="<?php echo $wo['config']['theme_url'];?>/javascript/forum/forum.ajax.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php } ?>
+
+      <?php if ($wo['page'] == 'movies' || $wo['page'] == 'watch_movie') { ?>
+        <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/movies/style.movies.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>" />
+      <?php } ?>
+
+      <?php if (isset($wo['bbcodeditor']) && $wo['bbcodeditor']):?>
+      <!-- <script src="<?php echo $wo['config']['theme_url'];?>/javascript/bbcode/jquery.bbcode.js"></script>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/javascript/bbcode/jquery.bbcode.css" media="all"> -->
+      <?php endif ?>
+      <?php if ($wo['config']['checkout_payment'] == 'yes') { ?>
+        <script type="text/javascript" src="https://www.2checkout.com/checkout/api/2co.min.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php } ?>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/player/fluidplayer.min.css?version=<?php echo $wo['config']['version']; ?>" type="text/css"/>
+      <script src="<?php echo $wo['config']['theme_url'];?>/player/fluidplayer.min.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php if ($wo['loggedin'] == true && $wo['page'] == 'home' && $wo['config']['web_push'] == 1) { ?>
+      <link rel="manifest" href="<?php echo $wo['config']['theme_url'];?>/javascript/OneSignalSDKFiles/manifest.json">
+      <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async='async'></script>
+      <script>
+        var push_user_id = '';
+        var my_id = '<?php echo $wo['user']['web_device_id'] ?>';
+        var OneSignal = window.OneSignal || [];
+        OneSignal.push(["init", {
+          appId: "<?php echo $wo['config']['web_push_id'] ?>",
+          autoRegister: true, /* Set to true to automatically prompt visitors */
+          notifyButton: {
+              enable: true /* Set to false to hide */
+          },
+          persistNotification: false,
+        }]);
+       OneSignal.push(function () {
+         OneSignal.getUserId(function(userId) {
+            push_user_id = userId;
+            if (userId != my_id) {
+              $.get("<?php echo $wo['config']['site_url'].'/requests.php';?>", {f: 'update_user_device_id', id:push_user_id});
+            }
+          });
+         OneSignal.on('subscriptionChange', function (isSubscribed) {
+             if (isSubscribed == false) {
+                $.get("<?php echo $wo['config']['site_url'].'/requests.php';?>", {f: 'remove_user_device_id'});
+             } else {
+                $.get("<?php echo $wo['config']['site_url'].'/requests.php';?>", {f: 'update_user_device_id', id:push_user_id});
+             }
+         });
+       });
+      </script>
+      <?php } ?>
+
+
+
+      <style>
+      <?php echo $wo['config']['styles_cc']; ?>
+      </style>
+      <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+      <style>
+    #fb5 #fb5-book .turn-page {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: #f5f5f5 !important;
+    }
+    #fb5-ajax.fullScreen, #fb5-ajax[data-template="true"]{
+        right: 0px !important;
+        max-width: 80%;
+    }
+    #fb5 .fb5-menu#fb5-center ul li{
+        display: block;
+        width: 100%;
+    }
+    #fb5 .fb5-menu#fb5-center{
+        width: auto;
+        background: black;
+        margin-top: 9px;
+        position: absolute;
+        right: 0px !important;
+        max-width: 45px;
+        left: auto !important;
+        top: 250px;
+    }
+
+    #fb5 .fb5-menu#fb5-left ul li{
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    #fb5 .fb5-menu#fb5-left{
+        width: auto;
+        background: black;
+        margin-top: 9px;
+        position: absolute;
+        left: 0px !important;
+        max-width: 100px;
+        top: 200px;
+        right: 0px;
+        display: none;
+    }
+    .wo_post_stat_button .stat-item {
+        border-radius: 100% !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        padding: 0px !important;
+        line-height: 45px !important;
+        background: #FFF !important;
+        top: 10px;
+        transition: all .1s ease-in-out;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        margin-bottom: 10px !important;
+        transition: 0.3s;
+    }
+
+    .wo_post_stat_button .stat-item:hover {
+        background: white !important;
+        color: black;
+        transition: 0.3s;
+    }
+    .wo_post_stat_button .dropdown.open .stat-item, .wo_post_stat_button .stat-item:hover {
+        border-radius: 0px;
+        background: white;
+    }
+    .mb-10{
+        margin-bottom: 10px !important;
+    }
+    .wo-reaction{
+        padding: 6px 11px !important;
+        border-radius: 3px !important;
+        background: #ebeef0 !important;
+    }
+
+    .fb5-overlay.active{
+            z-index: 999999;
+    }
+    @media only screen and (max-width: 820px) {
+      .social_btns {
+        display: none !important;
+      }
+      .g-signin2{
+        display: none !important;
+      }
+    }
+    .wo_imagecombo_lbox .comment-section{
+        max-width: 20%;
+    }
+    html .icon-rounded{
+        border: 2px solid #f5f5f5 !important;
+        width: 30px !important;
+        height: 30px !important;
+        padding: 1px !important;
+        margin-right: 0px !important;
+        padding-right: 0px !important;
+        font-size: 16px !important;
+        text-align: center !important;
+        line-height: 35px !important;
+        border-radius: 100% !important;
+    }
+    .reactions-box{
+        left: 40px;
+        z-index: 999999;
+        top: -20px;
+        width: 292px;
+    }
+    .stat-item.follow{
+        /*position: absolute;*/
+        top: 200px;
+        background: url(https://revolus.com/upload/photos/d-avatar.jpg?cache=0) no-repeat !important;
+        z-index: 999999;
+        background-size: cover !important;
+        border-radius: 100% !important;
+        border: 2px solid #cccccc !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        padding: 0px !important;
+        line-height: 45px !important;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        transition: 0.3s;
+        left: 20px;
+    }
+    .stat-item.follow:hover {
+        /*background: white !important;*/
+        /*color: black;*/
+        /*transition: 0.3s;*/
+    }
+    .stat-item.share{
+        /*position: absolute;*/
+        top: 300px;
+        z-index: 999999;
+        border-radius: 100% !important;
+        border: 2px solid #cccccc !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        padding: 0px !important;
+        line-height: 45px !important;
+        background: #FFF !important;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        transition: 0.3s;
+        left: 20px;
+    }
+    .stat-item.share:hover {
+        background: white !important;
+        color: black;
+        transition: 0.3s;
+    }
+    .stat-item.comment{
+        /*position: absolute;*/
+        top: 350px;
+        z-index: 999999;
+        border-radius: 100% !important;
+        border: 2px solid #cccccc !important;
+        color: #000;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 0px;
+        flex: 1;
+        border: 0;
+        box-shadow: none;
+        line-height: 45px !important;
+        padding: 0px !important;
+        background: #FFF !important;
+        cursor: pointer;
+        height: 50px;
+        width: 50px;
+        transition: 0.3s;
+        left: 20px;
+    }
+    .stat-item.comment:hover {
+        background: white !important;
+        color: black;
+        transition: 0.3s;
+    }
+    .chat-messages{
+        position: relative;
+    }
+
+    .inline_post_emoji{
+            margin-right: 1px !important;
+            margin-top: 15px;
+    }
+    .inline_post_emoji .emoji{
+        transform: scale(0.22);
+        top: -285%;
+        right: 285%;
+        line-height: 50px;
+    }
+    #fb5 #fb5-book .turn-page{
+        background-color: black !important;
+        position:relative;
+    }
+    #fb5 #fb5-book .turn-page:after{
+        content: "";
+        position: absolute;
+        right: 0px;
+        top: 0px;
+    }
+    #fb5 .turn-page.even .fb5-cont-page-book > .fb5-gradient-page{
+        background: none !important;
+    }
+
+    #fb5 .fb5-menu ul li a{ transition: 0.3s;font-size:30px;transform:scale(1);margin-bottom: 6px; }
+    #fb5 .fb5-menu ul li a:hover{ transition:0.3s;transform:scale(1.4); }
+    .turn-page-wrapper{
+        box-shadow:0 0 1px 0px #f5f5f5 !important;
+        /*0 0 40px rgb(102 102 102 / 80%)*/
+    }
+    #fb5-slider li img{
+        transition:0.3s;
+        transform:scale(0.8);
+    }
+    #fb5-slider li img:hover{
+        transition:0.3s;
+        transform:scale(1);
+    }
+    #fb5 #fb5-footer .fb5-bcg-tools{
+        display: none;
+    }
+
+
+    .sliderUl{
+        height: 110px;
+        width: 100%;
+        margin: 0 auto;
+        display: block;
+        overflow: scroll hidden !important;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+        z-index: 100000000;
+        bottom: 0px;
+        position: absolute;
+        display: none;
+    }
+    .sliderUl ul{
+        white-space:nowrap;
+    }
+    .sliderUl ul li{
+        margin-right: 15px;
+        display: inline;
+        font-size: 12px;
+        list-style-type: none;
+    }
+    .sliderUl ul li img{
+        max-height: 100px;
+        cursor: pointer;
+    }
+    .sliderUl::-webkit-scrollbar {
+      width: 4px !important;
+    height: 4px !important;
+    }
+    .sliderUl::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    .sliderUl::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+    .sliderUl::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    #fb5 #fb5-container-book{
+        /*position: initial;*/
+    }
+    #fb5-book{
+        top: -55px;
+    }
+    #fb5 #fb5-all-pages .fb5-container-pages {
+        background: black;
+        /*box-shadow: 0 0 40px rgb(102 102 102 / 80%);*/
+        box-shadow: none;
+        bottom: 0px;
+        top: auto !important;
+        height: 110px !important;
+        display: block !important;
+        z-index: 99;
+    }
+    #fb5 #fb5-slider li{
+        padding:0px !important;
+    }
+    #fb5 .fb5-overlay{
+        position: unset;
+        top: auto;
+        z-index: 10;
+    }
+    #fb5 .fb5-overlay.active{
+        background: none;
+    }
+    #fb5 .turn-page.odd .fb5-cont-page-book > .fb5-gradient-page{
+        box-shadow: none;
+        background: none;
+    }
+    #perImageModal .stat-item.follow{
+        top: 40px;
+    }
+    #perImageModal .stat-item.share{
+        top: 92px;
+    }
+    #perImageModal .stat-item.comment{
+        top: 382px;
+    left: 20px;
+    }
+    #perImageModal .stat-item{
+        transform: scale(0.9);
+        transition: 0.3s;
+    }
+    #perImageModal .stat-item:hover{
+        transform: scale(1.3);
+        transition: 0.3s;
+    }
+    #perImageModal .like-btn{
+        /*top: -3px;*/
+        font-size: 8px !important;
+        line-height: 50px;
+    }
+    #perImageModal .modal-dialog{
+        width: 1000px;
+    }
+    #perImageModal .reactions-box{
+        top: -5px;
+        left: 50px;
+    }
+    #perImageModal .stat-item.download{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 255px;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.forward{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 435px !important;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.reply{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 358px;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.logo{
+        /*position: absolute;*/
+        left: 20px;
+        top: 512px;
+        width: 48px;
+        background-color: none !important;
+        background: url(https://revolus.com/themes/wowonder/img/icon.png) no-repeat;
+        background-size: cover;
+        height: 46px;
+        object-fit: cover;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .stat-item.call{
+        /*position: absolute;*/
+        background: white;
+        left: 20px;
+        top: 242px !important;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    #perImageModal .post-text {
+        display: none;
+    }
+    #perImageModal .stat-item.vcall{
+        /*position: absolute;*/
+        left: 20px;
+        top: 410px;
+        background: white;
+        width: 48px;
+        height: 46px;
+        border-radius: 100%;
+        line-height: 25px;
+        border: 2px solid #cccccc;
+    }
+    .stat-item.follow button {
+        /*position: absolute;*/
+        padding: 8px 5px;
+        line-height: 0px;
+        border-radius: 10px;
+        background: white;
+        text-align: center;
+        border: none;
+        top: -5px;
+        height: 18px;
+        width: 18px;
+        right: -5px;
+        box-shadow: 2px 1px 12px #f2f3f5;
+    }
+    #fb5 #fb5-slider {
+        /*position: absolute;*/
+        left: 0;
+        width: 100% !important;
+        list-style: none;
+        height: inherit;
+        display: flex;
+        vertical-align: middle;
+        align-items: center;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        overflow: scroll hidden;
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar {
+      width: 4px !important;
+    height: 4px !important;
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+    #fb5 #fb5-slider::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+    #perImageModal button.close {
+        position: absolute;
+        right: 0px;
+        color: black;
+        background: white;
+        opacity: 1;
+        height: 30px;
+        width: 30px;
+        line-height: 0px;
+        z-index: 999999;
+        top: 0px;
+    }
+    .p-0{
+        padding: 0px !important;
+    }
+    #fb5 .turn-page.even .fb5-cont-page-book > .fb5-gradient-page{
+        cursor: pointer;
+    }
+    .svgIcon{
+        max-width: 25px;
+        max-height: 25px;
+        margin-top: 0px;
+        margin-left: -2px;
+    }
+    .fixedNavigation{
+        position: absolute;
+        left: 15px;
+        top: 40px;
+        width: 50px;
+        z-index:999999;
+    }
+
+
+
+
+    .navTopRight{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        right: 18px;
+        top: 0px;
+        transform: rotate(-46deg);
+    }
+    .navBottomRight{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        right: 18px;
+        bottom: 5px;
+        transform: rotate(-135deg);
+    }
+
+
+    .navTopLeft{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        left: 18px;
+        top: 0px;
+        transform: rotate(220deg);
+    }
+    .navBottomLeft{
+        color: white;
+        font-size: 30px !important;
+        position: absolute;
+        left: 18px;
+        bottom: 5px;
+        transform: rotate(55deg);
+    }
+    button.btn.btn-danger.btn-lg{
+        width: 90%;
+        border-radius: 34px;
+        margin: 5px 0px;
+        font-size: 100%;
+        padding: 5px 10px;
+    }
+    .chat-messages-wrapper .incoming .message-text, .chat-messages-wrapper .outgoing .message-text{
+        max-width: 250px;
+    }
+    .chat-messages-wrapper{
+        position:relative;
+        padding-top: 0px;
+    }
+    .group-messages-wrapper{
+        position:relative;
+        padding: 0px;
+    }
+    .chat-messages-wrapper .deleteMessage.right {
+    top: 4px !important;
+    left: -70px;
+    cursor: pointer;
+    color: #8e8e8e;
+    display: none;
+    /* transform: translate(0,0%); */
+    position: absolute;
+}
+.group-messages-wrapper .deleteMessage.grpRight{
+    position: absolute;color: white;left: -15px;top: 4px;
+}
+.grpRight i:hover{
+    color: white;
+}
+.group-messages-wrapper .deleteMessage.grpLeft{
+    position: absolute;color: white;right: -15px;top: 4px;
+}
+.grpLeft i:hover{
+    color: white;
+}
+    .chat-messages-wrapper .deleteMessage.left {
+    top: 4px !important;
+    right: -14px !important;
+    cursor: pointer;
+    color: #8e8e8e;
+    display: none;
+    /* transform: translate(0,0%); */
+    position: absolute;
+}
+    .toggleRightChat{
+        font-size: 13px;
+        position: absolute;
+        line-height: 18px;
+        transform: rotate(
+    90deg);color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+        display: block;
+        right: -7px;
+        top: 4px;
+    }
+
+    .quote_msg_display span.toggleRightChat {
+        color: #333;
+    }
+
+    .quote_msg_display .right i {
+        color: #333;
+    }
+    .chat-messages-wrapper .incoming .message-text, .chat-messages-wrapper .outgoing .message-text{
+        margin: 0px 10px;
+    }
+    .right i {
+    color: white;
+}
+.left i {
+    color: white;
+}
+    .toggleLeftChat{
+        font-size: 13px;
+        position: absolute;
+        line-height: 18px;
+        transform: rotate(
+    90deg);color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+        display: block;
+        left: 0px;
+        top: 4px;
+    }
+    #followUnFollow {
+        color: #f44336;
+        font-size: 9px;
+    }
+    #followUnFollowV2{
+        color: #f44336;
+        font-size: 9px;
+    }
+
+    .faIcon{
+        max-width: 25px;
+        font-size: 20px !important;
+        max-height: 25px;
+        margin-top: 0px;
+        margin-left: -2px;
+        line-height: 50px !important;
+    }
+    .fixedNavigation {
+    position: absolute;
+    left: 15px;
+    top: 40px;
+    width: 50px;
+    z-index:999999;
+}
+#perImageModal .modal-dialog {
+    width: 1000px;
+    position: relative;
+    min-height: 600px;
+    border-radius: 5px;
+    align-items: center;
+    box-shadow: 0px -4px 20px 0px #f5f5f57a;
+    background: black;
+    justify-content: center;
+    display: inline-flex;#
+    overflow: hidden;
+}
+#imgModalImgV2 {
+    min-height: 600px;
+    max-height: 600px;
+    object-fit: contain;
+}
+#imgModalImg {
+    min-height: 600px;
+    max-height: 600px;
+    object-fit: contain;
+}
+    @media only screen and (min-width: 1200px){
+        #fb5 #fb5-book .turn-page {
+            display: flex;
+            background-color: black !important;
+            min-height: 80vh;
+            vertical-align: middle !important;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .turn-page-wrapper{
+            box-shadow: 0 0 1px 0px #f5f5f5 !important;
+            min-height: 80vh;
+        }
+    }
+
+    @media (max-width: 800px){
+        #perImageModal button.close {
+            top: 0px;
+        }
+        #fb5 .fb5-menu ul li a{
+            font-size: 20px;
+        }
+        #fb5 #fb5-all-pages .fb5-container-pages{
+            bottom: 35%;
+            top: auto !important;
+            height:60px !important;
+        }
+        .stat-item.follow{
+            top: 20px;
+        }
+        /*.wo_post_stat_button {*/
+            /*margin: 1px -15px 0;*/
+        /*    left: 34px !important;*/
+        /*    width: calc(100% + 30px);*/
+        /*    top: 40px;*/
+        /*}*/
+        /*#perImageModal .stat-item.share{*/
+        /*    top: 210px;*/
+        /*}*/
+        .sliderUl{
+            bottom: 35%;
+        }
+        #fb5-book{
+            top: 65px;
+        }
+        #fb5-ajax.fullScreen, #fb5-ajax[data-template="true"]{
+            max-width: 100%;
+        }
+        .comment-inner-middle {
+            /*position: absolute;*/
+            top: 75px;
+            z-index: 999999;
+            border-radius: 4px;
+            left: 1px !important;
+        }
+        .sliderUl{
+            height: 70px;
+        }
+        .sliderUl ul li img {
+            max-height: 60px;
+        }
+        .wo_imagecombo_lbox .comment-section{
+            height: auto !important;
+            bottom: 0px;
+            position: absolute;
+            top: auto;
+            max-height: 35%;
+            max-width: 100%;
+            overflow: hidden scroll;
+            display:noe;
+        }
+        #fb5-ajax.fullScreen, #fb5-ajax[data-template="true"]{
+            right: 0px !important;
+        }
+        #fb5 #fb5-button-back{
+            botton: auto;
+            top: 50px;
+        }
+        #fb5 .fb5-menu#fb5-center{
+            width: auto;
+            margin-top: 9px;
+            top: 0px;
+            position: absolute;
+            max-width: 100%;
+            left: 18% !important;
+        }
+        #fb5 .fb5-menu#fb5-center ul li{
+            display: inline-block;
+            width: auto;
+        }
+        #perImageModal .modal-body{
+            min-height: 90vh;
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            background: black;
+        }
+
+    }
+
+
+    /*KASHAN*/
+
+    .galleryThumbnails img {
+        max-height: 100px !important;
+        max-width: initial !important;
+        width: auto;
+        min-height: 100px;
+        height: 100%;
+    }
+
+    a.custom-slider-prev {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        left: 25px;
+        font-size: 25px;
+        transform: translateY(-50%);
+    }
+
+
+    a.custom-slider-next {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        right: 25px;
+        font-size: 25px;
+        transform: translateY(-50%);
+    }
+
+    .custom-slider, .custom-slider-thumbnails{
+      position:relative;
+      overflow:hidden
+    }
+
+    .custom-slider .row, .custom-slider-thumbnails .row{
+      margin:0 !important
+    }
+
+    a.custom-slider-thumbnails-prev {
+        width: 35px;
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        left: 15px;
+        height: 35px;
+        background: #00000075;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(-50%)
+    }
+
+
+    a.custom-slider-thumbnails-next {
+      width: 35px;
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        right: 15px;
+        height: 35px;
+        background: #00000075;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(-50%);
+    }
+
+    .storyBody .comments-list {
+        max-height: 150px;
+        overflow: scroll;
+    }
+
+    /*div#storyComments {*/
+    /*    max-height: 120px;*/
+    /*    overflow: scroll;*/
+    /*}*/
+
+    .comment-enter {
+        position: relative;
+        overflow:hidden;
+        padding: 0 10px;
+    }
+
+    .comment-enter .comment_combo_footer {
+        position: absolute !important;
+        right: 18px;
+        background: transparent !important;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 5;
+    }
+
+    .pac-container{
+        z-index: 999999 !important;
+    }
+
+    .post .post-footer .comments-list{
+    padding: 0px 10px;
+    max-height: 120px;
+    overflow: hidden scroll;
+    }
+    @media screen and (max-width: 600px){
+    .post .post-footer .comments-list{
+    padding: 0px 10px;
+    max-height: 60px;
+    overflow: hidden scroll;
+    }
+    }
+
+    .m-0{
+        margin: 0px !important;
+    }
+    .p-0{
+        padding: 0px !important;
+    }
+    .d-inline-block{
+        display: inline-block !important;
+    }
+
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {background-color: #8b6060 !important; }
+    .select2-container--default {color: #363636 !important; }
+    .select2-container--default .select2-results__option[aria-selected=true] { background-color: #8b6060 !important;}
+
+	.call-reject {
+    text-align: right;
+    float: right;
+    display: block;
+    margin: 10px 0;
+}
+
+@media (min-width:1200px){
+.call-reject {
+    margin: 10px 9%;
+}
+
+}
+</style>
+
+      <script type="text/javascript">
+         <?php echo $wo['config']['header_cc']; ?>
+         function Wo_Ajax_Requests_File(){
+            return "<?php echo $wo['config']['site_url'].'/requests.php';?>"
+         }
+          function Wo_get_search_followers(){
+            return "<?php echo $wo['config']['site_url'].'/get_followers.php';?>"
+         }
+         function get_language_code(){
+            return "<?php echo $wo['config']['site_url'].'/set_language_variable.php';?>"
+         }
+         function Wo_get_search_following(){
+            return "<?php echo $wo['config']['site_url'].'/get_following.php';?>"
+         }
+         function Wo_Clear_All_Chat(){
+            return "<?php echo $wo['config']['site_url'].'/clear_chat.php';?>"
+         }
+         <?php if ($wo['config']['smooth_loading'] == 1 && $wo['loggedin'] == true) { ?>
+         function Wo_Ajax_Requests_Filee(){
+            return "<?php echo $wo['config']['site_url'].'/ajax_loading.php';?>"
+         }
+
+         var websiteUrl = "<?php echo $wo['config']['site_url'];?>";
+         $(function() {
+            <?php if ($wo['loggedin'] == true && $wo['config']['find_friends'] == 1) {?>
+              <?php if ($wo['user']['last_location_update'] < time()): ?>
+                if (navigator.geolocation) {
+                  var location = navigator.geolocation.getCurrentPosition(Wo_UpdateLocation);
+                }
+              <?php endif; ?>
+            <?php } ?>
+           var box = $('#contnet');
+           var ISAPI = $('#ISAPI').val();
+           $(document).on('click', 'a[data-ajax]', function(e) {
+            if ($('#live_post_id').length > 0) {
+                  DeleteLive();
+                  window.location = $(this).attr('href');
+                  return false;
+            }
+            Wo_CloseLightbox();
+              $('body').removeAttr('no-more-posts');
+              if ($('.postText').length) {
+                   if ($('.postText').val().length > 0) {
+                      if (!confirm("<?php echo html_entity_decode($wo['lang']['havent_finished_post'], ENT_QUOTES)?>")) {
+                         return false;
+                      } else {
+                       $('.postText').val("");
+                      }
+                   }
+               }
+               Wo_StartBar();
+               window.post = 0;
+               var url = $(this).attr('data-ajax');
+               e.preventDefault();
+               if (!ISAPI) {
+                 if (url == '?index.php?link1=home') {
+                    $get_value = $('#json-data').val();
+                    if ($get_value) {
+                        $('#load-more-posts').hide();
+                        json_data = JSON.parse($('#json-data').val());
+                        if (json_data.page == 'home') {
+                            document.getElementById('posts').innerHTML = '<div class="posts_load"><div class="wo_loading_post"><div class="lightui1-shimmer"> <div class="_2iwr"></div> <div class="_2iws"></div> <div class="_2iwt"></div> <div class="_2iwu"></div> <div class="_2iwv"></div> <div class="_2iww"></div> <div class="_2iwx"></div> <div class="_2iwy"></div> <div class="_2iwz"></div> <div class="_2iw-"></div> <div class="_2iw_"></div> <div class="_2ix0"></div> </div></div><div class="wo_loading_post"><div class="lightui1-shimmer"> <div class="_2iwr"></div> <div class="_2iws"></div> <div class="_2iwt"></div> <div class="_2iwu"></div> <div class="_2iwv"></div> <div class="_2iww"></div> <div class="_2iwx"></div> <div class="_2iwy"></div> <div class="_2iwz"></div> <div class="_2iw-"></div> <div class="_2iw_"></div> <div class="_2ix0"></div> </div></div></div>';
+                            loadposts();
+                            window.history.pushState({state:'new'},'', websiteUrl);
+                            $("html, body").animate({ scrollTop: 0 }, 100);
+                            $('.user-details, .pac-container, .lightbox-container').remove();
+                            Wo_clearPRecording();
+                            Wo_CleanRecordNodes();
+                            Wo_stopRecording();
+                            Wo_StopLocalStream();
+
+                            return false;
+                        }
+                    }
+                 }
+                 $.post(Wo_Ajax_Requests_Filee() + url, {url:url}, function (data) {
+                     $('.user-details').remove();
+                     json_data = JSON.parse($(data).filter('#json-data').val());
+                     if (json_data.welcome_page == 1 || json_data.redirect == 1) {
+                         window.location.href = websiteUrl;
+                         return false;
+                     }
+                     if ($('.message-option-btns').length > 0) {
+                          if (json_data.url == 'index.php?index.php?link1=home') {
+                              window.location.href = websiteUrl;
+                          } else {
+                             window.location.href = json_data.url;
+                          }
+                          return false;
+                     }
+                     //document.getElementById('#contnet').innerHTML = data;
+                     box.html(data);
+                     if (json_data.is_css_file == 1) {
+                       $('.styled-profile').remove();
+                       $('footer').append(json_data.css_file);
+                       $('.extra-css').html(json_data.css_file_header);
+                     } else {
+                       $('.styled-profile').attr('href', '');
+                       $('.extra-css').empty();
+                     }
+                     Wo_clearPRecording();
+                     Wo_CleanRecordNodes();
+                     Wo_stopRecording();
+                     Wo_StopLocalStream();
+                     if (json_data.page == 'home') {
+                       $('.filterby li.filter-by-li').on('click', function (e) {
+                         $('.filterby li.filter-by-li').each(function(){
+                           $(this).removeClass('avtive');
+                           $(this).find('i').addClass('hidden');
+                         });
+                          $(this).find('i').removeClass('hidden');
+                          $(this).addClass('avtive');
+                        });
+                       window.history.pushState({state:'new'},'', websiteUrl);
+                       //window.history.pushState({}, "<?php echo $wo['config']['site_url']?>", websiteUrl);
+                     } else {
+                       window.history.pushState({state:'new'},'', json_data.url);
+                       //window.history.pushState({}, "<?php echo $wo['config']['site_url']?>", json_data.url);
+                     }
+                     $('.postText').autogrow({vertical: true, horizontal: false, height: 200});
+                      window.onpopstate = function(event) {
+                        $(window).unbind('popstate');
+                        window.location.href = document.location;
+                      };
+
+                     if (json_data.page == 'timeline' || json_data.page == 'page' || json_data.page == 'group') {
+                       $('.content-container').css('margin-top', '25px');
+                       $('.ad-placement-header-footer').find('.contnet').css('margin-top', '20px');
+                     } else {
+                       $('.content-container').css('margin-top', '45px');
+                       $('.ad-placement-header-footer').find('.contnet').css('margin-top', '0');
+                     }
+                     if (json_data.is_footer == 1 && $('.second-footer').css('display') == 'none') {
+                        $('footer .footer-wrapper').show();
+                     }
+                     else if(json_data.is_footer == 1 && $('.second-footer').css('display') != 'none'){
+
+                     } else {
+                      if ($(window).width() < 720) {
+                        $('footer .footer-wrapper').show();
+                      } else {
+                        $('footer .footer-wrapper, .second-footer').hide();
+                      }
+                     }
+                     document.title = decodeHtml(json_data.title);
+                     document_title = decodeHtml(json_data.title);
+                     $("html, body").animate({ scrollTop: 0 }, 150);
+                     Wo_FinishBar();
+                     $('#hidden-content').empty();
+                     $(document).ready(function() {$('div.leftcol').theiaStickySidebar({additionalMarginTop: 65});});
+                     $('#users-reacted-modal').modal("hide");
+                 });
+                 $('.user-details, .pac-container, .lightbox-container').remove();
+               }
+           });
+       });
+      <?php } ?>
+      function RunLiveAgora(channelName,DIV_ID) {
+  var agoraAppId = '<?php echo($wo['config']['agora_app_id']) ?>';
+  var token = null;
+
+  var client = AgoraRTC.createClient({mode: 'live', codec: 'vp8'});
+  client.init(agoraAppId, function () {
+
+
+      client.setClientRole('audience', function() {
+    }, function(e) {
+    });
+
+    client.join(token, channelName, 0, function(uid) {
+    }, function(err) {
+    });
+    }, function (err) {
+    });
+
+    client.on('stream-added', function (evt) {
+    var stream = evt.stream;
+    var streamId = stream.getId();
+
+    client.subscribe(stream, function (err) {
+    });
+  });
+  client.on('stream-subscribed', function (evt) {
+    var remoteStream = evt.stream;
+    remoteStream.play(DIV_ID);
+    $('#player_'+remoteStream.getId()).addClass('embed-responsive-item');
+  });
+}
+      </script>
+      <?php echo (!empty($wo['config']['googleAnalytics'])) ? $wo['config']['googleAnalytics'] : ''; ?>
+
+    <?php echo Wo_LoadPage('style') ?>
+
+    <?php if ($wo['page'] == 'welcome') { ?>
+      <style>.login_left_combo{color:<?php echo $wo['config']['btn_color'];?>}body{background: <?php echo $wo['config']['btn_background_color'];?> !important;}   .wo_regi_features:before{content: '';display: block;background-image: url(<?php echo $wo['config']['theme_url'];?>/img/backgrounds/login.<?php echo $wo['config']['background_extension'];?>);background-repeat: no-repeat;background-size: cover;background-position:center;position: absolute;top: 0;left: 0;right: 0;bottom: 0;opacity: 0.35;}
+    </style>
+      <?php }?>
+
+    <?php if ($_COOKIE['mode'] == 'night') { ?>
+      <link rel="stylesheet" href="<?php echo $wo['config']['theme_url'];?>/stylesheet/dark.css<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>" id="night-mode-css">
+    <?php } ?>
+    <?php if($wo['config']['googleLogin'] != 0): ?>
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="<?php echo $wo['config']['googleAppId']?>">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <?php endif; ?>
+    <?php if ($wo['config']['agora_live_video'] == 1 && !empty($wo['config']['agora_app_id'])) { ?>
+      <script src="<?php echo $wo['config']['theme_url'];?>/javascript/agora.js"></script>
+    <?php } ?>
+    <?php if ($wo['config']['live_video'] == 1 && !empty($wo['config']['agora_app_id']) && !empty($wo['config']['agora_customer_id']) && !empty($wo['config']['agora_customer_certificate'])) { ?>
+      <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <?php } ?>
+    <script crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <style>
+        ul.dropdown-menu.dropdown-menu-right.wow_lang_select_menu {
+    width: 12em;
+    height: 20em;
+    line-height: 2em;
+    border: 1px solid #ccc;
+    padding: 0;
+    margin: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+    </style>
+
+   </head>
+
+   <body <?php if ($wo['config']['chatSystem'] == 0) { ?> chat-off="true" <?php } ?>>
+
+   <!-- <div sytle="display:none;">
+            <div id="google_translate_element"></div>
+		</div> -->
+
+
+    <div class="" style="display:none;">
+		    <div class="lang_tab notranslate">
+
+        <div id="google_translate_element"></div>
+
+
+            </div>
+		</div>
+
+
+
+    <?php $loadPage = Wo_LoadPage('thirdparty/theme-changer'); echo (!empty($loadPage)) ? $loadPage : '';?>
+    <div id="focus-overlay"></div>
+      <input type="hidden" class="seen_stories_users_ids" value="">
+      <input type="hidden" class="main_session" value="<?php echo Wo_CreateMainSession();?>">
+      <?php if($wo['page'] != 'welcome' && $wo['page'] != 'get_news_feed' && $wo['page'] != 'maintenance' && $wo['page'] != 'video-api'): ?>
+         <header class="header-container">
+            <?php echo Wo_LoadPage( 'header/content'); ?>
+         </header>
+      <?php endif; ?>
+      <?php
+      $container = 'container';
+      if ($wo['page'] == 'welcome') {
+        $container = 'welcome-container';
+      } else if ($wo['page'] == 'get_news_feed') {
+        $container = 'normal-container';
+      } else if ($wo['page'] == 'messages') {
+        $container = 'wo-msg-container';
+      }
+      ?>
+      <div class="content-container <?php echo $container?>" style="<?php echo ($wo['page'] == 'timeline' || $wo['page'] == 'page' || $wo['page'] == 'group') ? 'margin-top:25px;' : '';?>">
+
+         <div class="ad-placement-header-footer">
+
+            <?php
+               $header_ad = Wo_GetAd('header', false);
+               if($wo['page'] != 'admin' && $wo['page'] != 'welcome' && $wo['page'] != 'messages' && $wo['page'] != '404' && !empty($header_ad) && $wo['page'] != 'video-api') {
+                 $timeline_ads = ($wo['page'] == 'timeline' || $wo['page'] == 'page' || $wo['page'] == 'group')  ? 'style="margin-top: 20px;"' : '';
+                 echo '<div class="contnet" ' . $timeline_ads . '>' . $header_ad . '</div>';
+               }
+               ?>
+         </div>
+
+          <?php
+            $rruri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+            if(!empty($rruri) && substr($rruri, 0, 12) == '/video-call/'){ ?>
+            <a class="btn btn-danger ban-sm call-reject" href="<?php echo $wo['config']['site_url']; ?>"><i class="fa fa-phone"></I> Reject</a>
+          <?php } ?>
+
+         <div id="contnet"><?php echo $wo['content'];?></div>
+         <?php
+            $footer_ad = Wo_GetAd('footer', false);
+            if($wo['page'] != 'admin' && $wo['page'] != 'welcome' && $wo['page'] != 'messages' && $wo['page'] != '404' && !empty($footer_ad)) {
+              echo '<div class="contnet">' . $footer_ad . '</div>';
+            }
+            ?>
+         <footer>
+            <?php
+              if ($wo['page'] != 'welcome' && $wo['page'] != 'register' && $wo['page'] != 'get_news_feed' && $wo['page'] != 'forum' && $wo['page'] != 'messages' && $wo['page'] != 'jobs') {
+                echo Wo_LoadPage('footer/content');
+              }
+             ?>
+         </footer>
+         <div class="second-footer" style="<?php echo (in_array($wo['page'], $wo['footer_pages']) ? '' : 'display: none;' ); ?> ">
+            <?php
+               //if (in_array($wo['page'], $wo['footer_pages']) && $wo['page'] != 'messages' && $wo['page'] != 'jobs') {
+                  echo Wo_LoadPage('footer/content');
+               //}
+            ?>
+         </div>
+         <div class="extra">
+            <?php
+                if ($wo['loggedin'] == true) {
+                    echo Wo_LoadPage('modals/video_group_calling');
+                    echo Wo_LoadPage('modals/audio_group_calling');
+                }
+            ?>
+
+            <?php
+
+               if ($wo['loggedin'] == true && $wo['page'] != 'maintenance') {
+                 if ($wo['config']['chatSystem'] == 1 && $wo['page'] != 'get_news_feed' && $wo['page'] != 'sharer' && $wo['page'] != 'video-api' && $wo['page'] != 'messages') {
+                   echo Wo_LoadPage('chat/content');
+                   //echo Wo_LoadPage('chat/content_mobileapp');
+                 }
+                 echo Wo_LoadPage('modals/logged-out');
+                 ?>
+            <?php
+               }
+               ?>
+         </div>
+      </div>
+      <!-- Load modal alerts -->
+    <?php echo Wo_LoadPage('modals/site-alerts'); ?>
+
+    <?php if (($wo['page'] == 'home' || $wo['page'] == 'timeline' || $wo['page'] == 'products') && $wo['config']['classified'] == 1) { ?>
+    <?php echo Wo_LoadPage('products/create'); ?>
+    <?php } ?>
+
+    <?php if (($wo['page'] == 'ads')) { ?>
+    <?php //echo Wo_LoadPage('ads/send_money'); ?>
+    <?php } ?>
+
+    <?php if ($wo['loggedin'] == true) {?>
+    <div class="lb-preloader"><svg width='50px' height='50px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><circle cx="50" cy="50" r="40" stroke="#676d76" fill="none" stroke-width="6" stroke-linecap="round"><animate attributeName="stroke-dashoffset" dur="1.5s" repeatCount="indefinite" from="0" to="502"></animate><animate attributeName="stroke-dasharray" dur="1.5s" repeatCount="indefinite" values="150.6 100.4;1 250;150.6 100.4"></animate></circle></svg></div>
+
+    <?php echo Wo_LoadPage('modals/keyboard-shortcuts'); ?>
+    <?php } ?>
+
+      <!-- JS FILES -->
+
+
+      <script>
+      function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+  {default:'en'},
+  'google_translate_element'
+);
+}
+</script>
+
+
+
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+      <?php if ($wo['config']['reCaptcha'] == 1) { ?>
+      <script type="text/javascript" src='https://www.google.com/recaptcha/api.js'></script>
+      <?php } ?>
+      <?php if ($wo['loggedin'] == false) { ?>
+
+      <script type="text/javascript" src="<?php echo $wo['config']['theme_url'];?>/javascript/welcome.js<?php echo $wo['update_cache']; ?>?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php } ?>
+      <script type="text/javascript" src="<?php echo $wo['config']['theme_url'];?>/javascript/script.js<?php echo $wo['update_cache']; ?>?version=1.1.10"></script>
+
+      <script>
+      <?php if(!empty($_GET['action']) && !empty($_GET['type']) && !empty($_GET['to_id'])){ ?>
+        <?php if(!empty($_GET['group_id']) && !empty($_GET['group_name']) && $_GET['action'] == "group_call" && $_GET['type'] == "audio"){ ?>
+          Wo_GenerateGroupAudioCall(<?php echo $_GET['to_id']; ?>, <?php echo $_GET['group_id']; ?>, "<?php echo $_GET['group_name']; ?>");
+        <?php } elseif(!empty($_GET['group_id']) && !empty($_GET['group_name']) && $_GET['action'] == "group_call" && $_GET['type'] == "video") { ?>
+          Wo_GenerateGroupVideoCall(<?php echo $_GET['to_id']; ?>, <?php echo $_GET['group_id']; ?>, "<?php echo $_GET['group_name']; ?>");
+        <?php } elseif(!empty($_GET['from_id']) && $_GET['action'] == "voice_call" && $_GET['type'] == "audio") { ?>
+          Wo_GenerateVoiceCall(<?php echo $_GET['to_id']; ?>, <?php echo $_GET['from_id']; ?>);
+        <?php } elseif(!empty($_GET['from_id']) && $_GET['action'] == "voice_call" && $_GET['type'] == "video") { ?>
+          Wo_GenerateVideoCall(<?php echo $_GET['to_id']; ?>, <?php echo $_GET['from_id']; ?>);
+      <?php } } ?>
+      </script>
+
+      <?php if ($wo['loggedin'] == true) {?>
+      <?php if ($wo['config']['google_map'] == 1) { ?>
+      <script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $wo['config']['google_map_api'];?>&libraries=places"></script>
+      <?php } ?>
+      <script src="<?php echo $wo['config']['theme_url'];?>/javascript/audioRecord/recorder.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <script src="<?php echo $wo['config']['theme_url'];?>/javascript/audioRecord/record.js?version=<?php echo $wo['config']['version']; ?>"></script>
+      <?php } ?>
+      <?php if ($wo['page'] == 'timeline' && $wo['loggedin'] == true && $wo['config']['css_upload'] == 1) { ?>
+      <?php if (!empty($wo['user_profile']['css_file']) && file_exists($wo['user_profile']['css_file'])) {?>
+      <link class="styled-profile" rel="stylesheet" href="<?php echo Wo_GetMedia($wo['user_profile']['css_file']);?>">
+      <?php echo $wo['css_file_header'];?>
+      <?php } } ?>
+      <div class="extra-css"></div>
+      <?php if ($wo['page'] != 'welcome') { ?>
+      <script>$(document).ready(function() {$('div.leftcol').theiaStickySidebar({additionalMarginTop: 65});});</script>
+      <script type="text/javascript">jQuery(document).ready(function() {jQuery('.custom-fixed-element').theiaStickySidebar({additionalMarginTop: 65});});</script>
+      <?php }?>
+
+      <!-- End 'JS FILES' -->
+      <?php echo Wo_LoadPage('timeago/content'); ?>
+
+      <?php if($wo['loggedin'] == true) { echo Wo_LoadPage('extra_js/content'); }?>
+      <!-- Audio FILES -->
+      <?php if ($wo['loggedin'] == true) { ?>
+      <audio id="notification-sound" class="sound-controls" preload="auto">
+         <source src="<?php echo $wo['config']['theme_url']; ?>/mp3/New-notification.mp3" type="audio/mpeg">
+      </audio>
+      <audio id="message-sound" class="sound-controls" preload="auto">
+         <source src="<?php echo $wo['config']['theme_url']; ?>/mp3/New-message.mp3" type="audio/mpeg">
+      </audio>
+      <audio id="calling-sound" class="sound-controls" preload="auto">
+         <source src="<?php echo $wo['config']['theme_url']; ?>/mp3/calling.mp3" type="audio/mpeg">
+      </audio>
+      <audio id="video-calling-sound" class="sound-controls" preload="auto" allow="autoplay; fullscreen">
+         <source src="<?php echo $wo['config']['theme_url']; ?>/mp3/video_call.mp3" type="audio/mpeg">
+      </audio>
+      <?php } ?>
+
+      <!-- End 'Audio FILES' -->
+      <script>
+        $(window).on("popstate", function (e) {
+          location.reload();
+      });
+       /*Language Select*/
+        $(document).ready(function(){
+          $("#wo_language_modal .language_select .English").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/united-states.svg"/></span> ');
+          $("#wo_language_modal .language_select .Arabic").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/saudi-arabia.svg"/></span> ');
+          $("#wo_language_modal .language_select .Dutch").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/netherlands.svg"/></span> ');
+          $("#wo_language_modal .language_select .French").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/france.svg"/></span> ');
+          $("#wo_language_modal .language_select .German").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/germany.svg"/></span> ');
+          $("#wo_language_modal .language_select .Hungarian, #wo_language_modal .language_select .Magyar").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/hungary.svg"/></span> ');
+          $("#wo_language_modal .language_select .Italian").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/italy.svg"/></span> ');
+          $("#wo_language_modal .language_select .Portuguese").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/portugal.svg"/></span> ');
+          $("#wo_language_modal .language_select .Russian").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/russia.svg"/></span> ');
+          $("#wo_language_modal .language_select .Spanish").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/spain.svg"/></span> ');
+          $("#wo_language_modal .language_select .Serbian").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/serbia.svg"/></span> ');
+          $("#wo_language_modal .language_select .Turkish").append('<span class="language_initial"><img src="<?php echo $wo['config']['theme_url']; ?>/img/flags/turkey.svg"/></span> ');
+        });
+        <?php echo $wo['config']['footer_cc']; ?>
+      </script>
+      <?php if ($wo['page'] != 'get_news_feed') { ?>
+      <script>
+      window.addEventListener("load", function(){
+      window.cookieconsent.initialise({
+        "palette": {
+          "popup": {
+            "background": "<?php echo $wo['config']['header_background'];?>",
+            "text": "#fff"
+          },
+          "button": {
+            "background": "<?php echo $wo['config']['btn_background_color'];?>"
+          }
+        },
+        "theme": "edgeless",
+        <?php if ($wo['page'] == 'welcome') {?> "position": "bottom-left", <?php } ?>
+        "content": {
+          "message": "<?php echo $wo['lang']['cookie_message']?>",
+          "dismiss": "<?php echo $wo['lang']['cookie_dismiss']?>",
+          "link": "<?php echo $wo['lang']['cookie_link']?>",
+          "href": "<?php echo Wo_SeoLink('index.php?link1=terms&type=privacy-policy');?>"
+        }
+      })});
+      </script>
+      <?php } ?>
+      <?php if ($wo['page'] == 'welcome') {?>
+    <style>.cc-bottom{bottom: 2.5em;}</style>
+      <?php } ?>
+
+		<?php if ($wo['config']['user_status'] == 1) { ?>
+      <!-- // NEW STORY -->
+      <script type="text/javascript">
+          $(document).on('click', '.story-image-wrapper', function(event) {
+          event.preventDefault();
+          $('#contnet').append('<div class="lightbox-container"><div class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div><div class="lb-preloader" style="display:block"><svg width="50px" height="50px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><circle cx="50" cy="50" r="40" stroke="#676d76" fill="none" stroke-width="6" stroke-linecap="round"><animate attributeName="stroke-dashoffset" dur="1.5s" repeatCount="indefinite" from="0" to="502"></animate><animate attributeName="stroke-dasharray" dur="1.5s" repeatCount="indefinite" values="150.6 100.4;1 250;150.6 100.4"></animate></circle></svg></div></div>');
+
+          $value = $(this).parents(".story-container").attr('data-status-id');
+          $.post(Wo_Ajax_Requests_File() + '?f=story_view', {id: $value}, function(data, textStatus, xhr) {
+            if (data.status == 200) {
+              document.body.style.overflow = 'hidden';
+                $('.lightbox-container').html(data.html);
+                $('.width_').addClass('load');
+                setTimeout(function(){
+                    $('.width_').css('width', '100%');
+              }, 200);
+                Wo_Delay(function(){
+                    if ($('.dont_close_story_'+$value).length == 0) {
+                      Get_NextStory(data.story_id);
+                    }
+              }, 20000);
+            }
+            else{
+              Wo_CloseLightbox();
+            }
+          });
+        });
+
+        function Wo_GetMoreStoryViews(story_id,self) {
+          last_view = $('.story_views_').last().attr('id');
+          $(self).addClass('dont_close_story_'+story_id);
+          $(self).find('span').html('<?php echo $wo["lang"]["please_wait"]?>');
+          $.post(Wo_Ajax_Requests_File() + '?f=story_views_', {last_view:last_view,story_id:story_id}, function(data, textStatus, xhr) {
+            if (data.status == 200) {
+              $(self).find('button').html('<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather"><polyline points="6 9 12 15 18 9"></polyline></svg> <?php echo($wo['lang']['load_more']) ?>');
+
+              $('.views_container_').append(data.html);
+            }
+            else{
+              $(self).find('button').html('<?php echo $wo["lang"]["no_more_views"]?>');
+
+            }
+          });
+        }
+        $(document).on('click', '.see_all_stories', function(event) {
+          event.preventDefault();
+          $('#contnet').append('<div class="lightbox-container"><div class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div><div class="lb-preloader" style="display:block"><svg width="50px" height="50px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><circle cx="50" cy="50" r="40" stroke="#676d76" fill="none" stroke-width="6" stroke-linecap="round"><animate attributeName="stroke-dashoffset" dur="1.5s" repeatCount="indefinite" from="0" to="502"></animate><animate attributeName="stroke-dasharray" dur="1.5s" repeatCount="indefinite" values="150.6 100.4;1 250;150.6 100.4"></animate></circle></svg></div></div>');
+          user_id = $(this).attr('data_story_user_id');
+          type = $(this).attr('data_story_type');
+          $.post(Wo_Ajax_Requests_File() + '?f=view_all_stories', {user_id: user_id,type:type}, function(data, textStatus, xhr) {
+            document.body.style.overflow = 'hidden';
+            $('.lightbox-container').html(data.html);
+            $.ajax({
+                type : "GET",
+                url  : Wo_Ajax_Requests_File() +'?f=get_story_comments',
+                data : {
+                    'story_id' : data.story_id
+                },
+                success : function(res){
+                    $("#storyComments").html(res);
+                },
+                error : function(res){
+
+                }
+             });
+
+            setTimeout(function(){
+              video_story = $('#video_story').attr('data-story-video');
+                if ($('[data-story-video='+video_story+']').length == 0) {
+
+                  $('.width_').addClass('load');
+                  setTimeout(function(){
+                      $('.width_').css('width', '100%');
+                  }, 200);
+                  Wo_Delay(function(){
+                    value = $('.user_story_').attr('id');
+
+                      if ($('.dont_close_story_'+value).length == 0) {
+                        if (type == 'user') {
+                          Get_NextStory(data.story_id);
+                        }
+                        else{
+
+                          Get_NextStory(data.story_id,'friends');
+                        }
+                      }
+                  }, 20000);
+                }
+              }, 200);
+
+
+          });
+        });
+        function Get_PreviousStory(story_id,story_type = '') {
+          if ($('.lightbox-container').is(":visible")) {
+
+            Wo_CloseLightbox();
+            $('#contnet').append('<div class="lightbox-container"><div class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div><div class="lb-preloader" style="display:block"><svg width="50px" height="50px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><circle cx="50" cy="50" r="40" stroke="#676d76" fill="none" stroke-width="6" stroke-linecap="round"><animate attributeName="stroke-dashoffset" dur="1.5s" repeatCount="indefinite" from="0" to="502"></animate><animate attributeName="stroke-dasharray" dur="1.5s" repeatCount="indefinite" values="150.6 100.4;1 250;150.6 100.4"></animate></circle></svg></div></div>');
+            $.post(Wo_Ajax_Requests_File() + '?f=view_story_by_id', {story_id: story_id,type:'previous',story_type:story_type}, function(data, textStatus, xhr) {
+              if (data.status == 200) {
+                document.body.style.overflow = 'hidden';
+                  $('.lightbox-container').html(data.html);
+                  $.ajax({
+                        type : "GET",
+                        url  : Wo_Ajax_Requests_File() +'?f=get_story_comments',
+                        data : {
+                            'story_id' : data.story_id
+                        },
+                        success : function(res){
+                            $("#storyComments").html(res);
+                        },
+                        error : function(res){
+
+                        }
+                  });
+                  video_story = $('#video_story').attr('data-story-video');
+                if ($('[data-story-video='+video_story+']').length == 0) {
+                    $('.width_').addClass('load');
+                    setTimeout(function(){
+                        $('.width_').css('width', '100%');
+                  }, 200);
+                    Wo_Delay(function(){
+                      value = $('.user_story_').attr('id');
+                        if ($('.dont_close_story_'+value).length == 0) {
+                          if (story_type == 'user') {
+                            if ($('.lightpost-'+data.story_id).length > 0) {
+                              Get_NextStory(data.story_id);
+                            }
+                          }
+                          else{
+                            if ($('.lightpost-'+data.story_id).length > 0) {
+                              Get_NextStory(data.story_id,'friends');
+                            }
+                          }
+                        }
+                  }, 20000);
+                }
+              }
+              else{
+                Wo_CloseLightbox();
+              }
+            });
+
+
+
+
+          }
+        }
+        function Get_NextStory(story_id,story_type = '') {
+          if ($('.lightbox-container').is(":visible")) {
+
+            Wo_CloseLightbox();
+            $('#contnet').append('<div class="lightbox-container"><div class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div><div class="lb-preloader" style="display:block"><svg width="50px" height="50px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><rect x="0" y="0" width="100" height="100" fill="none" class="bk"></rect><circle cx="50" cy="50" r="40" stroke="#676d76" fill="none" stroke-width="6" stroke-linecap="round"><animate attributeName="stroke-dashoffset" dur="1.5s" repeatCount="indefinite" from="0" to="502"></animate><animate attributeName="stroke-dasharray" dur="1.5s" repeatCount="indefinite" values="150.6 100.4;1 250;150.6 100.4"></animate></circle></svg></div></div>');
+            $.post(Wo_Ajax_Requests_File() + '?f=view_story_by_id', {story_id: story_id,type:'next',story_type:story_type}, function(data, textStatus, xhr) {
+              if (data.status == 200) {
+                document.body.style.overflow = 'hidden';
+                  $('.lightbox-container').html(data.html);
+                  $.ajax({
+                        type : "GET",
+                        url  : Wo_Ajax_Requests_File() +'?f=get_story_comments',
+                        data : {
+                            'story_id' : data.story_id
+                        },
+                        success : function(res){
+                            $("#storyComments").html(res);
+                        },
+                        error : function(res){
+
+                        }
+                     });
+                  video_story = $('#video_story').attr('data-story-video');
+                if ($('[data-story-video='+video_story+']').length == 0) {
+                    $('.width_').addClass('load');
+                    setTimeout(function(){
+                        $('.width_').css('width', '100%');
+                  }, 200);
+                    Wo_Delay(function(){
+                      value = $('.user_story_').attr('id');
+                        if ($('.dont_close_story_'+value).length == 0) {
+                          if (story_type == 'user') {
+                            if ($('.lightpost-'+data.story_id).length > 0) {
+                              Get_NextStory(data.story_id);
+                            }
+                      }
+                      else{
+                        if ($('.lightpost-'+data.story_id).length > 0) {
+                          Get_NextStory(data.story_id,'friends');
+                        }
+                      }
+                        }
+                  }, 20000);
+                }
+              }
+              else{
+                if (story_type == 'user') {
+                  if($('.unseen_story').length > 0){
+                    $('.unseen_story').addClass('seen_story');
+                    $('.unseen_story').removeClass('unseen_story');
+
+                  }
+                }
+                Wo_CloseLightbox();
+              }
+
+            });
+          }
+      }
+    </script>
+      <!-- // NEW STORY -->
+
+	  <?php } ?>
+    <?php
+    if ($wo['loggedin'] == true) {
+    $wo['user']['notification_settings'] = (Array) json_decode(html_entity_decode($wo['user']['notification_settings']));
+     if ($wo['loggedin'] == true && $wo['config']['memories_system'] != 0 && $wo['user']['notification_settings']['e_memory'] == 1 && empty($_COOKIE['memory'])) { ?>
+      <script type="text/javascript">
+        $.post(Wo_Ajax_Requests_File() + '?f=notify_memories', function(data, textStatus, xhr) {});
+      </script>
+    <?php } } ?>
+    <div class="modal fade sun_modal" id="apply-job-modal" role="dialog">
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">SOS Alert</h4>
+        </div>
+        <div class="modal-body">
+          <p>Select message to send</p>
+
+            <form method="post" class="sendMessagess" name ="sos_form" action="">
+
+            <input type="radio" name="sos_alert_message" id="sos1" value="Emergency Alert"> <label for="sos1" style="cursor:pointer;">Emergency Alert</label><br>
+            <input type="radio" name="sos_alert_message" id="sos2" value="SOS Alert"> <label for="sos2" style="cursor:pointer;">SOS Alert</label><br>
+            <input type="radio" name="sos_alert_message" id="sos3" value="Emergency Call"> <label for="sos3" style="cursor:pointer;">Emergency Call</label><br>
+            <input type="text" name="message_sos"/>
+			<input type="submit" value="Send" name="send_sos"/>
+			<!--<input type="hidden" id="sendMessage" name="user_id" value="0" />-->
+			</form>
+            <?php
+			        global $wo, $sqlConnect;
+							$chats = Wo_GetMessagesUsers($wo['user']['user_id']);
+							$array = array();
+					        if (!empty($chats)) {
+					            $incre = 0;
+                                $id_num = 2000;
+					            $time = $chats[0][message][time];
+					            foreach ($chats as $key => $value) {
+					                $array[] = $value[user_id];
+					                //print_r($value[user_id]);
+					                $users_to_send = count($array);
+					            }
+					            for($i=0; $i <=$users_to_send; $i++) {
+					                //print_r($array[$incre]);
+					            if(isset($_POST['send_sos'])){
+					                mysqli_query($sqlConnect, "INSERT INTO ".T_MESSAGES." (`id`, `from_id`, `group_id`, `page_id`, `to_id`, `text`, `media`, `mediaFileName`, `mediaFileNames`, `time`, `seen`, `deleted_one`, `deleted_two`, `sent_push`, `notification_id`, `type_two`, `stickers`, `product_id`, `lat`, `lng`) VALUES
+                                (".rand(10,1950).", 3, 0, 0, ".$array[$incre].", '".$_POST['sos_alert_message'].$_POST['message_sos']."', '', '', '', ".$time.", 0, '0', '0', 0, '', '', '', 0, '0', '0')");
+
+					            }
+
+					                $incre++;
+					                $id_num++;
+					            }
+					        }
+
+			?>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!--<div>For testing For testing For testing For testing For testing For testing For testing For testing For testing For testing For testing </div>-->
+
+
+
+<div id="perImageModal" class="modal fade perImageModalV2" role="dialog" data-backdrop="static" data-keyboard="false" >
+  <div class="modal-dialog">
+
+      <div class="fixedNavigation">
+
+                <div class="comment-inner-middle" <?php if ($wo['loggedin'] != true) { ?>onclick="location.href= '<?php echo $wo['config']['site_url'];?>'"<?php } ?>>
+
+    				<div class="stats buttons" style="display: flex;">
+    					<?php if ($wo['config']['second_post_button'] == 'reaction') { ?>
+    						<div class="like-stat  stat-item post-like-status" style="width: inherit;">
+    							<span class="like-emo post-reactions-icons-<?php echo $wo['story']['id']; ?>"  onclick="Wo_OpenPostReactedUsers(<?php echo $wo['story']['id']; ?>);">
+    								<?php echo Wo_GetPostReactions($wo['story']['id']);?>
+    							</span>
+    							<!-- <span class="like-details">Arkaprava Majumder and 1k others</span> -->
+    						</div>
+    					<?php }?>
+    				</div>
+    				<?php if ($wo['config']['second_post_button'] == 'reaction') { ?>
+    				<?php } ?>
+    				<div class="stats wo_post_stat_button" id="qasimInayat" >
+
+						<div class="wo-reaction wo-reaction-lightbox stat-item unselectable" id="reactionCartoons">
+                           <span class="like-btn like-btn-lightbox unselectable deactive" id="deactive2" onclick="reactionEmoji($(this))" >
+                              <span class="status-reaction-364 active-like" style="color: rgb(243, 183, 21);">
+                                 <div class="inline_post_emoji no_anim">
+                                    <div class="emoji emoji--wow">
+                                       <div class="emoji__face">
+                                          <div class="emoji__eyebrows"></div>
+                                          <div class="emoji__eyes"></div>
+                                          <div class="emoji__mouth"></div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 WoW
+                              </span>
+                           </span>
+                           <ul class="reactions-box reactions-lightbox-container-364 test123"  data-id="364" style="right: auto; display: none;">
+                              <li class="reaction reaction-1" data-reaction="Like" data-reaction-id="1" data-reaction-lang="Like" data-post-id="364" onclick="Wo_RegisterReactionV2(this,'',1);">
+                                 <div class="emoji emoji--like">
+                                    <div class="emoji__hand">
+                                       <div class="emoji__thumb"></div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-2" data-reaction="Love" data-reaction-id="2" data-reaction-lang="Love" data-post-id="364" onclick="Wo_RegisterReactionV2(this,'',1);">
+                                 <div class="emoji emoji--love">
+                                    <div class="emoji__heart"></div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-3" data-reaction="HaHa" data-reaction-id="3" data-reaction-lang="HaHa" data-post-id="364" onclick="Wo_RegisterReactionV2(this,'',1);">
+                                 <div class="emoji emoji--haha">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth">
+                                          <div class="emoji__tongue"></div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-4" data-reaction="WoW" data-reaction-id="4" data-reaction-lang="WoW" data-post-id="364" onclick="Wo_RegisterReactionV2(this,'',1);">
+                                 <div class="emoji emoji--wow">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyebrows"></div>
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth"></div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-5" data-reaction="Sad" data-reaction-id="5" data-reaction-lang="Sad" data-post-id="364" onclick="Wo_RegisterReactionV2(this,'',1);">
+                                 <div class="emoji emoji--sad">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyebrows"></div>
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth"></div>
+                                    </div>
+                                 </div>
+                              </li>
+                              <li class="reaction reaction-6" data-reaction="Angry" data-reaction-id="6" data-reaction-lang="Angry" data-post-id="364" onclick="Wo_RegisterReactionV2(this,'',1);">
+                                 <div class="emoji emoji--angry">
+                                    <div class="emoji__face">
+                                       <div class="emoji__eyebrows"></div>
+                                       <div class="emoji__eyes"></div>
+                                       <div class="emoji__mouth"></div>
+                                    </div>
+                                 </div>
+                              </li>
+
+                        </ul>
+                    </div>
+    				</div>
+    			</div>
+
+    			<div class="btn btn-default stat-item follow mb-10" id="follow" title="Follow" onclick="followV2()">
+    			    <input type="hidden" id="currentFollowStatusV2" value="<?php echo Wo_GetFollowButton2($wo['story']['publisher']['id']); ?>"
+    			    <button class="user-follow-button"><span id="followUnFollowV2"><?php echo Wo_GetFollowButton2($wo['story']['publisher']['id']); ?> </span></button>
+                    <span class="like-btn-mobile"></span>
+                </div>
+
+    			<div class="btn btn-default stat-item share mb-10" title="Share"  onclick="shareV2($(this))" data-user-id="<?php echo $wo['user']['user_id']; ?>">
+                    <!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">-->
+                    <!--    <circle cx="18" cy="5" r="3"></circle>-->
+                    <!--    <circle cx="6" cy="12" r="3"></circle>-->
+                    <!--    <circle cx="18" cy="19" r="3"></circle>-->
+                    <!--    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>-->
+                    <!--    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>-->
+                    <!--</svg>-->
+                    <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                    <svg class="svgIcon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+                    <g>
+                    	<polygon style="fill:#0095FF;" points="177.47,244.428 162.118,218.646 333.856,115.459 349.208,141.24 	"/>
+                    	<polygon style="fill:#0095FF;" points="332.274,401.58 166.791,317.011 180.326,290.233 345.81,374.803 	"/>
+                    </g>
+                    <g>
+                    	<path style="fill:#00ABE9;" d="M406,0c-49.501,0-90,40.499-90,90c0,49.499,40.499,90,90,90s90-40.501,90-90
+                    		C496,40.499,455.501,0,406,0z"/>
+                    	<path style="fill:#00ABE9;" d="M406,332c-49.501,0-90,40.499-90,90c0,49.499,40.499,90,90,90s90-40.501,90-90
+                    		C496,372.499,455.501,332,406,332z"/>
+                    	<path style="fill:#00ABE9;" d="M106,181c-49.501,0-90,40.499-90,90c0,49.499,40.499,90,90,90s90-40.501,90-90
+                    		C196,221.499,155.501,181,106,181z"/>
+                    </g>
+                    <g>
+                    	<path style="fill:#0095FF;" d="M496,422c0,49.499-40.499,90-90,90V332C455.501,332,496,372.499,496,422z"/>
+                    	<path style="fill:#0095FF;" d="M406,180V0c49.501,0,90,40.499,90,90C496,139.499,455.501,180,406,180z"/>
+                    	<path style="fill:#0095FF;" d="M196,271c0,49.499-40.499,90-90,90V181C155.501,181,196,221.499,196,271z"/>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    </svg>
+
+                    <span class="like-btn-mobile"></span>
+                </div>
+                <!--<div class="btn btn-default stat-item comment mb-10" title="Comment" onclick="commentV2()" >-->
+                    <!--<svg fill="gray" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" class="feather feather-user-plus"><path d="M0 0h24v24H0z" fill="none"/><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/></svg>-->
+
+                <!--    <svg class="svgIcon" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m444.394 3.996h-285.072c-37.183 0-67.606 30.423-67.606 67.606v23.004h257.871c37.183 0 67.606 30.423 67.606 67.606v168.547h27.201c37.183 0 67.606-30.423 67.606-67.606v-191.551c0-37.184-30.423-67.606-67.606-67.606z" fill="#6c7ed6"/><path d="m396.461 91.515h-285.072c-6.836 0-13.441 1.036-19.673 2.946v.145h257.871c37.183 0 67.606 30.423 67.606 67.606v168.547h27.2c6.836 0 13.441-1.036 19.673-2.946v-168.692c.001-37.183-30.422-67.606-67.605-67.606z" fill="#4f67d2"/><path d="m352.678 91.515h-285.072c-37.183 0-67.606 30.423-67.606 67.606v191.55c0 37.183 30.423 67.606 67.606 67.606h171.096c7.335 0 12.811 6.826 11.133 13.966-4.537 19.317-11.48 39.745-21.744 60.686-4.609 9.405 5.876 18.966 14.782 13.454 25.751-15.937 62.389-42.61 93.244-80.317 4.056-4.957 10.156-7.79 16.561-7.79 37.183 0 67.606-30.423 67.606-67.606v-191.55c0-37.182-30.423-67.605-67.606-67.605z" fill="#60b8fe"/><path d="m293.618 432.243c1.677-7.141-3.798-13.966-11.133-13.966h-43.783c7.335 0 12.81 6.825 11.133 13.966-4.537 19.317-11.48 39.745-21.744 60.686-4.609 9.405 5.876 18.966 14.782 13.454 9.88-6.115 21.365-13.816 33.509-23.108 7.832-17.563 13.399-34.696 17.236-51.032z" fill="#23a8fe"/><path d="m43.783 350.671v-191.55c0-37.183 30.423-67.606 67.606-67.606h-43.783c-37.183 0-67.606 30.423-67.606 67.606v191.55c0 37.183 30.423 67.606 67.606 67.606h43.783c-37.184 0-67.606-30.422-67.606-67.606z" fill="#23a8fe"/><g fill="#dfebfa"><circle cx="93.714" cy="260.397" r="22.434"/><circle cx="166.174" cy="260.397" r="22.434"/><circle cx="238.633" cy="260.397" r="22.434"/><circle cx="311.093" cy="260.397" r="22.434"/></g><path d="m93.714 260.397c0-8.302 4.514-15.546 11.217-19.425-3.301-1.91-7.129-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.917-1.099 11.217-3.009-6.704-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/><path d="m166.174 260.397c0-8.302 4.514-15.546 11.217-19.425-3.301-1.91-7.129-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.916-1.099 11.217-3.009-6.704-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/><path d="m238.633 260.397c0-8.302 4.514-15.546 11.217-19.425-3.301-1.91-7.13-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.917-1.099 11.217-3.009-6.703-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/><path d="m311.093 260.397c0-8.302 4.513-15.546 11.217-19.425-3.301-1.91-7.13-3.009-11.217-3.009-12.39 0-22.434 10.044-22.434 22.434s10.044 22.434 22.434 22.434c4.088 0 7.917-1.099 11.217-3.009-6.704-3.879-11.217-11.123-11.217-19.425z" fill="#b1dbfc"/></svg>-->
+                <!--    <span class="like-btn-mobile"></span>-->
+                <!--</div>-->
+                <div class="btn btn-default stat-item download downloadButton mb-10" title="Download"  >
+                    <svg class="svgIcon" id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><g><path d="m512 212.575c0 46.635-37.81 84.44-84.45 84.44h-343.1c-46.64 0-84.45-37.805-84.45-84.44 0-36.896 23.67-68.242 56.66-79.731-2.71-41.495 30.2-75.981 71.1-75.981 11.02 0 21.45 2.51 30.76 6.969 16.4-37.575 53.87-63.832 97.48-63.832s81.08 26.257 97.48 63.832c9.31-4.46 19.74-6.969 30.76-6.969 40.99 0 73.81 34.576 71.11 75.981 32.98 11.489 56.65 42.835 56.65 79.731z" fill="#a8ebfa"/><path d="m512 212.575c0 46.635-37.81 84.44-84.45 84.44h-171.55v-297.015c43.61 0 81.08 26.257 97.48 63.832 9.31-4.46 19.74-6.969 30.76-6.969 40.99 0 73.81 34.576 71.11 75.981 32.98 11.489 56.65 42.835 56.65 79.731z" fill="#7dd5f4"/><path d="m476.89 441.878v55.123c0 8.279-6.72 14.998-15 14.998h-411.78c-8.28 0-15-6.719-15-14.998v-55.123c0-8.279 6.72-14.998 15-14.998 8.29 0 15 6.719 15 14.998v40.125h381.78v-40.125c0-8.279 6.71-14.998 15-14.998 8.28 0 15 6.719 15 14.998z" fill="#5e54ac"/><g><path d="m375.06 350.449-106.71 125.075c-2.8 4.069-7.42 6.499-12.35 6.499h-.01c-4.94 0-9.56-2.43-12.36-6.499l-106.69-125.055c-6.84-9.934.299-23.507 12.36-23.507h48.89l.01-196.377c0-8.279 6.71-14.988 14.99-14.988h42.81l42.81-.01c8.335 0 15 6.762 15 14.998l-.01 196.377 48.9-.01c12.056 0 19.2 13.563 12.36 23.497z" fill="#4793ff"/></g><path d="m375.06 350.449-106.71 125.075c-2.8 4.069-7.42 6.499-12.35 6.499v-366.426l42.81-.01c8.335 0 15 6.762 15 14.998l-.01 196.377 48.9-.01c12.056 0 19.2 13.563 12.36 23.497z" fill="#525cdd"/><path d="m476.89 441.878v55.123c0 8.279-6.72 14.998-15 14.998h-205.89v-29.996h190.89v-40.125c0-8.279 6.71-14.998 15-14.998 8.28 0 15 6.719 15 14.998z" fill="#453d81"/></g></svg>
+                    <span class="like-btn-mobile"></span>
+                </div>
+
+                <div class="btn btn-default stat-item forward mb-10" title="Forward" onclick="forwardV2()">
+                    <img class="svgIcon" src="https://revolus.com/assets/img/forward-message.png">
+                    <span class="like-btn-mobile"></span>
+                </div>
+                <div class="btn btn-default stat-item reply mb-10" title="Reply" onclick="replyV2()">
+                    <svg class="svgIcon" enable-background="new 0 0 24 24" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m21 24h-18c-1.654 0-3-1.346-3-3v-8c0-.553.447-1 1-1s1 .447 1 1v8c0 .551.448 1 1 1h18c.552 0 1-.449 1-1v-14c0-.551-.448-1-1-1h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c1.654 0 3 1.346 3 3v14c0 1.654-1.346 3-3 3z" fill="#607d8b"/><path d="m8.25 4h-.25v-3.25c0-.307-.186-.581-.47-.695-.283-.116-.609-.047-.82.175l-6.5 6.75c-.28.289-.28.75 0 1.039l6.5 6.75c.212.222.539.291.82.176.284-.114.47-.388.47-.695v-3.25h1.188c3.145 0 5.973 1.748 7.382 4.566l.013.024c.129.256.39.41.667.41l.175-.021c.338-.081.575-.382.575-.729v-1.5c0-5.376-4.374-9.75-9.75-9.75z" fill="#2196f3"/><path d="m1 12c-.553 0-1 .447-1 1v8c0 1.654 1.346 3 3 3h9v-2h-9c-.552 0-1-.449-1-1v-8c0-.553-.447-1-1-1z" fill="#546d79"/><path d="m7.273 0h-.049c-.191.006-.377.086-.514.23l-6.5 6.75c-.136.141-.206.322-.21.505v.03c.004.183.074.364.21.505l6.5 6.75c.144.15.341.23.541.23.094 0 .189-.018.28-.055.283-.114.469-.388.469-.695v-3.25h1.188c.979 0 1.928.169 2.812.488v-6.738c-1.155-.483-2.422-.75-3.75-.75h-.25v-3.25c0-.307-.186-.581-.47-.695-.083-.034-.17-.052-.257-.055z" fill="#1d83d4"/></svg>
+                    <span class="like-btn-mobile"></span>
+                </div>
+
+
+
+
+                <div class="btn btn-default stat-item call mb-10" id="call" title="Call" onclick="Wo_GenerateVoiceCallV2()">
+
+    <svg class="svgIcon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    	 viewBox="0 0 512.001 512.001" style="enable-background:new 0 0 512.001 512.001;" xml:space="preserve">
+    <path style="fill:#0D70B2;" d="M477.202,461.601l-127.2-127.2c-5.7-6-15.3-6-21-0.3c-17.701,17.699-46.201,17.699-63.9,0.3
+    	l-87.501-88.176c-17.401-17.701-17.401-46.199,0.3-63.9c5.7-5.7,5.7-15.3-0.3-21l-127.2-127.2c-5.7-6-15.3-6-21,0
+    	c-18.9,18.6-29.399,52.8-29.399,95.7c-0.3,72.9,32.3,183.876,116.6,268.176s191.7,114,264.3,114c0,0,0.3,0,0.601,0
+    	c42.9,0,77.1-10.499,95.7-29.399C483.202,476.902,483.202,467.301,477.202,461.601z"/>
+    <path style="fill:#0059AA;" d="M477.202,461.601c6,5.7,6,15.3,0,21c-18.6,18.9-52.8,29.399-95.7,29.399c-0.3,0-0.601,0-0.601,0
+    	c-72.599,0-180-29.7-264.3-114L222.8,292.099l42.301,42.301c17.699,17.399,46.199,17.399,63.9-0.3c5.7-5.7,15.3-5.7,21,0.3
+    	L477.202,461.601z"/>
+    <path style="fill:#17ACE8;" d="M198.901,97.725L114,12.824c-16.8-17.098-46.8-17.098-63.9,0l-20.7,21l148.5,148.5l21-20.7v-0.3
+    	C216.6,143.925,216.6,115.126,198.901,97.725z"/>
+    <path style="fill:#1689FC;" d="M498.501,398.001L413.602,313.1c-16.8-17.1-46.8-17.1-63.9,0l-20.7,21l148.5,148.5l20.999-20.7
+    	c0-0.3,0-0.3,0-0.3C516.202,444.201,516.202,415.4,498.501,398.001z"/>
+    <g>
+    	<path style="fill:#1DE8F1;" d="M512.001,225.001c0,19.799-30,19.799-30,0c0-53.701-21.899-102.601-56.999-138.001
+    		c-35.402-35.099-84.3-56.999-138.001-56.999c-19.799,0-19.799-30,0-30c62.1,0,118.5,25.199,159,65.999
+    		C486.802,106.501,512.001,162.901,512.001,225.001z"/>
+    	<path style="fill:#1DE8F1;" d="M452.001,225.001c0,19.799-30,19.799-30,0c0-37.202-15.3-71.1-39.6-95.402
+    		c-24.3-24.3-58.2-39.598-95.4-39.598c-19.799,0-19.799-30,0-30c45.601,0,86.7,18.3,116.7,48.3S452.001,179.4,452.001,225.001z"/>
+    	<path style="fill:#1DE8F1;" d="M392.001,225.001c0,19.799-30,19.799-30,0c0-20.7-8.399-39.3-21.899-53.101
+    		c-13.801-13.5-32.401-21.899-53.101-21.899c-19.799,0-19.799-30,0-30c29.101,0,55.201,11.699,74.101,30.899
+    		C380.301,169.8,392.001,195.9,392.001,225.001z"/>
+    	<path style="fill:#1DE8F1;" d="M332.001,225.001c0,19.799-30,19.799-30,0c0-4.2-1.5-8.101-4.499-10.501
+    		c-2.401-2.999-6.301-4.499-10.501-4.499c-19.799,0-19.799-30,0-30c12.301,0,23.701,5.099,31.8,13.2
+    		C326.902,201.3,332.001,212.7,332.001,225.001z"/>
+    </g>
+    <g>
+    	<path style="fill:#1BD9DE;" d="M302.001,225.001c0-4.2-1.5-8.101-4.499-10.501l21.299-21.299c8.101,8.099,13.2,19.499,13.2,31.8
+    		C332.001,244.8,302.001,244.8,302.001,225.001z"/>
+    	<path style="fill:#1BD9DE;" d="M362.001,225.001c0-20.7-8.399-39.3-21.899-53.101l21-21c19.199,18.9,30.899,45,30.899,74.101
+    		C392.001,244.8,362.001,244.8,362.001,225.001z"/>
+    	<path style="fill:#1BD9DE;" d="M422.001,225.001c0-37.202-15.3-71.1-39.6-95.402l21.301-21.299c30,30,48.3,71.1,48.3,116.7
+    		C452.001,244.8,422.001,244.8,422.001,225.001z"/>
+    	<path style="fill:#1BD9DE;" d="M512.001,225.001c0,19.799-30,19.799-30,0c0-53.701-21.899-102.601-56.999-138.001l20.999-21
+    		C486.802,106.501,512.001,162.901,512.001,225.001z"/>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    </svg>
+
+                    <span class="like-btn-mobile"></span>
+                </div>
+                <div class="btn btn-default stat-item vcall mb-10" title="Video Call" onclick="Wo_GenerateVideoCallV2()">
+                    <img class="svgIcon" src="https://revolus.com/assets/img/video-call.png">
+                    <!--<svg class="svgIcon" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="278.5" x2="278.5" y1="376" y2="0"><stop offset="0" stop-color="#ffc2cc"></stop><stop offset="1" stop-color="#fff2f4"></stop></linearGradient><linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="195.5" x2="195.5" y1="512" y2="121"><stop offset="0" stop-color="#fd3a84"></stop><stop offset="1" stop-color="#ffa68d"></stop></linearGradient><g><g><g><path d="m333.227 201.361c-7.411-5.13-16.758-6.748-26.777-3.691l-52.412 17.461c-4.249-11.309-15.059-19.131-28.038-19.131h-151c-16.816 0-30 13.184-30 30v120c0 16.816 13.184 30 30 30h151c12.979 0 23.789-7.852 28.037-19.131l51.445 17.08c9.351 3.86 20.599 2.063 28.389-3.779 7.705-5.977 12.129-14.766 12.129-24.17v-120c0-9.404-4.424-18.193-12.773-24.639zm133.773-141.361h-16v-45c0-6.064-3.662-11.543-9.258-13.857-5.566-2.314-12.041-1.055-16.348 3.252l-55.605 55.605h-83.789c-24.814 0-45 20.186-45 45v31c0 8.291 6.709 15 15 15h90c8.262 0 15 6.738 15 15v90c0 8.291 6.709 15 15 15h91c24.814 0 45-20.186 45-45v-121c0-24.814-20.186-45-45-45z" fill="url(#SVGID_1_)"></path></g></g><g><g><path d="m346 121h-301c-24.901 0-45 20.1-45 45v241c0 24.899 20.099 45 45 45h15v45c0 8.388 7.038 15 15 15 3.9 0 7.8-1.499 10.499-4.501l55.802-55.499h204.699c24.901 0 45-20.101 45-45v-241c0-24.9-20.099-45-45-45zm-15 225c0 4.799-2.401 9.3-6.301 12.299-3.389 2.543-9.039 3.586-13.499 1.8l-70.2-23.399v9.3c0 8.399-6.599 15-15 15h-151c-8.401 0-15-6.601-15-15v-120c0-8.401 6.599-15 15-15h151c8.401 0 15 6.599 15 15v9.3l70.201-23.401c4.799-1.5 9.598-.899 13.499 1.8 3.9 3.001 6.301 7.5 6.301 12.301v120z" fill="url(#SVGID_2_)"></path></g></g></g></svg>-->
+                    <span class="like-btn-mobile"></span>
+                </div>
+
+               <div class="btn btn-default stat-item logo mb-10" title="Home" onclick="document.location.href = 'https://revolus.com';">
+                    <!--<svg class="svgIcon" enable-background="new 0 0 24 24" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m21 24h-18c-1.654 0-3-1.346-3-3v-8c0-.553.447-1 1-1s1 .447 1 1v8c0 .551.448 1 1 1h18c.552 0 1-.449 1-1v-14c0-.551-.448-1-1-1h-3c-.553 0-1-.447-1-1s.447-1 1-1h3c1.654 0 3 1.346 3 3v14c0 1.654-1.346 3-3 3z" fill="#607d8b"/><path d="m8.25 4h-.25v-3.25c0-.307-.186-.581-.47-.695-.283-.116-.609-.047-.82.175l-6.5 6.75c-.28.289-.28.75 0 1.039l6.5 6.75c.212.222.539.291.82.176.284-.114.47-.388.47-.695v-3.25h1.188c3.145 0 5.973 1.748 7.382 4.566l.013.024c.129.256.39.41.667.41l.175-.021c.338-.081.575-.382.575-.729v-1.5c0-5.376-4.374-9.75-9.75-9.75z" fill="#2196f3"/><path d="m1 12c-.553 0-1 .447-1 1v8c0 1.654 1.346 3 3 3h9v-2h-9c-.552 0-1-.449-1-1v-8c0-.553-.447-1-1-1z" fill="#546d79"/><path d="m7.273 0h-.049c-.191.006-.377.086-.514.23l-6.5 6.75c-.136.141-.206.322-.21.505v.03c.004.183.074.364.21.505l6.5 6.75c.144.15.341.23.541.23.094 0 .189-.018.28-.055.283-.114.469-.388.469-.695v-3.25h1.188c.979 0 1.928.169 2.812.488v-6.738c-1.155-.483-2.422-.75-3.75-.75h-.25v-3.25c0-.307-.186-.581-.47-.695-.083-.034-.17-.052-.257-.055z" fill="#1d83d4"/></svg>-->
+                    <span class="like-btn-mobile"></span>
+                </div>
+
+
+            </div>
+      <!-- Close Button Starts -->
+            <button type="button" class="close" id="closeModal" data-dismiss="modal">&times;</button>
+            <!-- Close Button Ends -->
+
+    <!-- PerImage Modal content-->
+    <div class="modal-content">
+      <div class="modal-body text-center p-0">
+
+
+
+            <!-- Image Starts -->
+            <img id="imgModalImgV2" src="" alt="" class="w-100"/>
+            <!-- Image Ends -->
+            <input type="hidden" id="postIDV2">
+            <input type="hidden" id="imagePathV2">
+            <input type="hidden" id="imageIDV2">
+            <input type="hidden" id="publisherIdV2">
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PerImage Modals Ends -->
+
+<div class="modal fade forward_modal" id="forwardStoryModal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></button>
+				<h4 class="modal-title">Forward</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+				    <div class="col-md-12">
+				        <label>Select Username</label>
+
+				        <select class="form-control usernameField select2" id="usernameFieldV2" style="width:100%">
+				        <?php
+				            foreach(Wo_GetUsers() as $user){?>
+				                <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
+			            <?php }?>
+				        </select>
+
+				    </div>
+				    <div class="col-md-12 text-right" style="margin-top:10px;">
+				        <button class="btn btn-default"  data-dismiss="modal">Cancel</button>
+				        <button class="btn btn-success" onclick="forwardStory()">Forward</button>
+				    </div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade forward_modal" id="forward_modalV2" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></button>
+				<h4 class="modal-title">Forward</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+				    <div class="col-md-12">
+				        <label>Select Username</label>
+
+				        <select class="form-control usernameField select2" id="usernameFieldV2" style="width:100%">
+				        <?php
+				            foreach(Wo_GetUsers() as $user){?>
+				                <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
+			            <?php }?>
+				        </select>
+
+				    </div>
+				    <div class="col-md-12 text-right" style="margin-top:10px;">
+				        <button class="btn btn-default"  data-dismiss="modal">Cancel</button>
+				        <button class="btn btn-success" onclick="forwardImageV2()">Forward</button>
+				    </div>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="storyModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" style="width: 80%; height: 90%; ">
+  <div class="modal-content">
+       <div class="modal-header">
+        <button type="button" class="close" onClick="closeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+              <input type="hidden" id="storyID">
+              <div class="custom-slider">
+                <a href="javascript:;" class="custom-slider-prev" onclick="previousStory()"  ><i class="fa fa-chevron-left"></i></a>
+                  <div class="storyBody "></div>
+                  <a href="javascript:;" class="custom-slider-next"><i class="fa fa-chevron-right" onclick="nextStory()"></i></a>
+              </div>
+
+              <!-- <div class="col-md-1 text-right">
+
+              </div> -->
+        </div>
+        <hr>
+        <div class="custom-slider-thumbnails">
+          <!-- <div class="col-md-1 text-left"> -->
+              <a href="javascript:;" class="custom-slider-thumbnails-prev" onclick="previousThumnails()" ><i class="fa fa-chevron-left"></i></a>
+            <!-- </div> -->
+            <div class="galleryThumbnails">
+            </div>
+                    <!-- </div class="col-md-1 text-right"> -->
+                <a href="javascript:;" class="custom-slider-thumbnails-next" onclick="nextThumbnails()"><i class="fa fa-chevron-right"></i></a>
+            <!-- <//div> -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="shareLocationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title d-inline-block" id="exampleModalLongTitle">Enter Location</h5>
+        <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <input type="text" class="form-control" id="search_input" placeholder="Type address...">
+                <input type="hidden" id="locationURL">
+                <input type="hidden" id="toID">
+                <input type="hidden" id="formattedAddress">
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+        <button type="button" class="btn btn-success" onClick="shareLocation()" id="locationBtnStatus" disabled>Share Location</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="sendMessageToMultipleModal" role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="wow_pops_head">
+				<svg height="100px" preserveAspectRatio="none" version="1.1" viewBox="0 0 300 100" width="300px" xmlns="http://www.w3.org/2000/svg"><path d="M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729 c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z" fill="currentColor" opacity="0.6"></path> <path d="M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729 c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z" fill="currentColor" opacity="0.6"></path> <path d="M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428 c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z" fill="currentColor"></path></svg>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path></svg></button>
+				<h4><i class="fa fa-users"></i> Send Message to Multiple</h4>
+			</div>
+			<form id="selectedUsersForm" class="">
+				<div class="modal-body">
+					<div class="wow_form_fields selectedUserMsg" style="display:none">
+					    <span class="text-success">Message Sent!</span>
+					</div>
+					<div class="wow_form_fields">
+					    <label>Select Users</label>
+						<select class="form-control js-example-basic-multiple" id="selectedUsers" name="selectedUsers[]" style="width:100%; height:100px;" multiple>
+				        <?php
+				            foreach(Wo_GetUsers() as $user){?>
+				                <option value="<?php echo $user['user_id']; ?>"><?php echo $user['username']; ?></option>
+			            <?php }?>
+				        </select>
+					</div>
+					<div class="wow_form_fields">
+						<label>Message</label>
+						<textarea id="selectedUsersMessage"  name="selectedUsersMessage" class="form-control" rows="10"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="" type="submit" class="btn btn-main btn-mat btn-mat-raised ">Send</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script>
+
+// $('.goog-te-combo').change(function(){
+//     getSelectedlang();
+// });
+
+// $(document).ready(function(){
+//     setTimeout(function() {
+//         var lngvalue = getSelectedlang(); //Calls after 5 sec
+//         $('.lang_tab  option[value="en|'+lngvalue+'"]').attr('selected','selected');
+//     }, 3000);
+// });
+
+var flag = 0;
+//setInterval(getSelectedlang, 2000);
+function getSelectedlang(){
+
+    if(flag > 10){
+        return false;
+    }
+
+    language = $("select.goog-te-combo option:selected").val();
+    if(language == ''){
+        //$('.lang_chng_clss  option[value="en|en"]').attr('selected','selected');
+    } else{
+        //$('.lang_chng_clss  option[value="en|'+language+'"]').attr('selected','selected');
+    }
+    ++flag;
+
+    //console.log("Check: "+language);
+
+    // if(language != '' && flag == true){
+    //     $('.lang_chng_clss  option[value="en|'+language+'"]').attr('selected','selected');
+    //     flag = false;
+    //     console.log('flg');
+    // }
+    // console.log(selected_option);
+    //alert(language);
+    //return language;
+
+}
+
+</script>
+<script src="assets/js/select2.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.js" integrity="sha512-UNbeFrHORGTzMn3HTt00fvdojBYHLPxJbLChmtoyDwB6P9hX5mah3kMKm0HHNx/EvSPJt14b+SlD8xhuZ4w9Lg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+
+<script type="text/javascript">
+<?php if($wo['loggedin'] == true) { ?>
+$(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+});
+function storySlider(){
+    $.ajax({
+        type : "GET",
+        url  : 'https://revolus.com/requests.php?f=load_postsV2',
+        data : {},
+        success:function(res){
+            if(res != ''){
+                $(".storyBody").html(res);
+            }
+
+        },
+        error:function(res){
+          alert('error');
+        }
+      });
+
+      $.ajax({
+        type : "GET",
+        url  : 'https://revolus.com/requests.php?f=load_postsV3',
+        data : {},
+        success:function(res){
+            if(res != ''){
+                $(".galleryThumbnails").html(res);
+            }
+        },
+        error:function(res){
+          alert('error');
+        }
+      });
+
+      $('#storyModal').modal('show');
+}
+
+<?php } ?>
+function nextStory(){
+  var after_post_id = $('.storyBody').find('.post-container').find('.post').attr('data-post-id');
+  // alert(after_post_id);
+//   $(".custom-slider-prev").show();
+  $.ajax({
+    type : "GET",
+    url  : "https://revolus.com/requests.php?f=posts&s=load_more_postsV2&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+    data : {
+      'after_post_id' : after_post_id,
+    },
+    success : function(res){
+        if(res != ''){
+            $(".storyBody").html(res);
+        }
+    },
+    error   : function(res){
+
+    }
+  });
+
+  $.ajax({
+    type : "GET",
+    url  : "https://revolus.com/requests.php?f=posts&s=load_more_postsV3&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+    data : {
+      'after_post_id' : after_post_id,
+    },
+    success:function(res){
+        if(res != ''){
+            $(".galleryThumbnails").html(res);
+        }
+
+    },
+    error:function(res){
+      alert('error');
+    }
+  });
+}
+
+function previousStory(){
+  var before_post_id = $('.storyBody').find('.post-container').find('.post').attr('data-post-id');
+  // alert(before_post_id);
+  $.ajax({
+    type : "GET",
+    url  : "https://revolus.com/requests.php?f=posts&s=load_more_postsV2&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+    data : {
+      'after_post_id' : 0,
+      'before_post_id' : before_post_id,
+    },
+    success : function(res){
+        if(res != ''){
+            $(".storyBody").html(res);
+        }
+    },
+    error   : function(res){
+
+    }
+  });
+
+
+  $.ajax({
+    type : "GET",
+    url  : "https://revolus.com/requests.php?f=posts&s=load_more_postsV3&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+    data : {
+      'after_post_id' : 0,
+      'before_post_id' : before_post_id,
+    },
+    success : function(res){
+        if(res != ''){
+            $(".galleryThumbnails").html(res);
+        }
+    },
+    error   : function(res){
+
+    }
+  });
+}
+
+
+
+function nextThumbnails(){
+  var after_post_id = $('.galleryThumbnails').find('.row').find('.post-container').find('.post').attr('data-post-id');
+//   $(".custom-slider-thumbnails-prev").show();
+  $.ajax({
+    type : "GET",
+    url  : "https://revolus.com/requests.php?f=posts&s=load_more_postsV3&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+    data : {
+      'after_post_id' : after_post_id,
+    },
+    success:function(res){
+        if(res != ''){
+            $(".galleryThumbnails").html(res);
+        }
+    },
+    error:function(res){
+      alert('error');
+    }
+  });
+}
+
+
+ function previousThumnails(){
+      var before_post_id = $('.galleryThumbnails').find('.row').find('.post-container').find('.post').attr('data-post-id');
+
+      $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=posts&s=load_more_postsV3&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+        data : {
+          'after_post_id' : 0,
+          'before_post_id' : before_post_id,
+        },
+        success : function(res){
+            if(res != ''){
+                $(".galleryThumbnails").html(res);
+            }
+        },
+        error   : function(res){
+
+        }
+      });
+}
+
+function showStory(id){
+
+    $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=posts&s=show_story&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+        data : {
+          'after_post_id' : id,
+        },
+        success : function(res){
+            if(res != ''){
+                $(".storyBody").html(res);
+            }
+        },
+        error   : function(res){
+
+        }
+    });
+}
+
+function openStorySlider(id){
+  $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=posts&s=show_story&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+        data : {
+          'after_post_id' : id,
+        },
+        success : function(res){
+            if(res != ''){
+                $(".storyBody").html(res);
+            }
+        },
+        error   : function(res){
+
+        }
+    });
+
+    $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=posts&s=load_more_postsV3&filter_by_more=all&user_id=0&page_id=0&group_id=0&event_id=0&posts_count=1&is_api=0&ad_id=0&story_id=0",
+        data : {
+          'after_post_id' : id,
+        },
+        success:function(res){
+          $(".galleryThumbnails").html(res);
+        },
+        error:function(res){
+          alert('error');
+        }
+      });
+
+    $('#storyModal').modal('show');
+}
+
+function fullsizeimg(id,elm){
+
+    var publisherId = elm.attr('data-publisher-id');
+    $("#publisherIdV2").val(publisherId);
+    var pubID = $("#publisherIdV2").val();
+    $("#storyModal").modal('hide');
+    var userid = '<?php echo $wo['user']['user_id']; ?>';
+
+    if(parseInt(userid) == parseInt(pubID)){
+        $('#follow').hide();
+        $('#call').hide();
+        $('.vcall').hide();
+        // $('.forward').hide();
+        $('.reply').hide();
+
+    }
+    else{
+         $('#follow').show();
+        $('#call').show();
+        $('.vcall').show();
+        // $('.forward').show();
+        $('.reply').show();
+    }
+       $(".reactions-box").hide();
+    var img = $('div.img_'+id+' img').attr('src');
+    $("#imgModalImgV2").attr("src",img);
+    $(".perImageModalV2").modal('show');
+    $("#postIDV2").val(id);
+    $("#publisherIdV2").val(publisherId);
+
+
+    $("#qasimInayat").find('.wo-reaction').find('.like-btn-lightbox').find('.unselectable').addClass('status-reaction-'+id);
+    $(".reactions-box").hide();
+    $("#deactive2").attr('data-id',id);
+    $("#reactionCartoons").addClass('reactions-lightbox-container-'+id);
+    $.ajax({
+       type : "GET",
+       url  : Wo_Ajax_Requests_File() + '?f=get-post-reaction',
+       data : {
+         'post_id' : id,
+       },
+       success : function(res){
+           $(".deactive").html(res);
+       },
+       error   : function(res){
+
+       }
+    });
+}
+
+
+
+let btnDownload = document.querySelector('.download');
+let img = document.querySelector('#imgModalImgV2');
+
+// Must use FileSaver.js 2.0.2 because 2.0.3 has issues.
+btnDownload.addEventListener('click', () => {
+    let imagePath = img.getAttribute('src');
+    let fileName = getFileName(imagePath);
+    saveAs(imagePath, fileName);
+});
+function getFileName(str) {
+
+    return str.substring(str.lastIndexOf('/') + 1)
+}
+
+function commentV2(){
+    alert('check');
+     $("#perImageModalV2").modal('hide');
+    $(".comment-section").hide();
+    $(".lightbox-content").hide();
+}
+
+
+$("#closeModal").click(function(){
+
+    const element = Wo_CloseLightbox();
+    element.click();
+
+})
+
+function closeModal(){
+ $('#storyModal').modal('hide');
+//  location.reload();
+}
+
+function followV2(){
+    var postID  = $("#postIDV2").val();
+    var currentStatus = $("#currentFollowStatusV2").val();
+    if(currentStatus == "Follow"){
+        $("#currentFollowStatusV2").val('UnFollow');
+        $("#followUnFollowV2").html('UnFollow');
+    }
+    else{
+        $("#currentFollowStatusV2").val('Follow');
+        $("#followUnFollowV2").html('Follow');
+    }
+
+    $.ajax({
+         url: Wo_Ajax_Requests_File() + '?f=validate_follow',
+         method: 'GET',
+         dataType: 'json',
+         data : {
+            'id' : postID,
+         },
+         success:function(res){
+        //   $("#followUnFollow").html('UnFollow');
+         },
+         error:function(res){
+             console.log(res);
+         }
+    })
+}
+
+function shareV2(elm){
+
+//  var owner_id = elm.attr('data-user-id');
+var owner_id = 0;
+ var post_id  = $("#postIDV2").val();
+
+  if (!post_id) {
+    return false;
+  }
+
+    $('#share_post_modal').modal('hide');
+    $('#share_post_modal').remove();
+    $.ajax({
+      url: Wo_Ajax_Requests_File(),
+      type: 'GET',
+      dataType: 'json',
+      data: {f: 'get_share_post',post_id:post_id},
+    })
+    .done(function(data) {
+      if (data.status == 200) {
+        $('body').append(data.html);
+        $('#SearchForInputPostId').val(post_id);
+        $('#SearchForInputTypeId').val(owner_id);
+        $('#share_post_modal').modal('show');
+      }
+    })
+    .fail(function() {
+    })
+    .always(function() {
+    });
+}
+
+function forwardV2(){
+    $("#forward_modalV2").modal('show');
+}
+
+function forwardImageV2(){
+    var img = $("#imgModalImgV2").attr('src');
+    var postID  = $("#postIDV2").val();
+    var userID = $("#usernameFieldV2").val();
+    $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=send_forward",
+        data : {
+
+          'sendMessageFile' : img,
+          'post_id'        : postID,
+          'user_id'        : userID,
+        },
+        success: function(res){
+         if(res.success == true){
+             document.location.href = 'https://revolus.com/messages/'+userID;
+         }
+
+
+        },
+        error: function(res){
+
+        }
+    });
+}
+
+function replyV2(){
+    var img = $("#imgModalImgV2").attr('src');
+    var postID  = $("#postIDV2").val();
+    $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=send_reply",
+        data : {
+
+          'sendMessageFile' : img,
+          'post_id'        : postID
+        },
+        success: function(res){
+            if(res.success == true){
+                 document.location.href = 'https://revolus.com/messages/'+res.publisher_id;
+            }
+        },
+        error: function(res){
+
+        }
+    });
+}
+
+
+function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+        {pageLanguage: 'af,sq,ar,hy,az,eu,be,bg,ca,zh-CN,zh-TW,hr,cs,da,nl,en,et,tl,fi,fr,gl,ka,de,el,ht,iw,hi,hu,is,id,ga,it,ja,ko,lv,lt,mk,ms,mt,no,fa,pl,pt,ro,ru,sr,sk,sl,es,sw,sv,th,tr,uk,ur,vi,cy,yi,bn,bs,ceb,eo,gu,ha,hmn,ig,jw,kn,km,lo,la,mi,mr,mn,ne,pa,so,ta,te,yo,zu',default:'en'},
+        'google_translate_element'
+    );
+}
+
+function reactionEmoji(elm){
+    var status = elm.attr('id');
+    var id = elm.attr('data-id');
+    $(".reactions-lightbox-container-"+id).show();
+}
+function Wo_RegisterReactionV2(element,reaction_icon,is_html){
+    // $(".reactions-box").show();
+		  //  $(".how_reacted").show();
+    var reaction = parseInt($(element).attr('data-reaction-id'));
+   var post_id   = $("#postIDV2").val();
+    var path = "<?php echo $wo['config']['theme_url']?>";
+    var lang = $(element).attr('data-reaction-lang');
+    if (!post_id || !reaction) {
+      return false;
+    }
+
+    $('.reactions-box-container-'+post_id).fadeOut(1);
+
+    var reaction_color = '';
+    if (is_html == 1) {
+      switch (reaction) {
+          case 1:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--like"><div class="emoji__hand"><div class="emoji__thumb"></div></div></div></div>';
+              reaction_color = '#1da1f2';
+              break;
+          case 2:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--love"><div class="emoji__heart"></div></div></div>';
+              reaction_color = '#f25268';
+              break;
+          case 3:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--haha"><div class="emoji__face"><div class="emoji__eyes"></div><div class="emoji__mouth"><div class="emoji__tongue"></div></div></div></div></div>';
+              reaction_color = '#f3b715';
+              break;
+          case 4:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--wow"><div class="emoji__face"><div class="emoji__eyebrows"></div><div class="emoji__eyes"></div><div class="emoji__mouth"></div></div></div></div>';
+              reaction_color = '#f3b715';
+              break;
+          case 5:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--sad"><div class="emoji__face"><div class="emoji__eyebrows"></div><div class="emoji__eyes"></div><div class="emoji__mouth"></div></div></div></div>';
+              reaction_color = '#f3b715';
+              break;
+          case 6:
+              reaction_html = '<div class="inline_post_emoji no_anim"><div class="emoji emoji--angry"><div class="emoji__face"><div class="emoji__eyebrows"></div><div class="emoji__eyes"></div><div class="emoji__mouth"></div></div></div></div>';
+              reaction_color = '#f7806c';
+              break;
+      }
+
+    }
+    else{
+      reaction_html = '<div class="inline_post_count_emoji reaction"><img src="'+reaction_icon+'"></div>&nbsp;&nbsp;';
+      reaction_color = '';
+    }
+
+    $('.deactive').html(''+reaction_html+'').css({"color": reaction_color});
+    $('.deactive').addClass("active-like");
+    $.get(Wo_Ajax_Requests_File(), {f: 'posts', s: 'register_reaction', post_id: post_id, reaction: reaction}, function (data) {
+      if(data.status == 200) {
+        $('.post-reactions-icons-'+post_id).html(data.reactions);
+            $(".reactions-box").hide();
+      }
+      if (data.can_send == 1) {
+        Wo_SendMessages();
+      }
+      $('#react_'+post_id).attr('data_react','1');
+
+    });
+}
+
+
+function Wo_GenerateVoiceCallV2(){
+     var user_id1 = "<?php echo $wo['user']['user_id'] ?>";
+     var user_id2 = $("#publisherIdV2").val();
+      $.get(Wo_Ajax_Requests_File(), {f:'create_new_audio_call', 'new': 'true', user_id1: user_id1, user_id2:user_id2}, function(data) {
+          if (data.status == 200) {
+              $('body').append(data.html);
+               $('#calling-modal').modal({
+                 show: true
+               });
+               checkcalls = setTimeout(function () {
+                  Wo_CheckForAudioCallAnswer(data.id);
+               }, 2000);
+               setTimeout(function() {
+                $('#calling-modal').find('.modal-title').html('<i class="fa fa fa-phone"></i> ' + data.text_no_answer);
+                $('#calling-modal').find('.modal-body p').text(data.text_please_try_again_later);
+                clearTimeout(checkcalls);
+                Wo_PlayAudioCall('stop');
+               }, 43000);
+              Wo_PlayAudioCall('play');
+        }
+   });
+}
+
+
+
+
+
+function registerStoryComment (comment,story_id,publisher_id,user_id) {
+  if(event.keyCode == 13 && event.shiftKey == 0) {
+    var comment = $(".c-comment").val();
+    var avatar = '<img class="avatar" src="<?php echo $wo['user']['avatar'];?>"/>';
+    var name = "<?php echo $wo['user']['name'];?>";
+    $.ajax({
+        type : "POST",
+        url  : 'https://revolus.com/requests.php?f=posts&s=register_story_comment',
+
+        data:   {
+            'story_id' : story_id,
+            'text' : comment,
+            'user_id' : user_id,
+            'publisher_id' : publisher_id,
+            'user_id' : user_id,
+        },
+        success : function(res){
+          $(".c-comment").val('');
+          var html = '<div class="comment comment-container" id="comment_40" data-comment-id="40"><a class="pull-left" href="">'+avatar+'</a><div class="comment-body"><div class="comment-heading"><span class="user-popover" data-id="412" data-type="user"><a href=""><h4 class="user">'+name+'</h4></a></span><div class="comment-text">'+comment+'</div><div class="comment-image"></div><div class="clear"></div></div><div class="comment-edit"><input type="text" class="form-control" value="Comment 1" onkeyup="Wo_EditComment(this.value,40, event)" placeholder="Edit comment" dir="auto"></div></div></div>';
+          $(".appendComments").append(html);
+        },
+        error : function(res){
+
+        }
+    });
+  }
+}
+
+function registerStoryComment2(comment,story_id,publisher_id,user_id){
+    var comment = $(".c-comment").val();
+    var avatar = '<img class="avatar" src="<?php echo $wo['user']['avatar'];?>"/>';
+    var name = "<?php echo $wo['user']['name'];?>";
+    $.ajax({
+        type : "POST",
+        url  : 'https://revolus.com/requests.php?f=posts&s=register_story_comment',
+        data:   {
+            'story_id' : story_id,
+            'text' : comment,
+            'user_id' : user_id,
+            'publisher_id' : publisher_id,
+            'user_id' : user_id,
+        },
+        success : function(res){
+          $(".c-comment").val('');
+          var html = '<div class="comment comment-container" id="comment_40" data-comment-id="40"><a class="pull-left" href="">'+avatar+'</a><div class="comment-body"><div class="comment-heading"><span class="user-popover" data-id="412" data-type="user"><a href=""><h4 class="user">'+name+'</h4></a></span><div class="comment-text">'+comment+'</div><div class="comment-image"></div><div class="clear"></div></div><div class="comment-edit"><input type="text" class="form-control" value="Comment 1" onkeyup="Wo_EditComment(this.value,40, event)" placeholder="Edit comment" dir="auto"></div></div></div>';
+          $(".appendComments").append(html);
+        },
+        error : function(res){
+
+        }
+    });
+}
+
+function forwardModal(id){
+    $("#storyID").val(id);
+    $("#forwardStoryModal").modal('show');
+}
+function forwardStory(){
+    var img = $("#draggableHelper").find('img').attr('src');
+    if(img == undefined){
+        img = $("#draggableHelper").find('video').find('source').attr('src');
+    }
+
+     var story_id = $("#storyID").val();
+     var userID = $("#usernameFieldV2").val();
+     $.ajax({
+        type : "GET",
+        url  : "https://revolus.com/requests.php?f=send_forward",
+        data : {
+
+          'sendMessageFile' : img,
+          'post_id'        : story_id,
+          'user_id'        : userID,
+        },
+        success: function(res){
+         if(res.success == true){
+             document.location.href = 'https://revolus.com/messages/'+userID;
+            $("#forwardStoryModal").modal('hide');
+         }
+
+
+        },
+        error: function(res){
+
+        }
+    });
+
+}
+
+function shareStory(){
+    var content = $("#draggableHelper").find('img').attr('src');
+    if(content == undefined){
+        content = $("#draggableHelper").find('video').find('source').attr('src');
+    }
+    console.log(content);
+    $('#share_post_modal').modal('hide');
+    $('#share_post_modal').remove();
+    $.ajax({
+      url: Wo_Ajax_Requests_File(),
+      type: 'GET',
+      dataType: 'json',
+      data: {f: 'get_share_postV2',content:content},
+    })
+    .done(function(data) {
+      if (data.status == 200) {
+        $("#share_post_modalV2").remove();
+        $('body').append(data.html);
+        $('#share_post_modalV2').modal('show');
+      }
+    })
+    .fail(function() {
+    })
+    .always(function() {
+    });
+}
+
+
+var searchInput = 'search_input';
+$(document).ready(function () {
+    var autocomplete;
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
+        types: ['geocode'],
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+        var near_place = autocomplete.getPlace();
+        $("#locationBtnStatus").attr('disabled',false);
+        $("#formattedAddress").val(near_place.formatted_address);
+        document.getElementById('locationURL').value = near_place.url;
+    });
+});
+//Qasim
+function shareLocationModal(to_id,from_id){
+    $("#locationBtnStatus").attr('disabled',true);
+    $("#search_input").val('');
+    $("#toID").val(to_id);
+    $("#shareLocationModal").modal('show');
+}
+
+
+function shareLocation(){
+    var location = $("#locationURL").val();
+    var to_id = $("#toID").val();
+    var formattedAddress = $("#formattedAddress").val();
+    $.ajax({
+        type : "POST",
+        url  : "https://revolus.com/requests.php?f=chat&s=share_location",
+        data : {
+            'textSendMessage' : location,
+            'user_id' : to_id,
+            'formatted_address' : formattedAddress,
+        },
+        success : function(res){
+            $("#shareLocationModal").modal('hide');
+        },
+        error : function(res){
+
+        }
+    });
+}
+
+function sendMessageToMultipleModal(){
+    $(".selectedUserMsg").hide();
+    $("#selectedUsersForm").trigger('reset');
+    $(".select2-selection__rendered").html(null);
+    $("#sendMessageToMultipleModal").modal('show');
+}
+$("#selectedUsersForm").submit(function(event){
+   event.preventDefault();
+   var data =  $(this).serialize();
+   $.ajax({
+        type : "POST",
+        url  : "https://revolus.com/requests.php?f=chat&s=send_message_to_multiple",
+        data : data,
+        success : function(res){
+            if(res.status == 200){
+               $(".selectedUserMsg").show();
+               setTimeout(function() { $("#sendMessageToMultipleModal").modal('hide'); }, 2000);
+
+
+           }
+        },
+        error : function(res){
+
+        }
+   });
+});
+
+</script>
+<script type="text/javascript" src="<?php echo $wo['config']['theme_url'];?>/javascript/extras/modernizr.2.5.3.min.js"></script>
+
+
+<!--<div>For testing For testing For testing For testing For testing For testing For testing For testing For testing For testing For testing </div>-->
+
+ </body>
+</html>

@@ -1,0 +1,50 @@
+<?php
+
+$is_video = false;
+if(!empty($wo['product']['images'][0]['image_org'])){
+    $ext_array = array('m4v','webm','flv','mov','mpeg','mp4');
+    $gext = explode('.', $wo['product']['images'][0]['image_org']);
+    if(count($gext) > 0 && isset($gext[count($gext)-1]) && !empty($gext[count($gext)-1])){
+        if(in_array($gext[count($gext)-1], $ext_array)){
+            $is_video = true;
+        }
+    }
+}
+
+if($is_video == false){ ?>
+    <div class="wo_my_products col-xs-6 col-sm-4 col-md-3" id="product_<?php echo $wo['product']['id'];?>">
+    	<a href="<?php echo $wo['product']['url'];?>" data-ajax="?link1=post&id=<?php echo $wo['product']['post_id'];?>">
+          <div class="avatar">
+             <img src="<?php echo $wo['product']['images'][0]['image_org'];?>" alt="<?php echo $wo['product']['name']; ?> Profile Picture" />
+          </div>
+          <div class="produc_info">
+          	 <span title="<?php echo $wo['product']['name']; ?>"><?php echo $wo['product']['name']; ?></span>
+    		 <h4><?php echo (!empty($wo['currencies'][$wo['product']['currency']]['symbol'])) ? $wo['currencies'][$wo['product']['currency']]['symbol'] : $wo['config']['classified_currency_s'];?><?php echo $wo['product']['price']; ?></h4>
+          </div>
+    	</a>
+    </div>
+
+<?php
+} else{ ?>
+    
+    <div class="wo_my_products col-xs-6 col-sm-4 col-md-3" id="product_<?php echo $wo['product']['id'];?>">
+    	<a href="<?php echo $wo['product']['url'];?>" data-ajax="?link1=post&id=<?php echo $wo['product']['post_id'];?>">
+          <div class="avatar">
+              
+              <?php
+                echo '<video class="w-100" height="240" controls><source src="'.str_replace('_small', '', $wo['product']['images'][0]['image_org']).'" type="video/mp4"></video>';
+              ?>
+              
+          </div>
+          <div class="produc_info">
+          	 <span title="<?php echo $wo['product']['name']; ?>"><?php echo $wo['product']['name']; ?></span>
+    		 <h4><?php echo (!empty($wo['currencies'][$wo['product']['currency']]['symbol'])) ? $wo['currencies'][$wo['product']['currency']]['symbol'] : $wo['config']['classified_currency_s'];?><?php echo $wo['product']['price']; ?></h4>
+          </div>
+    	</a>
+    </div>
+
+<?php
+}
+?>
+
+

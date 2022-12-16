@@ -1,0 +1,95 @@
+<div class="container-fluid">
+    <div>
+        <h3>Application Settings</h3>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="#">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#">Settings</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Application Settings</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- Vertical Layout -->
+    <div class="row">
+        <div class="col-lg-6 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-success email-settings-alert"></div>
+                    <form class="email-settings" method="POST">
+                        <label for="app_navigation_and">Bottom Navigation Bar</label>
+                        <div class="form-group">
+                            <input type="radio" name="app_navigation_and" id="push-enabled" value="1" <?php echo ($wo['config']['app_navigation_and'] == 1) ? 'checked': '';?>>
+                            <label for="push-enabled">Enabled</label>
+                            <input type="radio" name="app_navigation_and" id="push-disabled" value="0" <?php echo ($wo['config']['app_navigation_and'] == 0) ? 'checked': '';?>>
+                            <label for="push-disabled" class="m-l-20">Disabled</label>
+                        </div>
+						<label for="app_slide_and">Slide Menu</label>
+                        <div class="form-group">
+                            <input type="radio" name="app_slide_and" id="push-enabled_1" value="1" <?php echo ($wo['config']['app_slide_and'] == 1) ? 'checked': '';?>>
+                            <label for="push-enabled_1">Enabled</label>
+                            <input type="radio" name="app_slide_and" id="push-disabled_1" value="0" <?php echo ($wo['config']['app_slide_and'] == 0) ? 'checked': '';?>>
+                            <label for="push-disabled_1" class="m-l-20">Disabled</label>
+                        </div>
+                        <br>
+                        <label for="banneron_and">Admob Banner</label>
+                        <div class="form-group">
+                            <input type="radio" name="banneron_and" id="push_notifications-enabled" value="1" <?php echo ($wo['config']['banneron_and'] == 1) ? 'checked': '';?>>
+                            <label for="push_notifications-enabled">Enabled</label>
+                            <input type="radio" name="banneron_and" id="push_notifications-disabled" value="0" <?php echo ($wo['config']['banneron_and'] == 0) ? 'checked': '';?>>
+                            <label for="push_notifications-disabled" class="m-l-20">Disabled</label>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="push_key" name="bannerid_and" class="form-control" value="<?php echo $wo['config']['bannerid_and'];?>">
+                                <label class="form-label">Admob Banner ID</label>
+                            </div>
+                        </div>
+						<label for="interstitialon_and">Admob Interstitial</label>
+                        <div class="form-group">
+                            <input type="radio" name="interstitialon_and" id="push_notifications-enabled_1" value="1" <?php echo ($wo['config']['interstitialon_and'] == 1) ? 'checked': '';?>>
+                            <label for="push_notifications-enabled_1">Enabled</label>
+                            <input type="radio" name="interstitialon_and" id="push_notifications-disabled_1" value="0" <?php echo ($wo['config']['interstitialon_and'] == 0) ? 'checked': '';?>>
+                            <label for="push_notifications-disabled_1" class="m-l-20">Disabled</label>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" id="push_key_1" name="interstitialid_and" class="form-control" value="<?php echo $wo['config']['interstitialid_and'];?>">
+                                <label class="form-label">Admob Interstitial ID</label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+                        <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="clearfix"></div>
+    </div>
+    <!-- #END# Vertical Layout -->
+<script>
+
+$(function() {
+    var form_email_settings = $('form.email-settings');
+    form_email_settings.ajaxForm({
+        url: Wo_Ajax_Requests_File() + '?f=admin_setting&s=update_general_setting',
+        beforeSend: function() {
+            form_email_settings.find('button').text('Please wait..');
+        },
+        success: function(data) {
+            if (data.status == 200) {
+                form_email_settings.find('button').text('Save');
+                $("html, body").animate({ scrollTop: 0 }, "slow");
+                $('.email-settings-alert').html('<i class="fa fa-check"></i> Settings updated successfully');
+                setTimeout(function () {
+                    $('.email-settings-alert').empty();
+                }, 2000);
+            }
+        }
+    });
+});
+</script>

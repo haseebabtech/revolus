@@ -1,0 +1,172 @@
+<?php
+session_start();
+?>
+
+<?php $msgdis=''; if (!empty($wo['chatMessage']['quote'])){ $msgdis='quote_msg_display'; } ?>
+
+<div class="messages-wrapper <?php echo $msgdis; ?> <?php echo ($wo['chatMessage']['onwer'] == 1) ? 'pull-right' : 'pull-left';?> messages-text" id="messageId_<?php echo $wo['chatMessage']['id'] ?>" data-message-id="<?php echo $wo['chatMessage']['id'] ?>">
+	<?php if ($wo['chatMessage']['onwer'] == 0) { ?>
+		<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u='.$wo['chatMessage']['messageUser']['username']);?>" data-ajax="?link1=timeline&u=<?php echo $wo['chatMessage']['messageUser']['username']?>">
+			<img class="user-avatar<?php echo ($wo['chatMessage']['onwer'] == 1) ? '-right' : '-left';?>" src="<?php echo $wo['chatMessage']['messageUser']['avatar'] ?>" alt="Profile Picture">
+		</a>
+	<?php } ?>
+	
+	<?php if (!empty($wo['chatMessage']['quote'])){ ?>
+	    <div class=" <?php echo ($wo['chatMessage']['onwer'] == 0) ? 'text-left': 'text-right';?>" id="quote_msg_display"><?php echo $wo['chatMessage']['quote']; ?></div>
+	<?php } ?>
+	
+	<?php if($wo['chatMessage']['is_location_shared'] == 1) {?>
+        <div class="message  outgoing pull-right" onclick="Wo_ShowMessageOptions(<?php echo $wo['chatMessage']['id'] ?>);">
+           <p id="particular_portion_<?php echo $wo['chatMessage']['id'] ?>" class="message-text" dir="auto" style="background: rgb(77, 145, 234); color: rgb(255, 255, 255);">
+               <?php echo ($wo['chatMessage']['onwer'] == 0) ? '<span class="toggleLeftChat">…</span>': '<span class="toggleRightChat">…</span>';?>
+              	<a href="<?php echo $wo['chatMessage']['location_link']; ?>" target="_blank"><?php echo $wo['chatMessage']['formatted_address']; ?></a>			
+           </p>
+           <div class="deleteMessage ">
+              <div class="editMessage ">
+              </div>
+              <i class="fa fa-pencil-square-o" onclick="Wo_EditChatMessage(<?php echo $wo['chatMessage']['id'] ?>);"></i>
+              <i class="fa fa-trash" onclick="Wo_DeleteChatMessage(<?php echo $wo['chatMessage']['id'] ?>);" aria-hidden="true"></i>
+              <i class="fa fa-reply" onclick="Wo_QuoteChatMessage(<?php echo $wo['recipient_id']; ?>,, <?php echo $wo['chatMessage']['id'] ?>);" aria-hidden="true"></i>
+           </div>
+           <p></p>
+           <input class="form-control" type="text" id="edit_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" name="edit_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" value="Hello World" onkeydown="Wo_UpdateChatMessage(event, <?php echo $wo['chatMessage']['id'] ?>)" style="display:none;">
+           <div class="clear"></div>
+           <div class="message-media" style="background: rgb(77, 145, 234);">
+           </div>
+        </div>
+	<?php } ?>
+	<div class="message <?php if (!empty($wo['chatMessage']['product_id'])) {$wo['product'] = Wo_GetProduct($wo['chatMessage']['product_id']);if (!empty($wo['product'])) {?>wo_msg_prod_prnt<?php } } ?> <?php echo ($wo['chatMessage']['onwer'] == 1) ? 'outgoing pull-right' : 'incoming pull-left';?>" onclick="Wo_ShowMessageOptions(<?php echo $wo['chatMessage']['id'] ?>);">
+		<?php if (!empty($wo['chatMessage']['text'])): ?>
+			<p id="particular_portion_<?php echo $wo['chatMessage']['id'] ?>" class="message-text" dir="auto" style="background: <?php echo ($wo['chatMessage']['onwer'] == 1 && isset($wo['chat']['color'])) ? $wo['chat']['color'] . ' !important;' : '';?>;<?php echo ($wo['chatMessage']['onwer'] == 1) ? ' color:#fff !important;' : '';?>">
+			    
+			    <?php echo ($wo['chatMessage']['onwer'] == 0) ? '<span class="toggleLeftChat">…</span>': '<span class="toggleRightChat">…</span>';?>
+			    
+                
+				<?php if($wo['chatMessage']['type_two'] == 'contact'): 
+				    
+					$json = json_decode(trim(htmlspecialchars_decode($wo['chatMessage']['text'])), true);
+					echo $json['Value'] . ' (' . $json['Key'] . ')';
+				?>
+				<?php else: 
+				    
+				    
+				   echo $wo['chatMessage']['text'];
+				  
+                 
+                
+				    
+				endif;?>
+				
+				
+				<div class="deleteMessage <?php echo ($wo['chatMessage']['onwer'] == 0) ? 'left': 'right';?>">
+				    
+				<div class="editMessage <?php echo ($wo['chatMessage']['onwer'] == 0) ? 'right': '';?>">
+				        
+  <!--                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"-->
+	 <!--width="494.936px" height="494.936px" viewBox="0 0 494.936 494.936" style="enable-background:new 0 0 494.936 494.936;" xml:space="preserve" onclick="Wo_EditChatMessage(<?php echo $wo['chatMessage']['id'] ?>);" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline>-->
+	 <!--   <path d="M389.844,182.85c-6.743,0-12.21,5.467-12.21,12.21v222.968c0,23.562-19.174,42.735-42.736,42.735H67.157-->
+		<!--	c-23.562,0-42.736-19.174-42.736-42.735V150.285c0-23.562,19.174-42.735,42.736-42.735h267.741c6.743,0,12.21-5.467,12.21-12.21-->
+		<!--	s-5.467-12.21-12.21-12.21H67.157C30.126,83.13,0,113.255,0,150.285v267.743c0,37.029,30.126,67.155,67.157,67.155h267.741-->
+		<!--	c37.03,0,67.156-30.126,67.156-67.155V195.061C402.054,188.318,396.587,182.85,389.844,182.85z"/>-->
+		<!--<path d="M483.876,20.791c-14.72-14.72-38.669-14.714-53.377,0L221.352,229.944c-0.28,0.28-3.434,3.559-4.251,5.396l-28.963,65.069-->
+		<!--	c-2.057,4.619-1.056,10.027,2.521,13.6c2.337,2.336,5.461,3.576,8.639,3.576c1.675,0,3.362-0.346,4.96-1.057l65.07-28.963-->
+		<!--	c1.83-0.815,5.114-3.97,5.396-4.25L483.876,74.169c7.131-7.131,11.06-16.61,11.06-26.692-->
+		<!--	C494.936,37.396,491.007,27.915,483.876,20.791z M466.61,56.897L257.457,266.05c-0.035,0.036-0.055,0.078-0.089,0.107-->
+		<!--	l-33.989,15.131L238.51,247.3c0.03-0.036,0.071-0.055,0.107-0.09L447.765,38.058c5.038-5.039,13.819-5.033,18.846,0.005-->
+		<!--	c2.518,2.51,3.905,5.855,3.905,9.414C470.516,51.036,469.127,54.38,466.61,56.897z"/></svg>-->
+		
+    				</div>
+    				
+    				<?php if($wo['chatMessage']['onwer'] == 0){} else{ ?>
+    				    <i class="fa fa-pencil-square-o" onclick="Wo_EditChatMessage(<?php echo $wo['chatMessage']['id'] ?>);"></i>
+    				    
+    				    <i class="fa fa-trash" onclick="Wo_DeleteChatMessage(<?php echo $wo['chatMessage']['id'] ?>);" aria-hidden="true"></i>
+    				<?php } ?>
+				
+				    <!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" onclick="Wo_DeleteChatMessage( echo $wo['chatMessage']['id'] );" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>-->
+				    
+				    
+				    
+				    <!--<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" onclick="Wo_QuoteChatMessage(<?php echo $wo['recipient_id']; ?>, <?php echo $wo['chatMessage']['id'] ?>);" viewBox="0 0 226.262 226.262" style="enable-background:new 0 0 226.262 226.262;" xml:space="preserve">-->
+				    <!--<path d="M113.131,6.031C50.75,6.031,0,45.208,0,93.365c0,30.958,21.196,59.533,55.542,75.209-->
+				    <!--c-5.924,32.347-7.907,42.069-8.566,44.973c-0.608,1.326-0.608,1.874-0.608,2.419l0.027,3.855l3.676,0.335-->
+				    <!--c0.454,0.04,0.856,0.075,1.217,0.075c1.419,0,2.219-0.56,3.139-3.598c0.767-1.618,5.013-8.688,27.829-39.224-->
+				    <!--c9.998,2.182,20.372,3.287,30.875,3.287c62.382,0,113.131-39.177,113.131-87.331C226.263,45.208,175.513,6.031,113.131,6.031z-->
+				    <!--M113.131,172.615c-10.787,0-21.419-1.231-31.599-3.658l-2.581-0.615l-1.59,2.123c-8.185,10.934-14.211,19.125-18.644,25.296-->
+				    <!--c1.758-9.316,3.745-20.107,5.346-28.871l0.58-3.18l-2.973-1.263C28.615,148.38,8.08,121.909,8.08,93.365-->
+				    <!--c0-43.699,47.126-79.253,105.051-79.253c57.925,0,105.051,35.555,105.051,79.253S171.056,172.615,113.131,172.615z"/>-->
+			     <!--   <path d="M133.333,46.435H92.929v28.283H64.646v40.404h28.283v28.283h40.404v-28.283h28.283V74.718h-28.283V46.435z-->
+				    <!--M153.535,82.799v24.242h-28.283v28.283H101.01v-28.283H72.727V82.799h28.283V54.516h24.242v28.283H153.535z"/>-->
+				    <i class="fa fa-reply" onclick="Wo_QuoteChatMessage(<?php echo $wo['recipient_id']; ?>, <?php echo $wo['chatMessage']['id'] ?>);" aria-hidden="true"></i>
+				</div>
+			</p>
+			<input class="form-control" type="text" id="edit_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" name="edit_chat_txt_<?php echo $wo['chatMessage']['id'] ?>" value="<?php echo $wo['chatMessage']['text'] ?>" onkeydown="Wo_UpdateChatMessage(event, <?php echo $wo['chatMessage']['id'] ?>)" style="display:none;" />
+		<?php endif ?>
+		<div class="clear"></div>
+		<div class="message-media" style="background: <?php echo ($wo['chatMessage']['onwer'] == 1 && isset($wo['chat']['color'])) ? $wo['chat']['color'] . ' !important;' : '';?>">
+		    
+			<?php  
+				if(isset($wo['chatMessage']['media']) && !empty($wo['chatMessage']['media'])) {
+					$media = array('type' => 'chatMessage', 'storyId' => $wo['chatMessage']['id'], 'filename' => $wo['chatMessage']['media'], 'name' => $wo['chatMessage']['mediaFileName']); 
+					echo Wo_DisplaySharedFile($media, 'chat');
+					
+				} 
+			?>
+			
+				  
+				
+				<?php if (!empty($wo['chatMessage']['stickers'])): ?>
+				<?php if (strpos('.mp4', $wo['chatMessage']['stickers'])) { ?>
+					<video autoplay loop><source src="<?php echo $wo['chatMessage']['stickers']; ?>" type="video/mp4"></video>
+				<?php } else { ?>
+					<img src="<?php echo $wo['chatMessage']['stickers']; ?>" alt="GIF">
+				<?php } ?>
+			<?php endif; ?>
+			
+			
+			<?php if (!empty($wo['chatMessage']['product_id'])) { 
+				$wo['product'] = Wo_GetProduct($wo['chatMessage']['product_id']);
+				if (!empty($wo['product'])) {
+			?>
+				<div class="wo_market">
+					<div class="market_bottom">
+						<div class="products">
+							<div class="product" id="product-<?php echo $wo['product']['id']?>" data-id="<?php echo $wo['product']['id']?>">
+								<div class="product_info">
+									<div class="product-image">
+										<a href="<?php echo $wo['product']['url']?>"><img src="<?php echo $wo['product']['images'][0]['image_org'];?>"></a>
+									</div>
+									<div class="produc_info">
+										<div class="product-title">
+											<a href="<?php echo $wo['product']['url']?>" title="<?php echo $wo['product']['name']?>"><?php echo $wo['product']['name']?></a>
+										</div>
+										<div class="product-by">
+											<?php
+												$product_by_ = $wo['product']['category'];
+												$product_by_ = str_replace('{product_category_name}', $wo['products_categories'][$wo['product']['category']], $product_by_);
+											?>
+											<a href="<?php echo Wo_SeoLink('index.php?link1=products&c_id=' . $wo['product']['category']);?>"><?php echo $wo['products_categories'][$wo['product']['category']];?></a>
+										</div>
+										<div class="product-price">
+											<?php echo (!empty($wo['currencies'][$wo['product']['currency']]['symbol'])) ? $wo['currencies'][$wo['product']['currency']]['symbol'] : $wo['config']['classified_currency_s'];?><?php echo $wo['product']['price']?>
+										</div>
+									</div>
+									<div class="clear"></div>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php } } ?>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<?php if($wo['chatMessage']['messageUser']['user_id'] == $wo['user']['user_id']) { ?>
+		<div class="message-seen text-right message-details"></div>
+		<div class="clear"></div>
+	<?php } ?>
+	<div class="message-typing message-details"></div>
+</div>
+<div class="clear"></div>
+

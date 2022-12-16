@@ -1,0 +1,198 @@
+<?php //include('../header/content.phtml');
+//session_start();
+
+?>
+<style>
+    div#subss input {
+    background: #4e72c3;
+    color: #fff;
+    border: 0;
+    padding: 7px 23px;
+    border-radius: 4px;
+}
+</style>
+<form id="frmPayment" action="?link1=payment" method="POST" enctype="multipart/form-data"> 
+    <section class="showcase">
+      <div class="container">
+        <div class="pb-2 mt-4 mb-2 border-bottom">
+          <h2>Pay with Authorize</h2>
+        </div>
+        <div class="row align-items-center">
+           <div class="form-group col-md-12">
+            <label for="inputEmail4">Amount</label>
+            <input type="text" class="form-control" id="amount" name="amount" placeholder="amount">
+          </div>
+      </div>
+        <div class="row align-items-center">
+           <div class="form-group col-md-6">
+            <label for="inputEmail4">First Name</label>
+            <input type="text" class="form-control" id="first-name" name="first_name" placeholder="First Name" required="">
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="inputEmail4">Last Name</label>
+            <input type="text" class="form-control" id="last-name" name="last_name" placeholder="Last Name" required="">
+          </div>
+
+      </div>
+        <div class="row align-items-center">  
+          <div class="form-group col-md-12">
+            <label for="inputEmail4">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required="">
+          </div>
+        </div>
+        <div class="row align-items-center">  
+          <div class="form-group col-md-12">
+            <label for="inputEmail4">Card Number</label>
+            <input type="text" class="form-control" maxlength="18" id="card_number" name="card_number" placeholder="4111111111111111" autocomplete="off" required="">
+          </div>
+        </div>
+
+        <div class="row align-items-center">  
+          <div class="form-group col-md-4">
+            <label for="inputEmail4">Expiry Month</label>
+            <select name="card_exp_month" id="month" class="form-control" required="">
+                <option value="01">01</option>
+                <option value="02">02</option>
+                <option value="03">03</option>
+                <option value="04">04</option>
+                <option value="05">05</option>
+                <option value="06">06</option>
+                <option value="07">07</option>
+                <option value="08">08</option>
+                <option value="09">09</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputEmail4">Expiry Year</label>
+            <select name="card_exp_year" id="year" class="form-control" required="">
+                <?php
+                echo $firstYear = (int)date('Y');
+                $lastYear = $firstYear + 10;
+                for($i=$firstYear;$i<=$lastYear;$i++)
+                {
+                    echo '<option value='.$i.'>'.$i.'</option>';
+                }
+                ?>
+            </select>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputEmail4">CVC</label>
+            <input type="text" name="card_cvc" maxlength="3" id="cvc" placeholder="CVC" class="form-control" required="">
+        </div>
+          </div>
+          <div class="row justify-content-start">
+              <div class="col" id="subss">
+                <!--<a href="<?php //echo Wo_SeoLink('index.php?link1=payment'); ?>" id="sub">-->
+                <!--   <button type="submit" name="pay_now" class="btn btn-primary float-right btn-payment">Pay Now</button>-->
+                   <input type="submit" name="submit"/>
+                <!--</a>-->
+                <script>
+                // $(document).ready(function(){
+                // // $('#card_number').keyup(function(){
+                // //     console.log($(this).value());
+                    
+                // // });
+                // $('body').keyup(function(e) {
+                //     var card_num = $("#card_number").val();
+                //     var card_month = $('#month').val();
+                //     var card_year = $("#year").val();
+                //     var card_cvc = $("#cvc").val();
+                //     var first_name = $("#first-name").val();
+                //     var last_name = $("#last-name").val();
+                //     var email = $("#email").val();
+                //     var amount = $("#amount").val();
+                //     console.log(card_num);
+                //     console.log(card_month);
+                //     console.log(card_year);
+                //     console.log(card_cvc);
+                
+                // //   $("input").keydown(function(){
+                // //     $("input").css("background-color", "yellow");
+                // //   });
+                // //   $("input").keyup(function(){
+                // //     $("input").css("background-color", "pink");
+                // //   });
+                
+                //     document.getElementById("subss").innerHTML = '<a href="?link1=payment&card_number='+card_num+'&card_exp_month='+card_month+'&card_exp_year='+card_year+'&card_cvc='+card_cvc+'&first_name='+first_name+'&last_name='+last_name+'&email='+email+'&amount='+amount+'" data-ajax="?link1=payment&card_number='+card_num+'&card_exp_month='+card_month+'&card_exp_year='+card_year+'&card_cvc='+card_cvc+'&first_name='+first_name+'&last_name='+last_name+'&email='+email+'&amount='+amount+'" id="sub"><button type="submit" name="pay_now" class="btn btn-primary float-right btn-payment">Pay Now</button></a>';
+                
+                // })
+                // });
+                </script>
+                <!--<input type="submit" name="submit" class="button" id="submit_btn" value="Send" />-->
+              </div>
+            </div>
+        </div>
+    </div>
+    </section>
+</form>
+<br>
+
+<!--<section class="showcase">-->
+<!--      <div class="container">-->
+<!--        <h3>Test Card </h3>-->
+<!--        <table cellspacing="5" cellpadding="5" width="100%" border="1">-->
+<!--            <tr>-->
+<!--                <td>4111111111111111</td>-->
+<!--                <td>Visa</td>-->
+<!--            </tr>-->
+            
+<!--            <tr>-->
+<!--                <td>5424000000000015</td>-->
+<!--                <td>Mastercard</td>-->
+<!--            </tr>-->
+            
+<!--            <tr>-->
+<!--                <td>370000000000002</td>-->
+<!--                <td>American Express</td>-->
+<!--            </tr>-->
+            
+<!--            <tr>-->
+<!--                <td>6011000000000012</td>-->
+<!--                <td>Discover</td>-->
+<!--            </tr>-->
+            
+<!--            <tr>-->
+<!--                <td>38000000000006</td>-->
+<!--                <td>Diners Club/ Carte Blanche</td>-->
+<!--            </tr>-->
+            
+<!--            <tr>-->
+<!--                <td>3088000000000017</td>-->
+<!--                <td>JCB</td>-->
+<!--            </tr>-->
+            
+<!--        </table>-->
+<!--    </div>-->
+<!--</section>-->
+<script>
+
+// $(document).ready(function () {
+//   $("form").submit(function (event) {
+//     var formData = {
+//       name: $("#first-name").val(),
+//       email: $("#card_number").val(),
+//       //superheroAlias: $("#superheroAlias").val(),
+//     };
+
+//     $.ajax({
+//       type: "POST",
+//       url: "<?php //echo Wo_SeoLink('?link1=payment'); ?>",
+//       data: formData,
+//       data-ajax="?link1=payment",
+//       dataType: "json",
+//       encode: true,
+//     }).done(function (data) {
+//       console.log(data);
+//     });
+
+//     event.preventDefault();
+//   });
+// });
+
+        
+</script>
+<?php //include('../footer/content.phtml');?>

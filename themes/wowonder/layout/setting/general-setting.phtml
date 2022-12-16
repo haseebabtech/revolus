@@ -1,0 +1,486 @@
+<div class="wo_settings_page wow_content">
+	<div class="avatar-holder">
+		<img src="<?php echo $wo['setting']['avatar']?>" alt="<?php echo $wo['setting']['name']?> Profile Picture" class="avatar">
+		<div class="infoz">
+			<h5 title="<?php echo $wo['setting']['name']?>"><a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u=' . $wo['setting']['username'] . '');?>" data-ajax="?link1=timeline&u=<?php echo $wo['setting']['username'] ?>"><?php echo $wo['setting']['name']?></a></h5>
+			<p><?php echo $wo['lang']['general_setting']; ?></p>
+		</div>
+	</div>
+	<hr>
+		
+	<form class="setting-general-form form-horizontal" method="post">
+		<div class="setting-general-alert setting-update-alert"></div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<div class="wow_form_fields">
+					<label for="username"><?php echo $wo['lang']['username']; ?></label>
+					<input id="username" name="username" type="text" value="<?php echo $wo['setting']['username']?>" onkeyup="Wo_CheckUsername(this.value);" autocomplete="off">
+					<span class="help-block checking"></span>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="wow_form_fields">
+					<label for="phone_number"><?php echo $wo['lang']['phone_number']; ?> </label>
+					<input name="phone_number" id="phone_number" type="tel" value="<?php echo $wo['setting']['phone_number']?>" autocomplete="off">
+					<?php if (($wo['config']['sms_or_email'] == 'sms') && !empty($wo['setting']['new_phone']) && $wo['config']['emailValidation'] == 1) { ?>
+						<span class="help-block unverify_color"><?php echo ($wo['setting']['new_phone']); ?>(<?php echo ($wo['lang']['unverified']); ?>)</span>
+					<?php } ?>
+				</div>
+			</div>
+		</div>
+		<div class="wow_form_fields">
+			<label for="email"><?php echo $wo['lang']['email']; ?> </label>
+			<input name="email" id="email" type="email" value="<?php echo $wo['setting']['email']?>" autocomplete="off">
+			<?php if (($wo['config']['sms_or_email'] == 'mail') && !empty($wo['setting']['new_email']) && $wo['config']['emailValidation'] == 1) { ?>
+				<span class="help-block unverify_color"><?php echo ($wo['setting']['new_email']); ?>(<?php echo ($wo['lang']['unverified']); ?>)</span>
+			<?php } ?>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<?php
+					$cutoff   = 1930;
+					$now      = date('Y');
+					$birthday = explode('-', $wo['setting']['birthday']);
+				?>
+				<div class="wow_form_fields">
+					<label for="usr_birthday"><?php echo $wo['lang']['birthday']; ?></label>
+					<input id="usr_birthday" name="birthday" type="text" autocomplete="off" value="<?php echo $wo['setting']['birthday']?>"> 
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="wow_form_fields">
+					<label for="country"><?php echo $wo['lang']['country']; ?> </label>
+					<select id="country" name="country">
+						<?php 
+						foreach ($wo['countries_name'] as $country_ids => $country) { 
+							$country_id = $wo['setting']['country_id'];
+							$selected_contry = ($country_ids == $country_id) ? ' selected' : '' ;
+						?>
+							<option value="<?php echo $country_ids;?>" <?php echo $selected_contry;?> ><?php echo $country;?></option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="wow_form_fields">
+					<label for="gender"><?php echo $wo['lang']['gender']; ?></label>
+					<select id="country" name="gender">
+						<?php foreach ($wo['genders'] as $key => $gender) { ?>
+							<option value="<?php echo($key) ?>" <?php echo ($wo['setting']['gender'] == $key)   ? 'selected' : '';?> ><?php echo $gender; ?></option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
+			
+			<div class="col-md-6">
+			    <div class="wow_form_fields">
+				<?php
+    $glangsr   = Wo_UserData($wo['user']['user_id']);
+    ?>
+			        <label for="gender">Language</label>
+    			    <select class="lang_chng_clss lang_chng_clss_slct" onchange="doGTranslate(this);">
+					<option value="" <?php echo $glangsr['glanguage'] == '' ? 'selected' : '' ?>>Select Language</option>
+               <option value="en|af" <?php echo $glangsr['glanguage'] == 'en|af' ? 'selected' : '' ?> >Afrikaans</option>
+               <option value="en|sq" <?php echo $glangsr['glanguage'] == 'en|sq' ? 'selected' : '' ?>>Albanian</option>
+               <option value="en|ar" <?php echo $glangsr['glanguage'] == 'en|ar' ? 'selected' : '' ?>>Arabic</option>
+               <option value="en|hy" <?php echo $glangsr['glanguage'] == 'en|hy' ? 'selected' : '' ?>>Armenian</option>
+               <option value="en|az" <?php echo $glangsr['glanguage'] == 'en|az' ? 'selected' : '' ?>>Azerbaijani</option>
+               <option value="en|eu" <?php echo $glangsr['glanguage'] == 'en|eu' ? 'selected' : '' ?>>Basque</option>
+               <option value="en|be" <?php echo $glangsr['glanguage'] == 'en|be' ? 'selected' : '' ?>>Belarusian</option>
+               <option value="en|bg" <?php echo $glangsr['glanguage'] == 'en|bg' ? 'selected' : '' ?>>Bulgarian</option>
+               <option value="en|ca" <?php echo $glangsr['glanguage'] == 'en|ca' ? 'selected' : '' ?>>Catalan</option>
+               <option value="en|zh-CN" <?php echo $glangsr['glanguage'] == 'en|zh-CN' ? 'selected' : '' ?>>Chinese (Simplified)</option>
+               <option value="en|zh-TW" <?php echo $glangsr['glanguage'] == 'en|zh-TW' ? 'selected' : '' ?>>Chinese (Traditional)</option>
+               <option value="en|hr" <?php echo $glangsr['glanguage'] == 'en|hr' ? 'selected' : '' ?>>Croatian</option>
+               <option value="en|cs" <?php echo $glangsr['glanguage'] == 'en|cs' ? 'selected' : '' ?>>Czech</option>
+               <option value="en|da" <?php echo $glangsr['glanguage'] == 'en|da' ? 'selected' : '' ?>>Danish</option>
+               <option value="en|nl" <?php echo $glangsr['glanguage'] == 'en|nl' ? 'selected' : '' ?>>Dutch</option>
+               <option value="en|en" <?php echo $glangsr['glanguage'] == 'en|en' ? 'selected' : '' ?>>English</option>
+               <option value="en|et" <?php echo $glangsr['glanguage'] == 'en|et' ? 'selected' : '' ?>>Estonian</option>
+               <option value="en|tl" <?php echo $glangsr['glanguage'] == 'en|tl' ? 'selected' : '' ?>>Filipino</option>
+               <option value="en|fi" <?php echo $glangsr['glanguage'] == 'en|fi' ? 'selected' : '' ?>>Finnish</option>
+               <option value="en|fr" <?php echo $glangsr['glanguage'] == 'en|fr' ? 'selected' : '' ?>>French</option>
+               <option value="en|gl" <?php echo $glangsr['glanguage'] == 'en|gl' ? 'selected' : '' ?>>Galician</option>
+               <option value="en|ka" <?php echo $glangsr['glanguage'] == 'en|ka' ? 'selected' : '' ?>>Georgian</option>
+               <option value="en|de" <?php echo $glangsr['glanguage'] == 'en|de' ? 'selected' : '' ?>>German</option>
+               <option value="en|el" <?php echo $glangsr['glanguage'] == 'en|el' ? 'selected' : '' ?>>Greek</option>
+               <option value="en|ht" <?php echo $glangsr['glanguage'] == 'en|ht' ? 'selected' : '' ?>>Haitian Creole</option>
+               <option value="en|iw" <?php echo $glangsr['glanguage'] == 'en|iw' ? 'selected' : '' ?>>Hebrew</option>
+               <option value="en|hi" <?php echo $glangsr['glanguage'] == 'en|hi' ? 'selected' : '' ?>>Hindi</option>
+               <option value="en|hu" <?php echo $glangsr['glanguage'] == 'en|hu' ? 'selected' : '' ?>>Hungarian</option>
+               <option value="en|is" <?php echo $glangsr['glanguage'] == 'en|is' ? 'selected' : '' ?>>Icelandic</option>
+               <option value="en|id" <?php echo $glangsr['glanguage'] == 'en|id' ? 'selected' : '' ?>>Indonesian</option>
+               <option value="en|ga" <?php echo $glangsr['glanguage'] == 'en|ga' ? 'selected' : '' ?>>Irish</option>
+               <option value="en|it" <?php echo $glangsr['glanguage'] == 'en|it' ? 'selected' : '' ?>>Italian</option>
+               <option value="en|ja" <?php echo $glangsr['glanguage'] == 'en|ja' ? 'selected' : '' ?>>Japanese</option>
+               <option value="en|ko" <?php echo $glangsr['glanguage'] == 'en|ko' ? 'selected' : '' ?>>Korean</option>
+               <option value="en|lv" <?php echo $glangsr['glanguage'] == 'en|lv' ? 'selected' : '' ?>>Latvian</option>
+               <option value="en|lt" <?php echo $glangsr['glanguage'] == 'en|lt' ? 'selected' : '' ?>>Lithuanian</option>
+               <option value="en|mk" <?php echo $glangsr['glanguage'] == 'en|mk' ? 'selected' : '' ?>>Macedonian</option>
+               <option value="en|ms" <?php echo $glangsr['glanguage'] == 'en|ms' ? 'selected' : '' ?>>Malay</option>
+               <option value="en|mt" <?php echo $glangsr['glanguage'] == 'en|mt' ? 'selected' : '' ?>>Maltese</option>
+               <option value="en|no" <?php echo $glangsr['glanguage'] == 'en|no' ? 'selected' : '' ?>>Norwegian</option>
+               <option value="en|fa" <?php echo $glangsr['glanguage'] == 'en|fa' ? 'selected' : '' ?>>Persian</option>
+               <option value="en|pl" <?php echo $glangsr['glanguage'] == 'en|pl' ? 'selected' : '' ?>>Polish</option>
+               <option value="en|pt" <?php echo $glangsr['glanguage'] == 'en|pt' ? 'selected' : '' ?>>Portuguese</option>
+               <option value="en|ro" <?php echo $glangsr['glanguage'] == 'en|ro' ? 'selected' : '' ?>>Romanian</option>
+               <option value="en|ru" <?php echo $glangsr['glanguage'] == 'en|ru' ? 'selected' : '' ?>>Russian</option>
+               <option value="en|sr" <?php echo $glangsr['glanguage'] == 'en|sr' ? 'selected' : '' ?>>Serbian</option>
+               <option value="en|sk" <?php echo $glangsr['glanguage'] == 'en|sk' ? 'selected' : '' ?>>Slovak</option>
+               <option value="en|sl" <?php echo $glangsr['glanguage'] == 'en|sl' ? 'selected' : '' ?>>Slovenian</option>
+               <option value="en|es" <?php echo $glangsr['glanguage'] == 'en|es' ? 'selected' : '' ?>>Spanish</option>
+               <option value="en|sw" <?php echo $glangsr['glanguage'] == 'en|sw' ? 'selected' : '' ?>>Swahili</option>
+               <option value="en|sv" <?php echo $glangsr['glanguage'] == 'en|sv' ? 'selected' : '' ?>>Swedish</option>
+               <option value="en|th" <?php echo $glangsr['glanguage'] == 'en|th' ? 'selected' : '' ?>>Thai</option>
+               <option value="en|tr" <?php echo $glangsr['glanguage'] == 'en|tr' ? 'selected' : '' ?>>Turkish</option>
+               <option value="en|uk" <?php echo $glangsr['glanguage'] == 'en|uk' ? 'selected' : '' ?>>Ukrainian</option>
+               <option value="en|ur" <?php echo $glangsr['glanguage'] == 'en|ur' ? 'selected' : '' ?>>Urdu</option>
+               <option value="en|vi" <?php echo $glangsr['glanguage'] == 'en|vi' ? 'selected' : '' ?>>Vietnamese</option>
+               <option value="en|cy" <?php echo $glangsr['glanguage'] == 'en|cy' ? 'selected' : '' ?>>Welsh</option>
+               <option value="en|yi" <?php echo $glangsr['glanguage'] == 'en|yi' ? 'selected' : '' ?>>Yiddish</option>
+               <option value="en|bn" <?php echo $glangsr['glanguage'] == 'en|bn' ? 'selected' : '' ?>>Bengali</option>
+               <option value="en|bs" <?php echo $glangsr['glanguage'] == 'en|bs' ? 'selected' : '' ?>>Bosnian</option>
+               <option value="en|ceb" <?php echo $glangsr['glanguage'] == 'en|ceb' ? 'selected' : '' ?>>Cebuano</option>
+               <option value="en|eo" <?php echo $glangsr['glanguage'] == 'en|eo' ? 'selected' : '' ?>>Esperanto</option>
+               <option value="en|gu" <?php echo $glangsr['glanguage'] == 'en|gu' ? 'selected' : '' ?>>Gujarati</option>
+               <option value="en|ha" <?php echo $glangsr['glanguage'] == 'en|ha' ? 'selected' : '' ?>>Hausa</option>
+               <option value="en|hmn" <?php echo $glangsr['glanguage'] == 'en|hmn' ? 'selected' : '' ?>>Hmong</option>
+               <option value="en|ig" <?php echo $glangsr['glanguage'] == 'en|ig' ? 'selected' : '' ?>>Igbo</option>
+               <option value="en|jw" <?php echo $glangsr['glanguage'] == 'en|jw' ? 'selected' : '' ?>>Javanese</option>
+               <option value="en|kn" <?php echo $glangsr['glanguage'] == 'en|kn' ? 'selected' : '' ?>>Kannada</option>
+               <option value="en|km" <?php echo $glangsr['glanguage'] == 'en|km' ? 'selected' : '' ?>>Khmer</option>
+               <option value="en|lo" <?php echo $glangsr['glanguage'] == 'en|lo' ? 'selected' : '' ?>>Lao</option>
+               <option value="en|la" <?php echo $glangsr['glanguage'] == 'en|la' ? 'selected' : '' ?>>Latin</option>
+               <option value="en|mi" <?php echo $glangsr['glanguage'] == 'en|mi' ? 'selected' : '' ?>>Maori</option>
+               <option value="en|mr" <?php echo $glangsr['glanguage'] == 'en|mr' ? 'selected' : '' ?>>Marathi</option>
+               <option value="en|mn" <?php echo $glangsr['glanguage'] == 'en|mn' ? 'selected' : '' ?>>Mongolian</option>
+               <option value="en|ne" <?php echo $glangsr['glanguage'] == 'en|ne' ? 'selected' : '' ?>>Nepali</option>
+               <option value="en|pa" <?php echo $glangsr['glanguage'] == 'en|pa' ? 'selected' : '' ?>>Punjabi</option>
+               <option value="en|so" <?php echo $glangsr['glanguage'] == 'en|so' ? 'selected' : '' ?>>Somali</option>
+               <option value="en|ta" <?php echo $glangsr['glanguage'] == 'en|ta' ? 'selected' : '' ?>>Tamil</option>
+               <option value="en|te" <?php echo $glangsr['glanguage'] == 'en|te' ? 'selected' : '' ?>>Telugu</option>
+               <option value="en|yo" <?php echo $glangsr['glanguage'] == 'en|yo' ? 'selected' : '' ?>>Yoruba</option>
+               <option value="en|zu" <?php echo $glangsr['glanguage'] == 'en|zu' ? 'selected' : '' ?>>Zulu</option>
+                    </select>
+                    </div>
+                    <div id="google_translate_element"></div>
+                </div>
+			</div>
+			
+			<?php if ($wo['config']['weather_widget'] == 1 && !empty($wo['config']['weather_key'])) { ?>
+			<div class="col-md-6">
+				<div class="wow_form_fields">
+					<label for="weather_unit"><?php echo $wo['lang']['weather_unit']; ?> </label>
+					<select id="weather_unit" name="weather_unit">
+						<option value="us" <?php echo ($wo['setting']['weather_unit'] == 'us')   ? 'selected' : '';?> >F</option>
+						<option value="uk" <?php echo ($wo['setting']['weather_unit'] == 'uk')   ? 'selected' : '';?> >C</option>
+					</select>
+				</div>
+			</div>
+		    <?php } ?>
+		</div>
+		
+		<?php if($wo['user']['user_id'] != $wo['setting']['user_id'] && ($wo['is_admin'] || $wo['is_moderoter'])) { ?>
+			<hr>
+			<?php if(!$wo['is_moderoter']) { ?>
+				<div class="wow_form_fields mb-0">
+					<label for="type"><?php echo $wo['lang']['type'];?></label>
+				</div>
+				<div class="form-group">
+					<?php 
+						$selected_type_user  = ($wo['setting']['admin'] == 0)   ? ' checked' : '';
+						$selected_type_admin = ($wo['setting']['admin'] == 1)   ? ' checked' : '';
+						$selected_type_mod   = ($wo['setting']['admin'] == 2)   ? ' checked' : '';
+					?>
+					<div class="col-md-12"> 
+						<label class="radio-inline" for="type-0">
+							<input type="radio" name="type" id="type-0" value="admin" <?php echo $selected_type_admin; ?>>
+							<?php echo $wo['lang']['admin']; ?>
+						</label> 
+						<label class="radio-inline" for="type-1">
+							<input type="radio" name="type" id="type-1" value="user" <?php echo $selected_type_user; ?>>
+							<?php echo $wo['lang']['user']; ?>
+						</label>
+						<label class="radio-inline" for="type-2">
+							<input type="radio" name="type" id="type-2" value="mod" <?php echo $selected_type_mod; ?>>
+							<?php echo $wo['lang']['moderator']; ?>
+						</label>
+					</div>
+				</div>
+			<?php } ?>
+				<div class="wow_form_fields mb-0">
+					<label for="active"><?php echo $wo['lang']['status'];?></label>
+				</div>
+				<div class="form-group">
+					<?php 
+						$selected_active_yes = ($wo['setting']['active'] == 1)   ? ' checked' : '';
+						$selected_active_no  = ($wo['setting']['active'] == 0 || $wo['setting']['active'] == 2)   ? ' checked' : '';
+					?>
+					<div class="col-md-12"> 
+						<label class="radio-inline" for="active-0">
+							<input type="radio" name="active" id="active-0" value="active" <?php echo $selected_active_yes; ?>>
+							<?php echo $wo['lang']['active']; ?>
+						</label> 
+						<label class="radio-inline" for="active-1">
+							<input type="radio" name="active" id="active-1" value="inactive" <?php echo $selected_active_no; ?>>
+							<?php echo $wo['lang']['inactive']; ?>
+						</label>
+					</div>
+				</div>
+		<?php } ?>
+		 
+		<?php if($wo['is_admin'] === true || $wo['is_moderoter'] === true) { ?>
+			<div class="wow_form_fields mb-0">
+				<label for="verified"><?php echo $wo['lang']['verification'];?></label>
+			</div>
+			<div class="form-group">
+				<?php
+					$selected_verified_yes = ($wo['setting']['verified'] == 1)   ? ' checked' : '';
+					$selected_verified_no  = ($wo['setting']['verified'] == 0)   ? ' checked' : '';
+				?>
+				<div class="col-md-12"> 
+					<label class="radio-inline" for="verified-0">
+						<input type="radio" name="verified" id="verified-0" value="verified" <?php echo $selected_verified_yes; ?> >
+						<?php echo $wo['lang']['verified']; ?>
+					</label> 
+					<label class="radio-inline" for="verified-1">
+						<input type="radio" name="verified" id="verified-1" value="notVerified" <?php echo $selected_verified_no; ?>>
+						<?php echo $wo['lang']['not_verified']; ?>
+					</label>
+				</div>
+			</div>
+			<?php if ($wo['config']['pro'] == 1) { ?>
+				<div class="wow_form_fields">
+					<label for="pro_type"><?php echo $wo['lang']['member_type'];?></label>
+					<select id="pro_type" name="pro_type">
+						<?php $pros = Wo_GetProPackages();?>
+						<?php foreach ($pros as $key => $pro) {?>
+							<option value="<?php echo $key;?>" <?php echo ($pro['id'] == $wo['setting']['pro_type']) ? 'selected' : ''; ?>><?php echo $pro['name'];?></option>
+						<?php } ?>
+					</select>
+				</div>
+			<?php } ?>
+			<div class="wow_form_fields">
+				<label for="wallet"><?php echo $wo['lang']['wallet']; ?></label>  
+				<input name="wallet" id="wallet" type="text" value="<?php echo $wo['setting']['wallet']?>" autocomplete="off">
+			</div>
+		<?php } ?>
+
+         <!-- Select Basic -->
+		<?php if ($wo['config']['pro'] == 1 && $wo['setting']['pro_type'] != 0 && $wo['setting']['is_pro'] == 1 && empty($_GET['user'])) { ?>
+			<div class="wow_form_fields mb-0">
+				<label for="membership"><?php echo $wo['lang']['membership'];?></label>
+			</div>
+			<div class="setting-panel form-group">
+				<div class="form-group col-lg-6">
+					<div class="col-md-12">
+						<?php $pro_type = Wo_GetUserProType($wo['setting']['pro_type']);?>
+						<label style="color:<?php echo $pro_type['color_name'];?>">
+						<?php if (!empty(in_array($wo['setting']['pro_type'], array_keys($wo['pro_packages_types'])) && !empty($wo['pro_packages'][$wo['pro_packages_types'][$wo['setting']['pro_type']]]['image'])) && $_COOKIE['mode'] == 'day') { ?>
+				          <img src="<?php echo($wo['pro_packages'][$wo['pro_packages_types'][$wo['setting']['pro_type']]]['image']) ?>" class="pro_packages_icon_inline">
+				        <?php }
+				        elseif (!empty(in_array($wo['setting']['pro_type'], array_keys($wo['pro_packages_types'])) && !empty($wo['pro_packages'][$wo['pro_packages_types'][$wo['setting']['pro_type']]]['night_image'])) && $_COOKIE['mode'] == 'night') { ?>
+				        	<img src="<?php echo($wo['pro_packages'][$wo['pro_packages_types'][$wo['setting']['pro_type']]]['night_image']) ?>" class="pro_packages_icon_inline">
+				        <?php }
+				        else{ ?>
+							<i class="fa fa-fw fa-<?php echo $pro_type['icon'];?>"></i> 
+				        <?php } ?>
+				        <?php echo $pro_type['type_name'];?>
+				        </label>
+					</div>
+				</div>
+				<div class="form-group col-lg-6">
+					<?php if ($wo['setting']['pro_type'] != 4) {?>
+					<a href="javascript:void();" onclick="Wo_ShowUpgrades();" class="wo_sett_upgrade"><?php echo $wo['lang']['upgrade'];?></a>
+					<div class="show-upgrades hidden">
+						<select id="upgrade" name="upgrade" class="form-control">
+							<?php foreach (Wo_GetAvUpgrades($wo['setting']['user_id']) as $key => $value) {?>
+								<option value="<?php echo $key;?>"><?php echo $value;?></option>
+							<?php } ?>
+						</select>
+						<br>
+						<a href="javascript:void();" class="btn btn-sm btn-main" id="upgrade-button" onclick="Wo_GetPayPal();"><?php echo $wo['lang']['upgrade'];?></a>
+					</div>
+					<?php }?>
+				</div>
+			</div>
+			<div class="form-group hidden please-wait">
+				<label class="col-md-3" for="country"></label>
+				<div class="col-md-7">
+					<label id="please-wait"><?php echo $wo['lang']['please_wait']?></label>
+				</div>
+			</div>
+		<?php } ?>
+         
+		<?php
+			$fields = Wo_GetProfileFields('general');
+			if (count($fields) > 0) {
+				foreach ($fields as $key => $wo['field']) {
+					echo Wo_LoadPage('setting/profile-fields');
+				}
+				echo '<input name="custom_fields" type="hidden" value="1">';
+			}
+		?>
+         
+		<div class="text-center">
+			<button type="submit" class="btn btn-main btn-mat btn-mat-raised add_wow_loader" id="update_user_data"><?php echo $wo['lang']['save']; ?></button>
+		</div>
+		<input type="hidden" name="user_id" value="<?php echo $wo['setting']['user_id'];?>">
+		<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+	</form>
+</div>
+
+<div class="modal fade" id="confirm_updatin_user_date" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span></button>
+				<h4 class="modal-title">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12" y2="17"></line></svg>
+					<?php echo $wo['lang']['important']; ?>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<p><?php echo $wo['lang']['unverify']; ?></p>
+			</div>
+			<div class="modal-footer">
+				<button id="delete-all-post" type="button" onclick="Wo_ConfirmUpdatingUserData();" class="btn  btn-main"><?php echo $wo['lang']['continue']; ?></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+   /* <![CDATA[ */
+   eval(function(p,a,c,k,e,r){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--)r[e(c)]=k[c]||e(c);k=[function(e){return r[e]}];e=function(){return'\\w+'};c=1};while(c--)if(k[c])p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c]);return p}('6 7(a,b){n{4(2.9){3 c=2.9("o");c.p(b,f,f);a.q(c)}g{3 c=2.r();a.s(\'t\'+b,c)}}u(e){}}6 h(a){4(a.8)a=a.8;4(a==\'\')v;3 b=a.w(\'|\')[1];3 c;3 d=2.x(\'y\');z(3 i=0;i<d.5;i++)4(d[i].A==\'B-C-D\')c=d[i];4(2.j(\'k\')==E||2.j(\'k\').l.5==0||c.5==0||c.l.5==0){F(6(){h(a)},G)}g{c.8=b;7(c,\'m\');7(c,\'m\')}}',43,43,'||document|var|if|length|function|GTranslateFireEvent|value|createEvent||||||true|else|doGTranslate||getElementById|google_translate_element|innerHTML|change|try|HTMLEvents|initEvent|dispatchEvent|createEventObject|fireEvent|on|catch|return|split|getElementsByTagName|select|for|className|goog|te|combo|null|setTimeout|500'.split('|'),0,{}))
+   /* ]]> */
+</script>
+
+<script>
+$('.lang_chng_clss_slct').on('change', function() {
+    //alert( this.value );
+
+    $.ajax({
+        url:  Wo_Ajax_Requests_File(),
+        type: 'get',
+        data:{f:'chat',s:'update-glanguage', 'language_val':this.value},
+        dataType: 'json',
+        success: function(data){
+          console.log(data);
+          //if (data['status'] == 200) {
+             //
+          //}
+        }
+      });
+  });
+  </script>
+
+<script type="text/javascript">
+	$(function() {
+	$("#usr_birthday").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		maxDate: new Date('<?php echo date('Y')-14; ?>-12-31'),
+		dateFormat: 'dd-mm-yy',
+		yearRange: "<?php echo date('Y')-129; ?>:<?php echo date('Y')-14; ?>",
+		prevText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>',
+		nextText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>'
+    });
+});
+function Wo_ShowUpgrades() {
+	$('.wo_sett_upgrade').addClass('hidden');
+	$('.show-upgrades').removeClass('hidden');
+}
+function Wo_ConfirmUpdatingUserData(){
+ $('form.setting-general-form').submit();
+ $("#confirm_updatin_user_date").modal('hide');
+}
+
+$(function() {
+
+  $("#update_user_data").click(function(event) {
+	if ('<?php echo $wo['setting']['username']?>' != $('#username').val() && '<?php echo $wo['setting']['verified']?>' == 1) {
+        event.preventDefault();
+        $("#confirm_updatin_user_date").modal('show');
+    }
+  });
+
+  $('form.setting-general-form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=update_general_settings',
+    beforeSend: function() {
+	  $('.wo_settings_page').find('.add_wow_loader').addClass('btn-loading');
+    },
+    success: function(data) {
+      scrollToTop();
+      if (data.status == 200) {
+      	if (data.type == 'phone' || data.type == 'email') {
+      		// if (data.type == 'email') {
+      		// 	$('#two_factor_title').html("<?php echo $wo['lang']['confirmation_email_sent']; ?>");
+      		// 	$('#two_factor_desc').html("<?php echo $wo['lang']['confirmation_email']; ?>");
+      		// }
+      		// else{
+      		// 	$('#two_factor_title').html("<?php echo $wo['lang']['confirmation_message_sent']; ?>");
+      		// 	$('#two_factor_desc').html("<?php echo $wo['lang']['confirmation_message']; ?>");
+      		// }
+      		$('#verify_email_phone').modal('show');
+      	}
+      	else{
+	        <?php if($wo['user']['user_id'] == $wo['setting']['user_id']) { ?>
+	        $('[id^=update-username]').attr('href', data.username);
+	        <?php } ?>
+	        $('.setting-general-alert').html('<div class="alert alert-success">' + data.message + '</div>');
+	        $('.alert-success').fadeIn('fast', function() {
+	           $(this).delay(2500).slideUp(500, function() {
+	              $(this).remove();
+	            });
+	        });
+	    }
+      } else if (data.errors) {
+          var errors = data.errors.join("<br>");
+          $('.setting-general-alert').html('<div class="alert alert-danger">' + errors + '</div>');
+          $('.alert-danger').fadeIn(300);
+      }
+      $('.wo_settings_page').find('.add_wow_loader').removeClass('btn-loading');
+    }
+  });
+
+    $('form.verify_email_phone_form').ajaxForm({
+    url: Wo_Ajax_Requests_File() + '?f=verify_email_phone',
+    beforeSend: function() {
+      $('#verify_email_phone_form_btn').text('<?php echo($wo['lang']['please_wait']) ?>');
+    },
+    success: function(data) {
+      if (data.status == 200) {
+        $('#verify_email_phone_form_alert').html('<div class="alert alert-success">' + data.message + '</div>');
+        $('#verify_email_phone_form_alert').fadeIn('fast', function() {
+          $(this).delay(2500).slideUp(500, function() {
+              $(this).remove();
+              $('#verify_email_phone').modal('hide');
+              location.reload();
+          });
+        });
+      } else if (data.status == 400) {
+        $('#verify_email_phone_form_alert').html('<div class="alert alert-danger">' + data.message + '</div>');
+        $('.alert-danger').fadeIn(300);
+      }
+      $('#verify_email_phone_form_btn').text('<?php echo($wo['lang']['send']) ?>');
+    }
+  });
+});
+
+function Wo_GetPayPal() {
+   type = $('#upgrade').val();
+   $('#upgrade-button').html("<?php echo $wo['lang']['please_wait']?>");
+   $.post(Wo_Ajax_Requests_File() + '?f=get_paypal_url', {type:type, type2:'upgrade'}, function (data) {
+    if (data.status == 200) {
+       window.location.href = data.url;
+    } else {
+      $('#upgrade-button').html('<?php echo $wo["lang"]["upgrade"]?>');
+      $('.please-wait').removeClass('hidden').find('#please-wait').text('<?php echo $wo["lang"]["error_please_try_again"]?>');
+    }
+   });
+}
+</script>

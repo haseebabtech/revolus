@@ -1,0 +1,18 @@
+<div class="modal fade" id="calling-modal" role="dialog" data-backdrop="static" data-keyboard="false">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title"> <?php echo $wo['lang']['calling'];?> <?php echo $wo['calling_user']['name'];?> ..</h4>
+         </div>
+         <div class="modal-body">
+            <p><?php echo $wo['lang']['calling_desc'];?></p>
+         </div>
+         <div class="modal-footer">
+            <?php if(Wo_IsUserFromApp()){} else { ?>
+               <button type="button" class="btn btn-success switch-call" onclick="Wo_SwitchCall(<?php echo $wo['user']['user_id'];?>, <?php echo isset($_SESSION['recptuser_id']) ? $_SESSION['recptuser_id'] : ''; ?>);"><?php echo 'Switch to video'; ?></button>
+            <?php } ?>
+            <button type="button" class="btn btn-danger cancel-call" onclick="Wo_CancelCall();">Reject</button>
+         </div>
+      </div>
+   </div>
+</div>

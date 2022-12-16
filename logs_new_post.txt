@@ -1,0 +1,51 @@
+
+
+2022-07-12 22:37:07 - {"postPhotos":{"name":["testimonial-6.jpeg"],"type":["image\/jpeg"],"tmp_name":["\/tmp\/phpFEb1Dj"],"error":[0],"size":[12438]}}
+
+2022-07-12 22:38:43 - {"postFile":{"name":"demo image 2.jpg","type":"image\/jpeg","tmp_name":"\/tmp\/phpEDwtpo","error":0,"size":4976}}
+
+2022-07-12 22:46:38 - {"postPhotos":{"name":["testimonial-6.jpeg"],"type":["image\/jpeg"],"tmp_name":["\/tmp\/phpsHaZ4L"],"error":[0],"size":[12438]}}
+
+2022-07-12 22:49:26 - {"thumb":{"name":"1657648150528_.png","type":"image\/png","tmp_name":"\/tmp\/phpIhMIdH","error":0,"size":0},"postVideo":{"name":"Video_20220712_224913_.mp4","type":"video\/mp4","tmp_name":"\/tmp\/phpVRTatG","error":0,"size":548038}}
+
+2022-07-13 03:05:37 - {"postPhotos":{"name":["testimonial-6.jpeg"],"type":["image\/jpeg"],"tmp_name":["\/tmp\/phpNmpOyl"],"error":[0],"size":[12438]}}
+
+2022-07-13 04:38:23 - {"thumb":{"name":"1657669079745_.png","type":"image\/png","tmp_name":"\/tmp\/phpc11nrM","error":0,"size":0},"postVideo":{"name":"Video_20220713_043807_.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 04:57:39 - {"postPhotos":{"name":["images.png"],"type":["image\/png"],"tmp_name":["\/tmp\/phpT0O8O1"],"error":[0],"size":[5776]}}
+
+2022-07-13 05:00:54 - {"postVideo":{"name":"Particle RSG Logo 3 Cameras Final.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:16:48 - {"postFile":{"name":"demo image 2.jpg","type":"image\/jpeg","tmp_name":"\/tmp\/phpzwHqQL","error":0,"size":4976},"postVideo":{"name":"Demo Video.mp4","type":"video\/mp4","tmp_name":"\/tmp\/php70TXjM","error":0,"size":1055736}}
+
+2022-07-13 05:17:06 - {"postVideo":{"name":"Demo Video.mp4","type":"video\/mp4","tmp_name":"\/tmp\/phpaOz7WL","error":0,"size":1055736}}
+
+2022-07-13 05:19:58 - {"postVideo":{"name":"Particle RSG Logo 3 Cameras Final.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:21:33 - {"postVideo":{"name":"Demo Video.mp4","type":"video\/mp4","tmp_name":"\/tmp\/php5jTaSa","error":0,"size":1055736}}
+
+2022-07-13 05:34:49 - {"postVideo":{"name":"Particle RSG Logo 3 Cameras Final.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:35:18 - {"postVideo":{"name":"pr.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:36:40 - {"postVideo":{"name":"pr.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:37:04 - {"postVideo":{"name":"pr.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:37:41 - {"postVideo":{"name":"Demo Video.mp4","type":"video\/mp4","tmp_name":"\/tmp\/phpLQ8XZJ","error":0,"size":1055736}}
+
+2022-07-13 05:39:15 - {"postVideo":{"name":"pr.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:39:50 - {"postVideo":{"name":"Demo Video.mp4","type":"video\/mp4","tmp_name":"\/tmp\/phpjlFMw1","error":0,"size":1055736}}
+
+2022-07-13 05:46:18 - {"postVideo":{"name":"pr.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 05:46:47 - {"postVideo":{"name":"pr.mp4","type":"","tmp_name":"","error":1,"size":0}}
+
+2022-07-13 21:47:18 - {"postPhotos":{"name":["JPEG_20220713_214700_5193136481057726473.jpg"],"type":["image\/jpeg"],"tmp_name":["\/tmp\/phpup7VEh"],"error":[0],"size":[200670]}}
+
+2022-07-13 21:49:06 - {"postPhotos":{"name":["JPEG_20220713_214856_3177446600585280113.jpg"],"type":["image\/jpeg"],"tmp_name":["\/tmp\/php8QO8cz"],"error":[0],"size":[200554]}}
+
+2022-07-13 22:07:42 - {"postPhotos":{"name":["JPEG_20220713_220732_1987993537952847702.jpg"],"type":["image\/jpeg"],"tmp_name":["\/tmp\/phpBA5O5z"],"error":[0],"size":[200733]}}
+
+2022-07-13 22:45:54 - {"postVideo":{"name":"pr.mp4","type":"","tmp_name":"","error":1,"size":0}}

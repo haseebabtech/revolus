@@ -1,0 +1,12 @@
+/*
+
+Add here your custom css styles Example: p { text-align: center; color: red; }
+
+*/
+body{
+	background: -webkit-linear-gradient(bottom, rgba(255, 10, 5, 0.2) 0%, rgba(255, 105, 0, 0.2) 40%, rgba(255, 200, 0, 0.2) 78%, rgba(255, 245, 0, 0.2) 98%, rgba(255, 250, 0, 0.2) 100%);
+    background: -o-linear-gradient(bottom, rgba(255, 10, 5, 0.2) 0%, rgba(255, 105, 0, 0.2) 40%, rgba(255, 200, 0, 0.2) 78%, rgba(255, 245, 0, 0.2) 98%, rgba(255, 250, 0, 0.2) 100%);
+    background: -ms-linear-gradient(bottom, rgba(255, 10, 5, 0.2) 0%, rgba(255, 105, 0, 0.2) 40%, rgba(255, 200, 0, 0.2) 78%, rgba(255, 245, 0, 0.2) 98%, rgba(255, 250, 0, 0.2) 100%);
+    background: -moz-linear-gradient(bottom, rgba(255, 10, 5, 0.2) 0%, rgba(255, 105, 0, 0.2) 40%, rgba(255, 200, 0, 0.2) 78%, rgba(255, 245, 0, 0.2) 98%, rgba(255, 250, 0, 0.2) 100%);
+    background: linear-gradient(to top, rgba(255, 10, 5, 0.2) 0%, rgba(255, 105, 0, 0.2) 40%, rgba(255, 200, 0, 0.2) 78%, rgba(255, 245, 0, 0.2) 98%, rgba(255, 250, 0, 0.2) 100%);
+}
